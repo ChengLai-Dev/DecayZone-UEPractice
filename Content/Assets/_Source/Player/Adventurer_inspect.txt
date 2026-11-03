@@ -1,0 +1,22 @@
+FILE D:\Code\UE Projects\DecayZone\Content\Assets\_Source\Player\Adventurer.fbx
+MESHES 4  ARMATURE CharacterArmature
+BONES 79
+REST_BBOX x[-0.825,0.825] y[-0.259,0.201] z[-0.001,1.828]
+REST_HEIGHT 1.828
+OK   bind pose 在原点
+BONE Foot.L       -> Root
+BONE Foot.L_end   -> Foot.L
+BONE PT.L         -> Root
+BONE PT.L_end     -> PT.L
+BONE Foot.R       -> Root
+BONE Foot.R_end   -> Foot.R
+BONE PT.R         -> Root
+BONE PT.R_end     -> PT.R
+FAIL 脚骨挂错父级：['Foot.L', 'PT.L', 'Foot.R', 'PT.R']（应为 LowerLeg/LeftLeg 的子级）
+ACTIONS 24
+OK   haracterArmature|CharacterArmature|Death   frames 1-33  最大位移 1.5355 m
+OK   cterArmature|CharacterArmature|Gun_Shoot   frames 1-19  最大位移 0.0608 m
+OK   terArmature|CharacterArmature|HitRecieve   frames 1-18  最大位移 0.0892 m
+OK   rArmature|CharacterArmature|HitRecieve_2   frames 1-18  最大位移 0.0198 m
+OK   CharacterArmature|CharacterArmature|Idle   frames 1-51  最大位移 0.0092 m
+... 其余 19 段未检查

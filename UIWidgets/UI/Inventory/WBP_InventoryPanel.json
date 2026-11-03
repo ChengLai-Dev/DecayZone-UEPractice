@@ -1,0 +1,1493 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Inventory/WBP_InventoryPanel",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "BG_Frame",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -480,
+								"top": -260,
+								"right": 960,
+								"bottom": 520
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Fill_Frame",
+						"isVariable": false,
+						"properties":
+						{
+							"BrushColor":
+							{
+								"r": 0.070588000118732452,
+								"g": 0.10196100175380707,
+								"b": 0.11372499912977219,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						}
+					}
+				]
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_Title",
+				"isVariable": false,
+				"properties":
+				{
+					"Text": "背包",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.909804,G=0.945098,B=0.949020,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=32.000000,MonospacedWidth=1.000000)"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": -244,
+								"right": 320,
+								"bottom": 44
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_1",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": -192,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_2",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -360,
+								"top": -192,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_3",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -264,
+								"top": -192,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_4",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -168,
+								"top": -192,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_5",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -72,
+								"top": -192,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_6",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": -96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_7",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -360,
+								"top": -96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_8",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -264,
+								"top": -96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_9",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -168,
+								"top": -96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_10",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -72,
+								"top": -96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_11",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": 0,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_12",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -360,
+								"top": 0,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_13",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -264,
+								"top": 0,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_14",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -168,
+								"top": 0,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_15",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -72,
+								"top": 0,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_16",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": 96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_17",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -360,
+								"top": 96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_18",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -264,
+								"top": 96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_19",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -168,
+								"top": 96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+				"className": "WBP_ItemSlot_C",
+				"name": "Slot_20",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -72,
+								"top": 96,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "BG_Detail",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 40,
+								"top": -192,
+								"right": 416,
+								"bottom": 384
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Fill_Detail",
+						"isVariable": false,
+						"properties":
+						{
+							"BrushColor":
+							{
+								"r": 0.043136999011039734,
+								"g": 0.066666997969150543,
+								"b": 0.078431002795696259,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						}
+					}
+				]
+			},
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "Icon_Big",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 56,
+								"top": -176,
+								"right": 96,
+								"bottom": 96
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Fill_Big",
+						"isVariable": false,
+						"properties":
+						{
+							"BrushColor":
+							{
+								"r": 0.1333329975605011,
+								"g": 0.18823499977588654,
+								"b": 0.20784300565719604,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						}
+					}
+				]
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_ItemName",
+				"isVariable": true,
+				"properties":
+				{
+					"Text": "未选中",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.909804,G=0.945098,B=0.949020,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=28.000000,MonospacedWidth=1.000000)"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 164,
+								"top": -176,
+								"right": 276,
+								"bottom": 38
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_ItemType",
+				"isVariable": true,
+				"properties":
+				{
+					"Text": "物资",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.650980,G=0.717647,B=0.737255,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=16.000000,MonospacedWidth=1.000000)"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 164,
+								"top": -134,
+								"right": 276,
+								"bottom": 22
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_ItemWeight",
+				"isVariable": true,
+				"properties":
+				{
+					"Text": "重量 0.0 kg",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.650980,G=0.717647,B=0.737255,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=20.000000,MonospacedWidth=1.000000)"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 56,
+								"top": -68,
+								"right": 384,
+								"bottom": 28
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_ItemDesc",
+				"isVariable": true,
+				"properties":
+				{
+					"Text": "点击左侧格子查看这件物资的说明。",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.545098,G=0.607843,B=0.631373,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=16.000000,MonospacedWidth=1.000000)",
+					"AutoWrapText": true
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 56,
+								"top": -34,
+								"right": 384,
+								"bottom": 110
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.Button",
+				"className": "Button",
+				"name": "Btn_Equip",
+				"isVariable": true,
+				"properties":
+				{
+					"BackgroundColor":
+					{
+						"r": 0.20784300565719604,
+						"g": 0.83921599388122559,
+						"b": 0.87058800458908081,
+						"a": 1
+					}
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 56,
+								"top": 104,
+								"right": 384,
+								"bottom": 60
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.TextBlock",
+						"className": "TextBlock",
+						"name": "Text_Equip",
+						"isVariable": false,
+						"properties":
+						{
+							"Text": "装备",
+							"ColorAndOpacity": "(SpecifiedColor=(R=0.043137,G=0.066667,B=0.078431,A=1.000000))",
+							"Justification": "Center"
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.ButtonSlot",
+							"className": "ButtonSlot",
+							"properties":
+							{
+							}
+						}
+					}
+				]
+			},
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_Hint",
+				"isVariable": false,
+				"properties":
+				{
+					"Text": "左键选中格子 · 右侧查看详情",
+					"ColorAndOpacity": "(SpecifiedColor=(R=0.545098,G=0.607843,B=0.631373,A=1.000000))",
+					"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=16.000000,MonospacedWidth=1.000000)"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -456,
+								"top": 204,
+								"right": 480,
+								"bottom": 22
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"contentHash": "dca055ea64bba174f12a6a7ae6dc2a05"
+}
