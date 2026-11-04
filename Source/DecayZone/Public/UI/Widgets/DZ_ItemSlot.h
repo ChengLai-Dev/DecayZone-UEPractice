@@ -20,8 +20,11 @@ class DECAYZONE_API UDZ_ItemSlot : public UDZ_UserWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeConstruct() override;
 	void SetItemInfo(int32 ItemID);
 	void SetSelected(bool IsSelected);
+	
+	virtual UDZ_UserWidget* CreateDragVisualWidget() override;
 	
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> Img_ItemIcon;
@@ -30,6 +33,7 @@ public:
 	TObjectPtr<UBorder> Border_Selected;
 	
 	int32 GetItemID();
+	
 private:
 	int32 CurrentItemID = 0;
 };

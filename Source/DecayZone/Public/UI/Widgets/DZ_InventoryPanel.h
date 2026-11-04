@@ -18,8 +18,6 @@ class DECAYZONE_API UDZ_InventoryPanel : public UDZ_UserWidget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
-	
-
 
 	UPROPERTY()
 	TArray<TObjectPtr<UDZ_ItemSlot>> ItemSlots;

@@ -8,6 +8,12 @@
 #include "Data/Item/FDZ_ItemData.h"
 #include "Library/ItemHelper.h"
 
+void UDZ_ItemSlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+	SetDragEnabled(true);
+}
+
 void UDZ_ItemSlot::SetItemInfo(int32 ItemID)
 {
 	CurrentItemID = ItemID;
@@ -26,6 +32,16 @@ void UDZ_ItemSlot::SetSelected(bool IsSelected)
 	const FLinearColor SelectedColor = FLinearColor(FColor::FromHex(TEXT("C9A968")));
 	const FLinearColor NormalColor = FLinearColor(FColor::FromHex(TEXT("2E3C44")));
 	Border_Selected->SetBrushColor(IsSelected ? SelectedColor : NormalColor);
+}
+
+UDZ_UserWidget* UDZ_ItemSlot::CreateDragVisualWidget()
+{
+	UDZ_ItemSlot* VisualWidget = CreateWidget<UDZ_ItemSlot>(GetOwningPlayer(), GetClass());
+	if (VisualWidget)
+	{
+		VisualWidget->SetItemInfo(CurrentItemID);
+	}
+	return VisualWidget;
 }
 
 int32 UDZ_ItemSlot::GetItemID()
