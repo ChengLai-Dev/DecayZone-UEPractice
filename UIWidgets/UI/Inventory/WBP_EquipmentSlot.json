@@ -1,0 +1,166 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Inventory/WBP_EquipmentSlot",
+	"root": {
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Root_Size",
+		"isVariable": false,
+		"properties": {
+			"HeightOverride": 136,
+			"bOverride_HeightOverride": true
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Border",
+				"className": "Border",
+				"name": "Border_Selected",
+				"isVariable": true,
+				"properties": {
+					"Padding": {
+						"left": 2,
+						"top": 2,
+						"right": 2,
+						"bottom": 2
+					},
+					"BrushColor": {
+						"r": 0.027320999652147293,
+						"g": 0.04518600180745125,
+						"b": 0.057806000113487244,
+						"a": 1
+					}
+				},
+				"slot": {
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
+					"properties": {}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Fill_Slot",
+						"isVariable": false,
+						"properties": {
+							"Padding": {
+								"left": 11,
+								"top": 11,
+								"right": 11,
+								"bottom": 11
+							},
+							"BrushColor": {
+								"r": 0.006049000192433596,
+								"g": 0.009134000167250633,
+								"b": 0.011611999943852425,
+								"a": 1
+							}
+						},
+						"slot": {
+							"class": "/Script/UMG.BorderSlot",
+							"className": "BorderSlot",
+							"properties": {
+								"Padding": {
+									"left": 2,
+									"top": 2,
+									"right": 2,
+									"bottom": 2
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "VB_Content",
+								"isVariable": false,
+								"properties": {},
+								"slot": {
+									"class": "/Script/UMG.BorderSlot",
+									"className": "BorderSlot",
+									"properties": {
+										"Padding": {
+											"left": 11,
+											"top": 11,
+											"right": 11,
+											"bottom": 11
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.SizeBox",
+										"className": "SizeBox",
+										"name": "Size_Icon",
+										"isVariable": false,
+										"properties": {
+											"WidthOverride": 44,
+											"HeightOverride": 44,
+											"bOverride_WidthOverride": true,
+											"bOverride_HeightOverride": true
+										},
+										"slot": {
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties": {
+												"HorizontalAlignment": "HAlign_Left"
+											}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.Image",
+												"className": "Image",
+												"name": "Img_EquipIcon",
+												"isVariable": true,
+												"properties": {},
+												"slot": {
+													"class": "/Script/UMG.SizeBoxSlot",
+													"className": "SizeBoxSlot",
+													"properties": {}
+												}
+											}
+										]
+									},
+									{
+										"class": "/Script/UMG.Spacer",
+										"className": "Spacer",
+										"name": "Spacer_Content",
+										"isVariable": false,
+										"properties": {},
+										"slot": {
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties": {
+												"Size": {
+													"value": 1,
+													"rule": "Fill"
+												}
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_EquipName",
+										"isVariable": true,
+										"properties": {
+											"Text": "未装备",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.132868,G=0.187821,B=0.212231,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
+											"TextOverflowPolicy": "Ellipsis"
+										},
+										"slot": {
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties": {}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "cf720aa7980ee0c86ecf5a1fe40c498b"
+}

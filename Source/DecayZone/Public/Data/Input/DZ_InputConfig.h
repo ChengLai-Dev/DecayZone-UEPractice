@@ -32,4 +32,7 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UInputAction> InteractAction;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> OpenOrCloseInventoryAction;
 };

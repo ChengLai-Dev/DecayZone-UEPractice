@@ -28,10 +28,22 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Energy)
+	FGameplayAttributeData Energy;
+	
+	UPROPERTY(ReplicatedUsing = OnRep_MaxEnergy)
+	FGameplayAttributeData MaxEnergy;
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);
 	
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
+	void OnRep_Energy(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
+	void OnRep_MaxEnergy(const FGameplayAttributeData& OldValue);
 	
 };

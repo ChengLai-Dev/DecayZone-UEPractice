@@ -16,6 +16,7 @@
 void ADZ_PlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	HighlightInteractable();
 }
 
 ADZ_PlayerCharacter::ADZ_PlayerCharacter()
@@ -76,6 +77,7 @@ void ADZ_PlayerCharacter::OnInteractableBeginOverlap(UPrimitiveComponent* Overla
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	OverlappingInteractables.Add(OtherActor);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AAAAAAAAAAAAAAAAAA")));
 }
 
 void ADZ_PlayerCharacter::OnInteractableEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -86,7 +88,6 @@ void ADZ_PlayerCharacter::OnInteractableEndOverlap(UPrimitiveComponent* Overlapp
 
 void ADZ_PlayerCharacter::HighlightInteractable()
 {
-	if (OverlappingInteractables.IsEmpty())	return;
 	float MaxDot = -1;
 	AActor* HighlightActor = nullptr;
 	for (AActor* Actor : OverlappingInteractables)
@@ -105,6 +106,5 @@ void ADZ_PlayerCharacter::HighlightInteractable()
 	}
 	UDZ_BlueprintLibrary::SetActorHighlight(HighlightActor, true);
 	CurrentInterctableActor = HighlightActor;
-	
 }
 

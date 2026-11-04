@@ -3,9 +3,6 @@
 	"EngineAssociation": "5.8",
 	"Category": "",
 	"Description": "",
-	"AdditionalPluginDirectories": [
-		"D:/Code/UE Plugins"
-	],
 	"Modules": [
 		{
 			"Name": "DecayZone",
@@ -47,8 +44,29 @@
 			]
 		},
 		{
+			"Name": "ModelContextProtocol",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
+			"Name": "EditorToolset",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
+		},
+		{
 			"Name": "Inventory",
 			"Enabled": false
+		},
+		{
+			"Name": "CommonUI",
+			"Enabled": true
 		}
+	],
+	"AdditionalPluginDirectories": [
+		"../../UE Plugins"
 	]
 }

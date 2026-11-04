@@ -1,0 +1,37 @@
+{
+  "id": "T_UI_Icon_Grenade",
+  "source_png": "outputs/moss/T_UI_Icon_Grenade__seed770002.png",
+  "master_png": "icons/work/moss/T_UI_Icon_Grenade.png",
+  "runtime_png": "icons/runtime/moss/T_UI_Icon_Grenade.png",
+  "source_size": [
+    1024,
+    1024
+  ],
+  "master_size": [
+    512,
+    512
+  ],
+  "runtime_size": [
+    256,
+    256
+  ],
+  "bg_std": 0.64,
+  "bg_tolerance": 10.0,
+  "foreground_ratio": 0.2544,
+  "content_box": [
+    283,
+    95,
+    759,
+    912
+  ],
+  "metrics": {
+    "coverage": 0.3192,
+    "corner_alpha_max": 0.0,
+    "fringe_delta": 150.05,
+    "halo_ratio": 0.812
+  },
+  "verdict": {
+    "status": "pass",
+    "reasons": []
+  }
+}

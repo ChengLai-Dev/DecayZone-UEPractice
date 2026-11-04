@@ -12,19 +12,13 @@ class DECAYZONE_API UDZ_InventoryComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UDZ_InventoryComponent();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+	TArray<int32> GetItems();
 	
+	void AddItem(int32 Item);
+	void RemoveItem(int32 Item);
 	
 private:
 	
+	UPROPERTY()
+	TArray<int32> Items;
 };

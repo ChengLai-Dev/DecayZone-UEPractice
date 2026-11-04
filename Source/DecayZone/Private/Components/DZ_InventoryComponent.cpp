@@ -4,33 +4,18 @@
 #include "Components/DZ_InventoryComponent.h"
 
 
-// Sets default values for this component's properties
-UDZ_InventoryComponent::UDZ_InventoryComponent()
+TArray<int32> UDZ_InventoryComponent::GetItems()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	return Items;
 }
 
-
-// Called when the game starts
-void UDZ_InventoryComponent::BeginPlay()
+void UDZ_InventoryComponent::AddItem(int32 Item)
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	Items.Add(Item);
 }
 
-
-// Called every frame
-void UDZ_InventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-                                           FActorComponentTickFunction* ThisTickFunction)
+void UDZ_InventoryComponent::RemoveItem(int32 Item)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	Items.Remove(Item);
 }
 
