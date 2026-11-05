@@ -6,6 +6,8 @@
 #include "Engine/DataAsset.h"
 #include "DZ_UIConfig.generated.h"
 
+class UDZ_InteractProgress;
+class UDZ_InteractPrompt;
 class UDZ_UserWidget;
 class UDZ_InventoryPanel;
 /**
@@ -23,5 +25,12 @@ public:
 	TSubclassOf<UDZ_InventoryPanel> InventoryWidgetClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_InteractPrompt> InteractPromptClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_InteractProgress> InteractProgressClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TMap<TSubclassOf<UDZ_UserWidget>, int32> ZOrderMap;
+	
 };

@@ -1,0 +1,264 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Interaction/WBP_InteractPrompt",
+	"designSizeMode": "Desired",
+	"root": {
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties": {
+			"Visibility": "SelfHitTestInvisible"
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "Size_Prompt",
+				"isVariable": false,
+				"properties": {},
+				"slot": {
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties": {
+						"bAutoSize": true,
+						"LayoutData": {
+							"offsets": {
+								"left": 220,
+								"top": 120,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors": {
+								"min": {
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max": {
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment": {
+								"x": 0.5,
+								"y": 0
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "HB_Prompt",
+						"isVariable": false,
+						"properties": {},
+						"slot": {
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties": {
+								"HorizontalAlignment": "HAlign_Center",
+								"VerticalAlignment": "VAlign_Center"
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Key",
+								"isVariable": false,
+								"properties": {
+									"MinDesiredWidth": 40,
+									"MinDesiredHeight": 40
+								},
+								"slot": {
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties": {
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.Border",
+										"className": "Border",
+										"name": "Border_KeyOutline",
+										"isVariable": false,
+										"properties": {
+											"Padding": {
+												"left": 1,
+												"top": 1,
+												"right": 1,
+												"bottom": 1
+											},
+											"BrushColor": {
+												"r": 0.068478003144264221,
+												"g": 0.10218899697065353,
+												"b": 0.12478700280189514,
+												"a": 1
+											}
+										},
+										"slot": {
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties": {}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.Border",
+												"className": "Border",
+												"name": "Border_KeyFill",
+												"isVariable": false,
+												"properties": {
+													"Padding": {
+														"left": 8,
+														"top": 4,
+														"right": 8,
+														"bottom": 4
+													},
+													"BrushColor": {
+														"r": 0.027320999652147293,
+														"g": 0.045186001807451248,
+														"b": 0.057805001735687256,
+														"a": 1
+													}
+												},
+												"slot": {
+													"class": "/Script/UMG.BorderSlot",
+													"className": "BorderSlot",
+													"properties": {}
+												},
+												"children": [
+													{
+														"class": "/Script/UMG.TextBlock",
+														"className": "TextBlock",
+														"name": "Text_Key",
+														"isVariable": true,
+														"properties": {
+															"Text": "E",
+															"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+															"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=20.000000,MonospacedWidth=1.000000)",
+															"Justification": "Center"
+														},
+														"slot": {
+															"class": "/Script/UMG.BorderSlot",
+															"className": "BorderSlot",
+															"properties": {
+																"HorizontalAlignment": "HAlign_Center",
+																"VerticalAlignment": "VAlign_Center"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Action",
+								"isVariable": false,
+								"properties": {
+									"MinDesiredHeight": 40
+								},
+								"slot": {
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties": {
+										"Padding": {
+											"left": 6,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										},
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.Border",
+										"className": "Border",
+										"name": "Border_ActionOutline",
+										"isVariable": false,
+										"properties": {
+											"Padding": {
+												"left": 1,
+												"top": 1,
+												"right": 1,
+												"bottom": 1
+											},
+											"BrushColor": {
+												"r": 0.068478003144264221,
+												"g": 0.10218899697065353,
+												"b": 0.12478700280189514,
+												"a": 1
+											}
+										},
+										"slot": {
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties": {
+												"HorizontalAlignment": "HAlign_Fill",
+												"VerticalAlignment": "VAlign_Fill"
+											}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.Border",
+												"className": "Border",
+												"name": "Border_ActionFill",
+												"isVariable": false,
+												"properties": {
+													"Padding": {
+														"left": 14,
+														"top": 0,
+														"right": 14,
+														"bottom": 0
+													},
+													"BrushColor": {
+														"r": 0.027320999652147293,
+														"g": 0.045186001807451248,
+														"b": 0.057805001735687256,
+														"a": 1
+													}
+												},
+												"slot": {
+													"class": "/Script/UMG.BorderSlot",
+													"className": "BorderSlot",
+													"properties": {}
+												},
+												"children": [
+													{
+														"class": "/Script/UMG.TextBlock",
+														"className": "TextBlock",
+														"name": "Text_Action",
+														"isVariable": true,
+														"properties": {
+															"Text": "搜刮",
+															"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+															"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=22.000000,MonospacedWidth=1.000000)"
+														},
+														"slot": {
+															"class": "/Script/UMG.BorderSlot",
+															"className": "BorderSlot",
+															"properties": {
+																"HorizontalAlignment": "HAlign_Center",
+																"VerticalAlignment": "VAlign_Center"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

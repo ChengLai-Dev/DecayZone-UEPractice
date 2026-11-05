@@ -1,12 +1,15 @@
 {
 	"schemaVersion": 1,
 	"assetPath": "/Game/UI/Inventory/WBP_EquipmentSlot",
-	"root": {
+	"designSizeMode": "Desired",
+	"root":
+	{
 		"class": "/Script/UMG.SizeBox",
 		"className": "SizeBox",
 		"name": "Root_Size",
 		"isVariable": false,
-		"properties": {
+		"properties":
+		{
 			"HeightOverride": 136,
 			"bOverride_HeightOverride": true
 		},
@@ -16,24 +19,30 @@
 				"className": "Border",
 				"name": "Border_Selected",
 				"isVariable": true,
-				"properties": {
-					"Padding": {
+				"properties":
+				{
+					"Padding":
+					{
 						"left": 2,
 						"top": 2,
 						"right": 2,
 						"bottom": 2
 					},
-					"BrushColor": {
+					"BrushColor":
+					{
 						"r": 0.027320999652147293,
-						"g": 0.04518600180745125,
+						"g": 0.045186001807451248,
 						"b": 0.057806000113487244,
 						"a": 1
 					}
 				},
-				"slot": {
+				"slot":
+				{
 					"class": "/Script/UMG.SizeBoxSlot",
 					"className": "SizeBoxSlot",
-					"properties": {}
+					"properties":
+					{
+					}
 				},
 				"children": [
 					{
@@ -41,25 +50,31 @@
 						"className": "Border",
 						"name": "Fill_Slot",
 						"isVariable": false,
-						"properties": {
-							"Padding": {
-								"left": 11,
-								"top": 11,
-								"right": 11,
-								"bottom": 11
+						"properties":
+						{
+							"Padding":
+							{
+								"left": 8,
+								"top": 8,
+								"right": 8,
+								"bottom": 8
 							},
-							"BrushColor": {
-								"r": 0.006049000192433596,
-								"g": 0.009134000167250633,
+							"BrushColor":
+							{
+								"r": 0.0060490001924335957,
+								"g": 0.0091340001672506332,
 								"b": 0.011611999943852425,
 								"a": 1
 							}
 						},
-						"slot": {
+						"slot":
+						{
 							"class": "/Script/UMG.BorderSlot",
 							"className": "BorderSlot",
-							"properties": {
-								"Padding": {
+							"properties":
+							{
+								"Padding":
+								{
 									"left": 2,
 									"top": 2,
 									"right": 2,
@@ -73,16 +88,21 @@
 								"className": "VerticalBox",
 								"name": "VB_Content",
 								"isVariable": false,
-								"properties": {},
-								"slot": {
+								"properties":
+								{
+								},
+								"slot":
+								{
 									"class": "/Script/UMG.BorderSlot",
 									"className": "BorderSlot",
-									"properties": {
-										"Padding": {
-											"left": 11,
-											"top": 11,
-											"right": 11,
-											"bottom": 11
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 8,
+											"top": 8,
+											"right": 8,
+											"bottom": 8
 										}
 									}
 								},
@@ -92,17 +112,20 @@
 										"className": "SizeBox",
 										"name": "Size_Icon",
 										"isVariable": false,
-										"properties": {
-											"WidthOverride": 44,
-											"HeightOverride": 44,
+										"properties":
+										{
+											"WidthOverride": 92,
+											"HeightOverride": 92,
 											"bOverride_WidthOverride": true,
 											"bOverride_HeightOverride": true
 										},
-										"slot": {
+										"slot":
+										{
 											"class": "/Script/UMG.VerticalBoxSlot",
 											"className": "VerticalBoxSlot",
-											"properties": {
-												"HorizontalAlignment": "HAlign_Left"
+											"properties":
+											{
+												"HorizontalAlignment": "HAlign_Center"
 											}
 										},
 										"children": [
@@ -111,11 +134,17 @@
 												"className": "Image",
 												"name": "Img_EquipIcon",
 												"isVariable": true,
-												"properties": {},
-												"slot": {
+												"properties":
+												{
+													"Visibility": "Collapsed"
+												},
+												"slot":
+												{
 													"class": "/Script/UMG.SizeBoxSlot",
 													"className": "SizeBoxSlot",
-													"properties": {}
+													"properties":
+													{
+													}
 												}
 											}
 										]
@@ -125,12 +154,17 @@
 										"className": "Spacer",
 										"name": "Spacer_Content",
 										"isVariable": false,
-										"properties": {},
-										"slot": {
+										"properties":
+										{
+										},
+										"slot":
+										{
 											"class": "/Script/UMG.VerticalBoxSlot",
 											"className": "VerticalBoxSlot",
-											"properties": {
-												"Size": {
+											"properties":
+											{
+												"Size":
+												{
 													"value": 1,
 													"rule": "Fill"
 												}
@@ -142,16 +176,21 @@
 										"className": "TextBlock",
 										"name": "Text_EquipName",
 										"isVariable": true,
-										"properties": {
+										"properties":
+										{
 											"Text": "未装备",
 											"ColorAndOpacity": "(SpecifiedColor=(R=0.132868,G=0.187821,B=0.212231,A=1.000000))",
+											"Justification": "Center",
 											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
 											"TextOverflowPolicy": "Ellipsis"
 										},
-										"slot": {
+										"slot":
+										{
 											"class": "/Script/UMG.VerticalBoxSlot",
 											"className": "VerticalBoxSlot",
-											"properties": {}
+											"properties":
+											{
+											}
 										}
 									}
 								]
@@ -162,5 +201,5 @@
 			}
 		]
 	},
-	"contentHash": "cf720aa7980ee0c86ecf5a1fe40c498b"
+	"contentHash": "d411e6ce07dad3905e0de63575d3fd0c"
 }

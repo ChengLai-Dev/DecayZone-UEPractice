@@ -2,31 +2,18 @@
 
 
 #include "UI/Widgets/DZ_InventoryPanel.h"
-
 #include "Blueprint/WidgetTree.h"
-#include "Components/CanvasPanel.h"
-#include "Components/UniformGridPanel.h"
+#include "UI/Widgets/DZ_BackpackPanel.h"
 #include "UI/Widgets/DZ_ItemDetail.h"
 #include "UI/Widgets/DZ_ItemSlot.h"
 
-void UDZ_InventoryPanel::NativeConstruct()
+void UDZ_InventoryPanel::NativeOnInitialized()
 {
-	Super::NativeConstruct();
-	for (UWidget* Child: Grid_Backpack->GetAllChildren())
-	{
-		if (Child->GetName().StartsWith("ItemSlot_"))
-		{
-			if (UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Child))
-			{
-				ItemSlots.Add(ItemSlot);
-				ItemSlot->SetItemInfo(2);
-				ItemSlot->OnWidgetLeftClicked.AddDynamic(this, &ThisClass::OnItemSlotClicked);
-			}
-		}
-	}
+	Super::NativeOnInitialized();
+	BackpackPanel->OnItemSlotClicked.AddDynamic(this, &ThisClass::HandleItemSlotClicked);
 }
 
-void UDZ_InventoryPanel::OnItemSlotClicked(UWidget* Widget)
+void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
 {
 	UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Widget);
 	if (CurrentSelectedItem.IsValid())

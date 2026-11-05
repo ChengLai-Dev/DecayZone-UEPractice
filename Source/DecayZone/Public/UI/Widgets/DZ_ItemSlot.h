@@ -12,7 +12,6 @@ class UImage;
  * 
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemSlotClicked, UDZ_ItemSlot*, ClickedSlot);
 
 UCLASS()
 class DECAYZONE_API UDZ_ItemSlot : public UDZ_UserWidget

@@ -14,8 +14,7 @@ class DECAYZONE_API UDZ_BlueprintLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
-public:
-	
+public: 
 	static void SetActorHighlight(AActor* Actor, bool bEnable);
 
 };

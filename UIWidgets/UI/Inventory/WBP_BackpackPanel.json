@@ -1,0 +1,616 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Inventory/WBP_BackpackPanel",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.Border",
+		"className": "Border",
+		"name": "Panel_Backpack",
+		"isVariable": false,
+		"properties":
+		{
+			"Padding":
+			{
+				"left": 15,
+				"top": 15,
+				"right": 15,
+				"bottom": 15
+			},
+			"BrushColor":
+			{
+				"r": 0.01095999963581562,
+				"g": 0.018500000238418579,
+				"b": 0.024157999083399773,
+				"a": 1
+			}
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.VerticalBox",
+				"className": "VerticalBox",
+				"name": "VB_Backpack",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.BorderSlot",
+					"className": "BorderSlot",
+					"properties":
+					{
+						"Padding":
+						{
+							"left": 15,
+							"top": 15,
+							"right": 15,
+							"bottom": 15
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "HB_BackpackHeader",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.TextBlock",
+								"className": "TextBlock",
+								"name": "Text_BackpackTitle",
+								"isVariable": false,
+								"properties":
+								{
+									"Text": "BACKPACK",
+									"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+									"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=16.500000,MonospacedWidth=1.000000)"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"VerticalAlignment": "VAlign_Center"
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.Spacer",
+								"className": "Spacer",
+								"name": "Spacer_BackpackHeader",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 1,
+											"rule": "Fill"
+										}
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.TextBlock",
+								"className": "TextBlock",
+								"name": "Text_WeightValue",
+								"isVariable": true,
+								"properties":
+								{
+									"Text": "24.5 / 40 KG",
+									"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+									"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
+									"Justification": "Right"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"VerticalAlignment": "VAlign_Center"
+									}
+								}
+							}
+						]
+					},
+					{
+						"class": "/Game/UI/Inventory/WBP_WeightBar.WBP_WeightBar_C",
+						"className": "WBP_WeightBar_C",
+						"name": "WeightBar",
+						"isVariable": true,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 9,
+									"right": 0,
+									"bottom": 0
+								}
+							}
+						}
+					},
+					{
+						"class": "/Script/UMG.SizeBox",
+						"className": "SizeBox",
+						"name": "Size_Divider_Backpack",
+						"isVariable": false,
+						"properties":
+						{
+							"HeightOverride": 1,
+							"bOverride_HeightOverride": true
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 13,
+									"right": 0,
+									"bottom": 13
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Border",
+								"className": "Border",
+								"name": "Divider_Backpack",
+								"isVariable": false,
+								"properties":
+								{
+									"BrushColor":
+									{
+										"r": 0.023152999579906464,
+										"g": 0.036890000104904175,
+										"b": 0.046665001660585403,
+										"a": 1
+									}
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.SizeBoxSlot",
+									"className": "SizeBoxSlot",
+									"properties":
+									{
+									}
+								}
+							}
+						]
+					},
+					{
+						"class": "/Script/UMG.UniformGridPanel",
+						"className": "UniformGridPanel",
+						"name": "Grid_Backpack",
+						"isVariable": true,
+						"properties":
+						{
+							"SlotPadding":
+							{
+								"left": 4,
+								"top": 4,
+								"right": 4,
+								"bottom": 4
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"HorizontalAlignment": "HAlign_Center"
+							}
+						},
+						"children": [
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_1",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_2",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Column": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_3",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Column": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_4",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Column": 3
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_5",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_6",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 1,
+										"Column": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_7",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 1,
+										"Column": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_8",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 1,
+										"Column": 3
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_9",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_10",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 2,
+										"Column": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_11",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 2,
+										"Column": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_12",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 2,
+										"Column": 3
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_13",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 3
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_14",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 3,
+										"Column": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_15",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 3,
+										"Column": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_16",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 3,
+										"Column": 3
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_17",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 4
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_18",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 4,
+										"Column": 1
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_19",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 4,
+										"Column": 2
+									}
+								}
+							},
+							{
+								"class": "/Game/UI/Inventory/WBP_ItemSlot.WBP_ItemSlot_C",
+								"className": "WBP_ItemSlot_C",
+								"name": "ItemSlot_20",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.UniformGridSlot",
+									"className": "UniformGridSlot",
+									"properties":
+									{
+										"Row": 4,
+										"Column": 3
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "ba78b2c90225df92648d49838b229447"
+}

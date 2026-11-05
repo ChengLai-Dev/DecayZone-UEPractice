@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "DZ_PlayerController.generated.h"
 
+class UDZ_InteractProgress;
+class UDZ_InteractPrompt;
 class UDZ_UIConfig;
 struct FInputActionValue;
 class UDZ_InputConfig;
@@ -19,8 +21,17 @@ class DECAYZONE_API ADZ_PlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	void Interact();
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void HandleInteractableActorChanged(AActor* Actor);
+	virtual void OnPossess(APawn* InPawn) override;
+	
+	
+	UFUNCTION(Server, Reliable)
+	void ServerTakeItem(AActor* ContainerActor, int32 SlotIndex, int32 Count);
 	
 private:
 	
@@ -34,6 +45,12 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_InventoryPanel> InventoryWidget;
+	
+	UPROPERTY()
+	TObjectPtr<UDZ_InteractPrompt> InteractPromptWidget;
+	
+	UPROPERTY()
+	TObjectPtr<UDZ_InteractProgress> InteractProgressWidget;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TObjectPtr<UDZ_UIConfig> UIConfig;

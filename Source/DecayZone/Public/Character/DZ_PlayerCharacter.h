@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "DZ_BaseCharacter.h"
+#include "DZ_DelegateTypes.h"
 #include "DZ_PlayerCharacter.generated.h"
 
 class UCameraComponent;
@@ -36,12 +37,18 @@ public:
 	UFUNCTION()
 	void OnInteractableEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	
+	AActor* GetHighlightActor();
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnActorEvent OnFocusInteractableActorChanged;
+	
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	void HighlightInteractable();
-	
+	AActor* FindTargetInteractableActor();
+
 	UPROPERTY()
 	TSet<AActor*> OverlappingInteractables;
 	
@@ -57,6 +64,5 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UBoxComponent> InteractionBox;
 	
-	TWeakObjectPtr<AActor> CurrentInterctableActor;
-	
+	TWeakObjectPtr<AActor> CurrentInteractableActor;
 };

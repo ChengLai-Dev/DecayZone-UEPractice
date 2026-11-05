@@ -6,6 +6,7 @@
 #include "UI/DZ_UserWidget.h"
 #include "DZ_InventoryPanel.generated.h"
 
+class UDZ_BackpackPanel;
 class UDZ_ItemDetail;
 class UUniformGridPanel;
 class UDZ_ItemSlot;
@@ -17,20 +18,18 @@ class DECAYZONE_API UDZ_InventoryPanel : public UDZ_UserWidget
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 
-	UPROPERTY()
-	TArray<TObjectPtr<UDZ_ItemSlot>> ItemSlots;
-	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UUniformGridPanel> Grid_Backpack;
-	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_ItemDetail> ItemDetail;
 	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UDZ_BackpackPanel> BackpackPanel;
+	
 private:
 	UFUNCTION()
-	void OnItemSlotClicked(UWidget* Widget);
+	void HandleItemSlotClicked(UWidget* Widget);
 	
 	TWeakObjectPtr<UDZ_ItemSlot> CurrentSelectedItem;
+	
 };

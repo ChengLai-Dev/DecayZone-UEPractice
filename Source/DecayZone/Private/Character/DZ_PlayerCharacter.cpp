@@ -77,7 +77,6 @@ void ADZ_PlayerCharacter::OnInteractableBeginOverlap(UPrimitiveComponent* Overla
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	OverlappingInteractables.Add(OtherActor);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("AAAAAAAAAAAAAAAAAA")));
 }
 
 void ADZ_PlayerCharacter::OnInteractableEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -86,12 +85,30 @@ void ADZ_PlayerCharacter::OnInteractableEndOverlap(UPrimitiveComponent* Overlapp
 	OverlappingInteractables.Remove(OtherActor);
 }
 
+AActor* ADZ_PlayerCharacter::GetHighlightActor()
+{
+	return CurrentInteractableActor.Get();
+}
+
 void ADZ_PlayerCharacter::HighlightInteractable()
+{
+	AActor* TargetActor = FindTargetInteractableActor();
+	if (TargetActor != CurrentInteractableActor)
+	{
+		OnFocusInteractableActorChanged.Broadcast(TargetActor);
+		UDZ_BlueprintLibrary::SetActorHighlight(TargetActor, true);
+		UDZ_BlueprintLibrary::SetActorHighlight(CurrentInteractableActor.Get(), false);
+		CurrentInteractableActor = TargetActor;
+	}
+}
+
+AActor* ADZ_PlayerCharacter::FindTargetInteractableActor()
 {
 	float MaxDot = -1;
 	AActor* HighlightActor = nullptr;
 	for (AActor* Actor : OverlappingInteractables)
 	{
+		if (!IsValid(Actor)) continue;
 		const FVector ToInteractable = Actor->GetActorLocation() - GetActorLocation();
 		float Dot = FVector::DotProduct(GetActorForwardVector(), ToInteractable.GetSafeNormal());
 		if (Dot > MaxDot)
@@ -100,11 +117,5 @@ void ADZ_PlayerCharacter::HighlightInteractable()
 			MaxDot = Dot;
 		}
 	}
-	if (CurrentInterctableActor.IsValid())
-	{
-		UDZ_BlueprintLibrary::SetActorHighlight(CurrentInterctableActor.Get(), false);
-	}
-	UDZ_BlueprintLibrary::SetActorHighlight(HighlightActor, true);
-	CurrentInterctableActor = HighlightActor;
+	return HighlightActor;
 }
-

@@ -5,7 +5,7 @@
 | 资产 | `/Game/UI/Inventory/WBP_EquipmentSlot` |
 | 父类 | `UUserWidget`（未接 C++） |
 | 源文件 | `UIWidgets/UI/Inventory/WBP_EquipmentSlot.json` |
-| 尺寸 | 宽随父级、高 136 |
+| 尺寸 | 宽随父级（依赖父级 `VerticalBoxSlot` 的 `HAlign_Fill`）、高 136 |
 
 ---
 
@@ -22,7 +22,7 @@
 | 节点 | 类型 | 说明 |
 |---|---|---|
 | `Root_Size` | SizeBox | 槽位根节点，整槽命中区（暂不接事件，见交互） |
-| `Size_Icon` | SizeBox | 图标显示区 44×44，固定 |
+| `Size_Icon` | SizeBox | 图标显示区 92×92，居中，固定 |
 | `Fill_Slot` | Border | 槽底色，纯装饰 |
 | `Spacer_Content` | Spacer | 把装备名压到底部 |
 | `VB_Content` | VerticalBox | 图标在上、名称在下的布局容器 |
@@ -41,7 +41,7 @@
 
 | 状态 | 哪个节点变 | 变成什么 |
 |---|---|---|
-| 空槽 | `Img_EquipIcon` + `Text_EquipName` | 图标隐藏，文字「未装备」 |
+| 空槽 | `Img_EquipIcon` + `Text_EquipName` | 图标隐藏（`Visibility` 默认 `Collapsed`，程序切 `Visible` 并设贴图），文字「未装备」 |
 | 已装备 | `Img_EquipIcon` + `Text_EquipName` | 图标显示，文字为装备名 |
 | 选中 | `Border_Selected` | 2px `#C9A968` |
 | 未选中 | `Border_Selected` | 2px `#2E3C44` |

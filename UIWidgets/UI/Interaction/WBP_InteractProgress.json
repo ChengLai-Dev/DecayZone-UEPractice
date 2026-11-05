@@ -1,0 +1,152 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Interaction/WBP_InteractProgress",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "Size_Ring",
+				"isVariable": false,
+				"properties":
+				{
+					"WidthOverride": 96,
+					"HeightOverride": 96,
+					"bOverride_WidthOverride": true,
+					"bOverride_HeightOverride": true
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 220,
+								"top": 120,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0.5,
+								"y": 0
+							}
+						},
+						"bAutoSize": true
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Overlay",
+						"className": "Overlay",
+						"name": "Overlay_Ring",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Image",
+								"className": "Image",
+								"name": "Img_RingBG",
+								"isVariable": false,
+								"properties":
+								{
+									"Brush": "(TintColor=(SpecifiedColor=(R=1.000000,G=1.000000,B=1.000000,A=1.000000)),DrawAs=Image,ImageSize=(X=96.000000,Y=96.000000),Margin=(),ResourceObject=\"/Script/Engine.MaterialInstanceConstant'/Game/UI/Materials/MI_LootRing_BG.MI_LootRing_BG'\",OutlineSettings=(CornerRadii=(X=0.000000,Y=0.000000,Z=0.000000,W=0.000000),Color=(SpecifiedColor=(R=0.000000,G=0.000000,B=0.000000,A=0.000000)),RoundingType=HalfHeightRadius),UVRegion=(Min=(X=0.000000,Y=0.000000),Max=(X=0.000000,Y=0.000000),bIsValid=False))"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"HorizontalAlignment": "HAlign_Fill",
+										"VerticalAlignment": "VAlign_Fill"
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.Image",
+								"className": "Image",
+								"name": "Img_RingFill",
+								"isVariable": true,
+								"properties":
+								{
+									"Brush": "(TintColor=(SpecifiedColor=(R=1.000000,G=1.000000,B=1.000000,A=1.000000)),DrawAs=Image,ImageSize=(X=96.000000,Y=96.000000),Margin=(),ResourceObject=\"/Script/Engine.MaterialInstanceConstant'/Game/UI/Materials/MI_LootRing.MI_LootRing'\",OutlineSettings=(CornerRadii=(X=0.000000,Y=0.000000,Z=0.000000,W=0.000000),Color=(SpecifiedColor=(R=0.000000,G=0.000000,B=0.000000,A=0.000000)),RoundingType=HalfHeightRadius),UVRegion=(Min=(X=0.000000,Y=0.000000),Max=(X=0.000000,Y=0.000000),bIsValid=False))"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"HorizontalAlignment": "HAlign_Fill",
+										"VerticalAlignment": "VAlign_Fill"
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.TextBlock",
+								"className": "TextBlock",
+								"name": "Text_Time",
+								"isVariable": true,
+								"properties":
+								{
+									"Text": "0.0",
+									"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+									"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=22.000000,MonospacedWidth=1.000000)",
+									"Justification": "Center"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"HorizontalAlignment": "HAlign_Center",
+										"VerticalAlignment": "VAlign_Center"
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "bbdc187b89271960a7cd6573e971f0b0"
+}

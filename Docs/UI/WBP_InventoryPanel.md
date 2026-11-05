@@ -13,9 +13,12 @@
 
 | 节点 | 类型 | 程序用它做什么 |
 |---|---|---|
-| `Grid_Backpack` | UniformGridPanel | 20 个背包格的容器，按 `ItemSlot_` 前缀收集 |
-| `Text_WeightValue` | TextBlock | 中栏负重文本 `24.5 / 40 KG` |
+| `EquipmentPanel` | `WBP_EquipmentPanel` | 左栏装备区；设置 8 个装备槽 |
+| `BackpackPanel` | `WBP_BackpackPanel` | 中栏背包区；设置 20 格物品、负重文本/条、接收格子事件 |
+| `ItemDetail` | `WBP_ItemDetail` | 右栏详情；切换汇总/详情态、填物品数据 |
 | `Text_TotalValue` | TextBlock | 底栏总价值 |
+
+> 节点名一律写对象名（`GetName()` / JSON 的 `name` 字段）。
 
 ## 不需要接的节点
 
@@ -24,15 +27,11 @@
 | `RootCanvas` / `Size_Root` | CanvasPanel / SizeBox | 根与居中尺寸 |
 | `Border_Outline` / `BG_Panel` | Border | 1px 描边 + 面板底 |
 | `VB_Main` / `HB_Regions` | VerticalBox / HorizontalBox | 三栏与底栏的主布局 |
-| `Panel_Equipment` / `Panel_Backpack` / `Panel_Detail` | Border | 三个区域的底板 |
-| `VB_Equipment` / `VB_Backpack` / `VB_Detail` | VerticalBox | 区域内部布局 |
-| `Text_EquipTitle` / `Text_BackpackTitle` | TextBlock | 固定标题 `EQUIPMENT` / `BACKPACK` |
-| `Row_Equip_1..4` / `Cell_*` | HorizontalBox / VerticalBox | 装备区 2×4 排布 |
-| `Text_Label_*`（8 个） | TextBlock | 装备槽类型标签（头盔/护甲/主武器…），固定文案 |
-| `HB_BackpackHeader` / `Spacer_BackpackHeader` | HorizontalBox / Spacer | 背包标题行布局 |
+| `Panel_Detail` | Border | 右栏底板 + 15px 内边距，纯装饰 |
 | `Panel_Footer` / `HB_Footer` / `Spacer_Footer` | 容器 | 底栏布局 |
 | `Text_Label_Total` / `Text_EscHint` | TextBlock | 固定文案「总价值」「[ESC] 关闭」 |
-| 所有 `Size_Divider_*` / `Divider_*` | 容器 | 分隔线 |
+
+> `Grid_Backpack`、`Text_WeightValue`、20 个 `ItemSlot_*` 已迁到 [WBP_BackpackPanel.md](WBP_BackpackPanel.md)；8 个 `EquipSlot_*` 已迁到 [WBP_EquipmentPanel.md](WBP_EquipmentPanel.md)。
 
 ---
 
@@ -40,8 +39,10 @@
 
 | 触发来源 | 事件 | 程序要做什么 |
 |---|---|---|
-| 背包格（见 [WBP_ItemSlot.md](WBP_ItemSlot.md)） | 格子被左键点击 | 1) 遍历 20 格：被点的格子刷金框，其余刷回灰框（保证同时最多一个选中）；2) 该格有物品 → 右侧 `ItemDetail` 切到详情态并填入该物品；3) 该格为空 → 按待定方案处理（取消选中或忽略） |
-| 详情按钮（见 [WBP_ItemDetail.md](WBP_ItemDetail.md)） | 使用 / 装备 / 丢弃 | 对当前选中物品执行对应操作，并把结果反映到格子与详情 |
+| `BackpackPanel` 的格子（见 [WBP_ItemSlot.md](WBP_ItemSlot.md)） | 格子被左键点击 | 1) 遍历背包格：被点的格子刷金框，其余刷回灰框（保证同时最多一个选中）；2) 该格有物品 → `ItemDetail` 切到详情态并填入该物品；3) 该格为空 → 按待定方案处理（取消选中或忽略） |
+| `BackpackPanel` 的格子 | 拖拽开始 / 拖放结束 | 背包面板只上报事件；跨栏拖放（战利品 → 背包）由 `WBP_LootPanel` 处理，本面板不处理战利品行 |
+| `ItemDetail` 的按钮（见 [WBP_ItemDetail.md](WBP_ItemDetail.md)） | 使用 / 装备 / 丢弃 | 对当前选中物品执行对应操作，并把结果反映到格子与详情 |
+| `EquipmentPanel` | 装备槽点击 | 当前不接；见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) 的「待定」 |
 | 面板空白处 | 左键单击 | **待定**：取消选中 / 无响应 |
 | `ESC` | 按键 | 关闭面板（按键不在 UI 节点上） |
 
@@ -54,10 +55,11 @@
 | 状态 | 哪个节点变 | 变成什么 |
 |---|---|---|
 | 打开 / 关闭 | 面板整体 | 由外部加到视口 / 移除 |
-| 选中哪个格子 | 子控件的 `Border_Selected` | 见 [WBP_ItemSlot.md](WBP_ItemSlot.md) |
-| 详情显示什么 | 子控件的 `Switcher_Detail` | 见 [WBP_ItemDetail.md](WBP_ItemDetail.md) |
+| 选中哪个背包格 | `BackpackPanel` 内的 `Border_Selected` | 见 [WBP_ItemSlot.md](WBP_ItemSlot.md) |
+| 详情显示什么 | `ItemDetail` 的 `Switcher_Detail` | 见 [WBP_ItemDetail.md](WBP_ItemDetail.md) |
+| 负重变化 | `BackpackPanel` 的 `Text_WeightValue` / `WeightBar` | 见 [WBP_BackpackPanel.md](WBP_BackpackPanel.md) |
 
-面板本身没有独立的状态节点，选中与详情表现都落在子控件上。
+面板本身没有独立的状态节点，选中、负重与详情表现都落在子控件上。
 
 ---
 
@@ -65,7 +67,6 @@
 
 | 节点 | 资产 | 程序要做什么 | 交互文档 |
 |---|---|---|---|
-| `ItemSlot_1` … `ItemSlot_20` | `WBP_ItemSlot` | 20 个背包格，逐个设置物品/数量/选中 | 见 [WBP_ItemSlot.md](WBP_ItemSlot.md) |
-| `EquipSlot_Helmet` / `EquipSlot_Armor` / `EquipSlot_Primary` / `EquipSlot_Secondary` / `EquipSlot_Melee` / `EquipSlot_Backpack` / `EquipSlot_ChestRig` / `EquipSlot_Headset` | `WBP_EquipmentSlot` | 按槽位设置装备图标与名称 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `WeightBar` | `WBP_WeightBar` | 设置中栏负重比例 | 见 [WBP_WeightBar.md](WBP_WeightBar.md) |
+| `EquipmentPanel` | `WBP_EquipmentPanel` | 设置 8 个装备槽的图标/名称/选中 | 见 [WBP_EquipmentPanel.md](WBP_EquipmentPanel.md) |
+| `BackpackPanel` | `WBP_BackpackPanel` | 设置 20 格物品/数量/负重；接收格子点击与拖放 | 见 [WBP_BackpackPanel.md](WBP_BackpackPanel.md) |
 | `ItemDetail` | `WBP_ItemDetail` | 切换汇总/详情态、填物品数据 | 见 [WBP_ItemDetail.md](WBP_ItemDetail.md) |

@@ -29,6 +29,9 @@ public:
 	float GetInteractDuration();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FText GetInteractPromptText();
+	
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnInteractStarted(AActor* Interactor);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

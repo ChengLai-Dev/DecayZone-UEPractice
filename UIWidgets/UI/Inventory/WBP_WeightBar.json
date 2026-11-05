@@ -1,98 +1,45 @@
 {
 	"schemaVersion": 1,
 	"assetPath": "/Game/UI/Inventory/WBP_WeightBar",
-	"root": {
+	"designSizeMode": "Desired",
+	"root":
+	{
 		"class": "/Script/UMG.SizeBox",
 		"className": "SizeBox",
 		"name": "Root_Size",
 		"isVariable": false,
-		"properties": {
+		"properties":
+		{
 			"HeightOverride": 9,
 			"bOverride_HeightOverride": true
 		},
 		"children": [
 			{
-				"class": "/Script/UMG.Border",
-				"className": "Border",
-				"name": "Bar_Track",
+				"class": "/Script/UMG.ProgressBar",
+				"className": "ProgressBar",
+				"name": "Bar_Weight",
 				"isVariable": true,
-				"properties": {
-					"Padding": {
-						"left": 1,
-						"top": 1,
-						"right": 1,
-						"bottom": 1
-					},
-					"BrushColor": {
-						"r": 0.023153,
-						"g": 0.03689,
-						"b": 0.046665,
+				"properties":
+				{
+					"Percent": 0.61250001192092896,
+					"FillColorAndOpacity":
+					{
+						"r": 0.58407801389694214,
+						"g": 0.39675500988960266,
+						"b": 0.13843199610710144,
 						"a": 1
 					}
 				},
-				"slot": {
+				"slot":
+				{
 					"class": "/Script/UMG.SizeBoxSlot",
 					"className": "SizeBoxSlot",
-					"properties": {}
-				},
-				"children": [
+					"properties":
 					{
-						"class": "/Script/UMG.HorizontalBox",
-						"className": "HorizontalBox",
-						"name": "HB_Bar",
-						"isVariable": false,
-						"properties": {},
-						"slot": {
-							"class": "/Script/UMG.BorderSlot",
-							"className": "BorderSlot",
-							"properties": {}
-						},
-						"children": [
-							{
-								"class": "/Script/UMG.Border",
-								"className": "Border",
-								"name": "Bar_Fill",
-								"isVariable": true,
-								"properties": {
-									"BrushColor": {
-										"r": 0.584078,
-										"g": 0.396755,
-										"b": 0.138432,
-										"a": 1
-									}
-								},
-								"slot": {
-									"class": "/Script/UMG.HorizontalBoxSlot",
-									"className": "HorizontalBoxSlot",
-									"properties": {
-										"Size": {
-											"value": 0.6125,
-											"rule": "Fill"
-										}
-									}
-								}
-							},
-							{
-								"class": "/Script/UMG.Spacer",
-								"className": "Spacer",
-								"name": "Spacer_Rest",
-								"isVariable": false,
-								"properties": {},
-								"slot": {
-									"class": "/Script/UMG.HorizontalBoxSlot",
-									"className": "HorizontalBoxSlot",
-									"properties": {
-										"Size": {
-											"value": 0.3875,
-											"rule": "Fill"
-										}
-									}
-								}
-							}
-						]
 					}
-				]
+				}
 			}
 		]
-	}
+	},
+	"contentHash": "95cb882f8960ab75a47fdad4ca0cd031"
 }

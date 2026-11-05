@@ -1,0 +1,827 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Inventory/WBP_EquipmentPanel",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.Border",
+		"className": "Border",
+		"name": "Panel_Equipment",
+		"isVariable": false,
+		"properties":
+		{
+			"Padding":
+			{
+				"left": 15,
+				"top": 15,
+				"right": 15,
+				"bottom": 15
+			},
+			"BrushColor":
+			{
+				"r": 0.01095999963581562,
+				"g": 0.018500000238418579,
+				"b": 0.024157999083399773,
+				"a": 1
+			}
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.VerticalBox",
+				"className": "VerticalBox",
+				"name": "VB_Equipment",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.BorderSlot",
+					"className": "BorderSlot",
+					"properties":
+					{
+						"Padding":
+						{
+							"left": 15,
+							"top": 15,
+							"right": 15,
+							"bottom": 15
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.TextBlock",
+						"className": "TextBlock",
+						"name": "Text_EquipTitle",
+						"isVariable": false,
+						"properties":
+						{
+							"Text": "EQUIPMENT",
+							"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+							"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=16.500000,MonospacedWidth=1.000000)"
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+							}
+						}
+					},
+					{
+						"class": "/Script/UMG.SizeBox",
+						"className": "SizeBox",
+						"name": "Size_Divider_Equip",
+						"isVariable": false,
+						"properties":
+						{
+							"HeightOverride": 1,
+							"bOverride_HeightOverride": true
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 9,
+									"right": 0,
+									"bottom": 13
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Border",
+								"className": "Border",
+								"name": "Divider_Equip",
+								"isVariable": false,
+								"properties":
+								{
+									"BrushColor":
+									{
+										"r": 0.023152999579906464,
+										"g": 0.036890000104904175,
+										"b": 0.046665001660585403,
+										"a": 1
+									}
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.SizeBoxSlot",
+									"className": "SizeBoxSlot",
+									"properties":
+									{
+									}
+								}
+							}
+						]
+					},
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "Row_Equip_1",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 0,
+									"right": 0,
+									"bottom": 9
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Helmet",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 0,
+											"top": 0,
+											"right": 4,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Helmet",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "头盔",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Helmet",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Armor",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 4,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Armor",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "护甲",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Armor",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "Row_Equip_2",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 0,
+									"right": 0,
+									"bottom": 9
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Primary",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 0,
+											"top": 0,
+											"right": 4,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Primary",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "主武器",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Primary",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Secondary",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 4,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Secondary",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "副武器",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Secondary",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "Row_Equip_3",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 0,
+									"right": 0,
+									"bottom": 9
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Melee",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 0,
+											"top": 0,
+											"right": 4,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Melee",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "近战武器",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Melee",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Backpack",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 4,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Backpack",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "背包",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Backpack",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "Row_Equip_4",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.VerticalBoxSlot",
+							"className": "VerticalBoxSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_ChestRig",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 0,
+											"top": 0,
+											"right": 4,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_ChestRig",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "胸挂",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_ChestRig",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "Cell_Headset",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Size":
+										{
+											"value": 0.5,
+											"rule": "Fill"
+										},
+										"Padding":
+										{
+											"left": 4,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Label_Headset",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "耳机",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Game/UI/Inventory/WBP_EquipmentSlot.WBP_EquipmentSlot_C",
+										"className": "WBP_EquipmentSlot_C",
+										"name": "EquipSlot_Headset",
+										"isVariable": true,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 3,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "87939969316991453938488cfb3ce2a7"
+}

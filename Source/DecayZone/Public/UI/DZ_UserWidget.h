@@ -3,19 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DZ_DelegateTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "DZ_UserWidget.generated.h"
 
 /**
  * 
  */
-
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetLeftClicked, UWidget*, Widget);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetRightClicked, UWidget*, Widget);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetDragStart, UWidget*, Widget);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWidgetDragging, UWidget*, Widget);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWidgetDragEnded, UWidget*, StartWidget, UWidget*, EndWidget);
 
 UCLASS()
 class DECAYZONE_API UDZ_UserWidget : public UUserWidget
@@ -34,19 +28,19 @@ public:
 	void SetDragEnabled(bool bEnable);
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnWidgetLeftClicked OnWidgetLeftClicked;
+	FOnWidgetEvent OnWidgetLeftClicked;
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnWidgetRightClicked OnWidgetRightClicked;
+	FOnWidgetEvent OnWidgetRightClicked;
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnWidgetDragStart OnWidgetDragStart;
+	FOnWidgetEvent OnWidgetDragStart;
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnWidgetDragging OnWidgetDragging;
+	FOnWidgetEvent OnWidgetDragging;
 	
 	UPROPERTY(BlueprintAssignable)
-	FOnWidgetDragEnded OnWidgetDragEnded;
+	FOnWidgetDragEndedEvent OnWidgetDragEnded;
 	
 private:
 	bool bIsDragging = false;
