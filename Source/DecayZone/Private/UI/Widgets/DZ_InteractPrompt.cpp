@@ -5,6 +5,13 @@
 
 #include "Components/TextBlock.h"
 
+
+UDZ_InteractPrompt::UDZ_InteractPrompt()
+{
+	bEnableKeyClose = false;
+	
+}
+
 void UDZ_InteractPrompt::SetKeyText(const FText& KeyText)
 {
 	Text_Key->SetText(KeyText);

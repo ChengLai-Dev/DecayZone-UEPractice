@@ -6,22 +6,15 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 
+UDZ_InteractProgress::UDZ_InteractProgress()
+{
+	bEnableKeyClose = false;
+}
+
 void UDZ_InteractProgress::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	AddToViewport();
-	Hide();
 	CacheMaterial = Img_RingFill->GetDynamicMaterial();
-}
-
-void UDZ_InteractProgress::Show()
-{
-	SetVisibility(ESlateVisibility::Visible);
-}
-
-void UDZ_InteractProgress::Hide()
-{
-	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UDZ_InteractProgress::SetProgress(float Progress, float Remaining)

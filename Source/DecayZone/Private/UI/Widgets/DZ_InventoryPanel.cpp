@@ -3,14 +3,26 @@
 
 #include "UI/Widgets/DZ_InventoryPanel.h"
 #include "Blueprint/WidgetTree.h"
+#include "Components/DZ_InventoryComponent.h"
 #include "UI/Widgets/DZ_BackpackPanel.h"
 #include "UI/Widgets/DZ_ItemDetail.h"
 #include "UI/Widgets/DZ_ItemSlot.h"
+
+void UDZ_InventoryPanel::HandleItemDrop(UWidget* From, UWidget* To)
+{
+	OnItemMoveRequested.Broadcast(From, To);
+}
 
 void UDZ_InventoryPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	BackpackPanel->OnItemSlotClicked.AddDynamic(this, &ThisClass::HandleItemSlotClicked);
+	BackpackPanel->OnItemDrop.AddDynamic(this, &ThisClass::HandleItemDrop);
+}
+
+void UDZ_InventoryPanel::SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo)
+{
+	BackpackPanel->SetBackpackPanel(BackpackInfo);
 }
 
 void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
@@ -20,7 +32,7 @@ void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
 	{
 		CurrentSelectedItem->SetSelected(false);
 	}
-	if (CurrentSelectedItem == ItemSlot)
+	if (CurrentSelectedItem == ItemSlot || ItemSlot->IsEmptyState())
 	{
 		ItemDetail->SwitchShowType(ItemDetailShowType::Bag);
 		CurrentSelectedItem = nullptr;

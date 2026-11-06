@@ -15,4 +15,5 @@ void UDZ_LootRow::SetItemInfo(int32 ItemID, int32 Quantity)
 	Text_ItemName->SetText(Data->ItemName);
 	Text_Quantity->SetText(FText::AsNumber(Quantity));
 	Img_ItemIcon->SetBrushFromTexture(Data->Icon);
+	Img_ItemIcon->SetVisibility(ESlateVisibility::Visible);
 }

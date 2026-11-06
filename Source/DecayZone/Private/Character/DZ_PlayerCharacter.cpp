@@ -6,6 +6,7 @@
 #include "AbilitySystem/DZ_AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/DZ_InventoryComponent.h"
 #include "DecayZone/DecayZone.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
@@ -39,6 +40,8 @@ ADZ_PlayerCharacter::ADZ_PlayerCharacter()
 	InteractionBox->SetCollisionResponseToChannel(Interactable, ECR_Overlap);
 	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnInteractableBeginOverlap);
 	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnInteractableEndOverlap);
+	
+	InventoryComponent = CreateDefaultSubobject<UDZ_InventoryComponent>("InventoryComponent");
 }
 
 bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)

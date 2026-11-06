@@ -4,7 +4,6 @@
 #include "Components/DZ_ContainerComponent.h"
 
 #include "Data/Item/DZ_ContainerSpawnItemConfig.h"
-#include "Dialogs/Dialogs.h"
 #include "Game/DZ_GameInstance.h"
 #include "Net/UnrealNetwork.h"
 
@@ -42,15 +41,19 @@ void UDZ_ContainerComponent::GenerateContainerItems()
 	{
 		for (const FDZ_ItemStack ItemStack: Info->CertainItems)
 		{
-			ItemCounts[ItemStack.ItemId] += ItemStack.Count;
+			ItemCounts.FindOrAdd(ItemStack.ItemId) +=  ItemStack.Count;
 		}
 		for (const FDZ_RandomSpawnItemInfo& RandomInfo: Info->RandomItems)
 		{
 			if (FMath::FRand() >= RandomInfo.DropRate) continue;
 			
 			const int32 RandomNum = FMath::RandRange(RandomInfo.MinNum, RandomInfo.MaxNum);
-			ItemCounts[RandomInfo.ItemID] += RandomNum;
+			ItemCounts.FindOrAdd(RandomInfo.ItemID) += RandomNum;
 		}
+	}
+	for (const TTuple<int32, int32>& P: ItemCounts)
+	{
+		Items.Add(FDZ_ItemStack(P.Key, P.Value));
 	}
 }
 
@@ -64,11 +67,28 @@ int32 UDZ_ContainerComponent::TryTake(int32 SlotIndex, int32 Count)
 	return 0;
 }
 
+TArray<FDZ_ItemStack> UDZ_ContainerComponent::GetItems()
+{
+	return Items;
+}
+
 void UDZ_ContainerComponent::SetContents(const TArray<FDZ_ItemStack>& InItems)
 {
 	if (!GetOwner()->HasAuthority()) return;
 	Items = InItems;
 	OnContentsChanged.Broadcast();
+}
+
+bool UDZ_ContainerComponent::IsSlotValid(int32 SlotIndex)
+{
+	return SlotIndex >= 0 && SlotIndex < Items.Num();
+}
+
+void UDZ_ContainerComponent::RemoveItemsAll(int32 SlotIndex)
+{
+	if (!GetOwner()->HasAuthority()) return;
+	if (!IsSlotValid(SlotIndex)) return;
+	Items.RemoveAt(SlotIndex);
 }
 
 void UDZ_ContainerComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

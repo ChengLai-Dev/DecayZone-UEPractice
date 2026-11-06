@@ -16,7 +16,7 @@ class DECAYZONE_API UDZ_InteractPrompt : public UDZ_UserWidget
 	GENERATED_BODY()
 	
 public:
-	
+	UDZ_InteractPrompt();
 	void SetKeyText(const FText& KeyText);
 	void SetPromptText(const FText& PromptText);
 private:

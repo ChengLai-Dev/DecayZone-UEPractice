@@ -24,10 +24,15 @@ public:
 	
 	int32 TryTake(int32 SlotIndex, int32 Count);
 	
+	TArray<FDZ_ItemStack> GetItems();
+	
 	void SetContents(const TArray<FDZ_ItemStack>& InItems);
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnContentsChanged;
+	
+	bool IsSlotValid(int32 SlotIndex);
+	void RemoveItemsAll(int32 SlotIndex);
 	
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

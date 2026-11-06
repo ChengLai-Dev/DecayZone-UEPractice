@@ -11,6 +11,7 @@
 void UDZ_LootListPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	ScrollBox_LootList->ClearChildren();
 }
 
 void UDZ_LootListPanel::SetContainerName(const FText& Name)
@@ -20,6 +21,15 @@ void UDZ_LootListPanel::SetContainerName(const FText& Name)
 
 void UDZ_LootListPanel::SetLootListInfo(const TArray<FDZ_ItemStack>& ItemList)
 {
+	if (ItemList.IsEmpty())
+	{
+		ScrollBox_LootList->SetVisibility(ESlateVisibility::Collapsed);
+		Text_EmptyHint->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	ScrollBox_LootList->SetVisibility(ESlateVisibility::Visible);
+	Text_EmptyHint->SetVisibility(ESlateVisibility::Collapsed);
+	
 	int32 ChildrenCount = ScrollBox_LootList->GetChildrenCount();
 	for (int32 i = 0; i < ItemList.Num() - ChildrenCount; i++)
 	{

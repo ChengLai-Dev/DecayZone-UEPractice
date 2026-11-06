@@ -8,6 +8,7 @@
 #include "DZ_DelegateTypes.h"
 #include "DZ_PlayerCharacter.generated.h"
 
+class UDZ_InventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class UDZ_AbilitySystemComponent;
@@ -56,6 +57,9 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY()
+	TObjectPtr<UDZ_InventoryComponent> InventoryComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<USpringArmComponent> SpringArm;

@@ -3,6 +3,13 @@
 
 #include "UI/DZ_UserWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "UI/UIManager.h"
+
+void UDZ_UserWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	UIManager = ULocalPlayer::GetSubsystem<UUIManager>(GetOwningLocalPlayer());
+}
 
 FReply UDZ_UserWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -91,4 +98,24 @@ UDZ_UserWidget* UDZ_UserWidget::CreateDragVisualWidget()
 void UDZ_UserWidget::SetDragEnabled(bool bEnable)
 {
 	bEnableDragging = bEnable;
+}
+
+void UDZ_UserWidget::Open()
+{
+	UIManager->OpenWidget(this, bEnableKeyClose);
+}
+
+void UDZ_UserWidget::Close()
+{
+	UIManager->CloseWidget(this);
+}
+
+void UDZ_UserWidget::Show()
+{
+	SetVisibility(ESlateVisibility::Visible);
+}
+
+void UDZ_UserWidget::Hide()
+{
+	SetVisibility(ESlateVisibility::Collapsed);
 }

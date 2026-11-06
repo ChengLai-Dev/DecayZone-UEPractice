@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "DZ_PlayerController.generated.h"
 
+class UDZ_UserWidget;
+class UDZ_LootPanel;
 struct FGameplayTag;
 class UDZ_InteractProgress;
 class UDZ_InteractPrompt;
@@ -39,23 +41,33 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerBeginInteract(AActor* ContainerActor);
 	
-	UFUNCTION(Client, Reliable)
-	void ClientInteractFinished(AActor* Target);
+	UFUNCTION(Server, Reliable)
+	void ServerMoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	
+	UFUNCTION(Client, Reliable)
+	void ClientInteractFinished(AActor* Target, bool bSucceeded);
+
 private:
+	UFUNCTION()
+	void HandleItemMoveRequested(UWidget* From, UWidget* To);
+	
+	UFUNCTION()
+	void HandleInventoryItemsChanged();
+	
 	void FinishInteract();
 	void ActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
+	void CloseTopWidget();
 	void OpenOrCloseInventoryPanel();
 
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UDZ_InputConfig> InputConfig;
 	
 	UPROPERTY()
-	TObjectPtr<UDZ_InventoryPanel> InventoryWidget;
+	TObjectPtr<UDZ_InventoryPanel> InventoryPanelWidget;
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_InteractPrompt> InteractPromptWidget;
@@ -63,8 +75,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<UDZ_InteractProgress> InteractProgressWidget;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
-	TObjectPtr<UDZ_UIConfig> UIConfig;
+	UPROPERTY()
+	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
 	
 	float TotalDuration = 0.f;
 	float ElapsedTime = 0.f;

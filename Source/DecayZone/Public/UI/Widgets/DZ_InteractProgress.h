@@ -17,10 +17,9 @@ class DECAYZONE_API UDZ_InteractProgress : public UDZ_UserWidget
 	GENERATED_BODY()
 
 public:
+	UDZ_InteractProgress();
+	
 	virtual void NativeOnInitialized() override;
-	void Show();
-	void Hide();
-
 	void SetProgress(float Progress, float Remaining);
 
 private:

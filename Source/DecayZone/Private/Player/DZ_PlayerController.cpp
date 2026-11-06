@@ -11,14 +11,20 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/DZ_PlayerCharacter.h"
 #include "Components/DZ_ContainerComponent.h"
+#include "Components/DZ_InventoryComponent.h"
 #include "Data/Input/DZ_InputConfig.h"
 #include "Data/UI/DZ_UIConfig.h"
 #include "DecayZone/DecayZone.h"
+#include "Game/DZ_GameInstance.h"
 #include "GameFramework/Character.h"
 #include "Interface/DZ_Interactable.h"
+#include "Library/ItemHelper.h"
+#include "UI/UIManager.h"
 #include "UI/Widgets/DZ_InteractProgress.h"
 #include "UI/Widgets/DZ_InventoryPanel.h"
 #include "UI/Widgets/DZ_InteractPrompt.h"
+#include "UI/Widgets/DZ_ItemSlotBase.h"
+#include "UI/Widgets/DZ_LootPanel.h"
 
 
 void ADZ_PlayerController::SetupInputComponent()
@@ -38,6 +44,7 @@ void ADZ_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(InputConfig->MoveAction, ETriggerEvent::Triggered, this, &ADZ_PlayerController::Move);
 	EnhancedInputComponent->BindAction(InputConfig->OpenOrCloseInventoryAction, ETriggerEvent::Started, this, &ADZ_PlayerController::OpenOrCloseInventoryPanel);
 	EnhancedInputComponent->BindAction(InputConfig->InteractAction, ETriggerEvent::Started, this, &ADZ_PlayerController::Interact);
+	EnhancedInputComponent->BindAction(InputConfig->CloseTopWidgetAction, ETriggerEvent::Started, this, &ADZ_PlayerController::CloseTopWidget);
 	
 }
 
@@ -45,9 +52,13 @@ void ADZ_PlayerController::BeginPlay()
 {
 	if (!IsLocalController()) return;
 	Super::BeginPlay();
-	InventoryWidget = CreateWidget<UDZ_InventoryPanel>(this, UIConfig->InventoryWidgetClass);
+	UDZ_UIConfig* UIConfig = Cast<UDZ_GameInstance>(GetGameInstance())->UIConfig;
+	InventoryPanelWidget = CreateWidget<UDZ_InventoryPanel>(this, UIConfig->InventoryWidgetClass);
 	InteractPromptWidget = CreateWidget<UDZ_InteractPrompt>(this, UIConfig->InteractPromptClass);
 	InteractProgressWidget = CreateWidget<UDZ_InteractProgress>(this, UIConfig->InteractProgressClass);
+	LootPanelWidget = CreateWidget<UDZ_LootPanel>(this, UIConfig->LootPanelClass);
+	
+	InventoryPanelWidget->OnItemMoveRequested.AddDynamic(this, &ADZ_PlayerController::HandleItemMoveRequested);
 }
 
 void ADZ_PlayerController::Tick(float DeltaSeconds)
@@ -73,12 +84,12 @@ void ADZ_PlayerController::Interact()
 		ElapsedTime = 0;
 		if (TotalDuration == 0.f)
 		{
-			InteractProgressWidget->Hide();
+			InteractProgressWidget->Close();
 			return;
 		}
-		InteractProgressWidget->Show();
+		InteractProgressWidget->Open();
 		bIsInteracting = true;
-		InteractPromptWidget->SetVisibility(ESlateVisibility::Collapsed);
+		InteractPromptWidget->Hide();
 		ServerBeginInteract(InteractActor);
 	}
 }
@@ -108,24 +119,64 @@ void ADZ_PlayerController::ServerBeginInteract_Implementation(AActor* ContainerA
 	GetWorldTimerManager().SetTimer(InteractTimerHandle, this, &ADZ_PlayerController::FinishInteract, Duration, false);
 }
 
-void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target)
+void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target, bool bSucceeded)
 {
-	InteractProgressWidget->Hide();
+	InteractProgressWidget->Close();
 	InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
 	bIsInteracting = false;
+
+	if (!bSucceeded) return;
+	LootPanelWidget->Open();
+	UDZ_ContainerComponent* ContainerComp = Target->FindComponentByClass<UDZ_ContainerComponent>();
+	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
+	
+	LootPanelWidget->SetLootListInfo(ContainerComp->GetContents());
+	LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+}
+
+void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent* InventoryComp,
+	UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To)
+{
+	if (ItemHelper::MoveItem(InventoryComp, ContainerComp, From, To))
+	{
+		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+	}
+}
+
+
+void ADZ_PlayerController::HandleItemMoveRequested(UWidget* From, UWidget* To)
+{
+	UDZ_ItemSlotBase* FromWidget = Cast<UDZ_ItemSlotBase>(From);
+	UDZ_ItemSlotBase* ToWidget   = Cast<UDZ_ItemSlotBase>(To);
+	if (!FromWidget || !ToWidget) return;
+	
+	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
+	ServerMoveItem(InventoryComp, nullptr, FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
+}
+
+void ADZ_PlayerController::HandleInventoryItemsChanged()
+{
+	if (UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>())
+	{
+		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+	}
 }
 
 void ADZ_PlayerController::FinishInteract()
 {
 	AActor* Target = InteractTarget.Get();
 	InteractTarget = nullptr;
-
-	if (!IsValid(Target)) return;
 	
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
-	if (!PlayerCharacter || !PlayerCharacter->IsInteractableInRange(Target)) return;
-
-	ClientInteractFinished(Target);
+	if (!IsValid(Target) || !PlayerCharacter || !PlayerCharacter->IsInteractableInRange(Target))
+	{
+		ClientInteractFinished(Target, false);
+	}
+	else
+	{
+		ClientInteractFinished(Target, true);
+	}
+	
 }
 
 void ADZ_PlayerController::ActivateAbilityByTag(const FGameplayTag& AbilityTag)
@@ -142,13 +193,13 @@ void ADZ_PlayerController::HandleInteractableActorChanged(AActor* Actor)
 	
 	if (!IsValid(Actor))
 	{
-		InteractPromptWidget->RemoveFromParent();
+		InteractPromptWidget->Close();
 		return;
 	}
 	
 	if (Cast<IDZ_Interactable>(Actor))
 	{
-		InteractPromptWidget->AddToViewport();
+		InteractPromptWidget->Open();
 		FText InteractPrompt = IDZ_Interactable::Execute_GetInteractPromptText(Actor);
 		FText InteractKey; 
 		for (const auto& Mapping: InputConfig->DefaultInputMappingContext->GetMappings())
@@ -170,6 +221,10 @@ void ADZ_PlayerController::AcknowledgePossession(APawn* InPawn)
 	if (ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(InPawn))
 	{
 		PlayerCharacter->OnFocusInteractableActorChanged.AddDynamic(this, &ADZ_PlayerController::HandleInteractableActorChanged);
+		if (UDZ_InventoryComponent* InventoryComp = PlayerCharacter->FindComponentByClass<UDZ_InventoryComponent>())
+		{
+			InventoryComp->OnItemsChanged.AddDynamic(this, &ADZ_PlayerController::HandleInventoryItemsChanged);
+		}
 	}
 }
 
@@ -206,20 +261,27 @@ void ADZ_PlayerController::Jump(const FInputActionValue& Value)
 	GetCharacter()->Jump();
 }
 
+void ADZ_PlayerController::CloseTopWidget()
+{
+	UUIManager* UIManager = ULocalPlayer::GetSubsystem<UUIManager>(GetLocalPlayer());
+	UIManager->CloseTopWidget();
+}
+
 void ADZ_PlayerController::OpenOrCloseInventoryPanel()
 {
-	if (!InventoryWidget) return;
+	if (!InventoryPanelWidget) return;
 	
-	if (InventoryWidget->IsInViewport())
+	if (InventoryPanelWidget->IsInViewport())
 	{
-		InventoryWidget->RemoveFromParent();
-		SetInputMode(FInputModeGameOnly());
-		bShowMouseCursor = false;
+		InventoryPanelWidget->Close();
 	}
 	else
 	{
-		InventoryWidget->AddToViewport();
-		SetInputMode(FInputModeGameAndUI());
-		bShowMouseCursor = true;
+		InventoryPanelWidget->Open();
+		UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
+		if (InventoryComp)
+		{
+			InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+		}
 	}
 }

@@ -13,6 +13,7 @@ class UDZ_WeightBar;
  */
 class UDZ_ItemSlot;
 class UTextBlock;
+struct FDZ_ItemStack;
 
 UCLASS()
 class DECAYZONE_API UDZ_BackpackPanel : public UDZ_UserWidget
@@ -22,6 +23,8 @@ class DECAYZONE_API UDZ_BackpackPanel : public UDZ_UserWidget
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
 public:
+	
+	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
 	
 	UPROPERTY()
 	TArray<TObjectPtr<UDZ_ItemSlot>> ItemSlots;
@@ -35,7 +38,13 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_WeightBar> WeightBar;
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnWidgetDragEndedEvent OnItemDrop;
+	
 private:
 	UFUNCTION()
 	void HandleItemSlotClicked(UWidget* Widget);
+	
+	UFUNCTION()
+	void HandleItemSlotDragEnded(UWidget* From, UWidget* To);
 };

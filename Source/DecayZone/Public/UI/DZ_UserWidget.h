@@ -11,12 +11,15 @@
  * 
  */
 
+class UUIManager;
+
 UCLASS()
 class DECAYZONE_API UDZ_UserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -26,7 +29,11 @@ public:
 	
 	virtual UDZ_UserWidget* CreateDragVisualWidget();
 	void SetDragEnabled(bool bEnable);
-	
+	void Open();
+	void Close();
+	void Show();
+	void Hide();
+
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetEvent OnWidgetLeftClicked;
 	
@@ -41,8 +48,13 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetDragEndedEvent OnWidgetDragEnded;
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	bool bEnableKeyClose = true;
 	
 private:
+	TWeakObjectPtr<UUIManager> UIManager;
 	bool bIsDragging = false;
 	bool bEnableDragging = false;
 };

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/DZ_UserWidget.h"
+#include "DZ_ItemSlotBase.h"
 #include "DZ_LootRow.generated.h"
 
 class UImage;
@@ -12,7 +12,7 @@ class UTextBlock;
  * 
  */
 UCLASS()
-class DECAYZONE_API UDZ_LootRow : public UDZ_UserWidget
+class DECAYZONE_API UDZ_LootRow : public UDZ_ItemSlotBase
 {
 	GENERATED_BODY()
 public:

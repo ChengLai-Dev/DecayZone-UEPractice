@@ -9,6 +9,8 @@
 class UDZ_ContainerSpawnItemConfig;
 struct FDZ_ItemData;
 class UDZ_StartupAbilities;
+class UDZ_UIConfig;
+
 /**
  * 
  */
@@ -26,6 +28,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UDZ_ContainerSpawnItemConfig> ContainerSpawnItemConfig;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TObjectPtr<UDZ_UIConfig> UIConfig;
 	
 	const FDZ_ItemData* GetItemData(int32 ItemId);
 	

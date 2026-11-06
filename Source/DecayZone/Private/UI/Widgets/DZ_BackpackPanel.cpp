@@ -4,6 +4,7 @@
 #include "UI/Widgets/DZ_BackpackPanel.h"
 
 #include "Components/UniformGridPanel.h"
+#include "Data/Item/FDZ_ItemStack.h"
 #include "Library/UIHelper.h"
 #include "UI/Widgets/DZ_ItemSlot.h"
 
@@ -23,14 +24,35 @@ void UDZ_BackpackPanel::NativeOnInitialized()
 			if (UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Child))
 			{
 				ItemSlots.Add(ItemSlot);
-				ItemSlot->SetItemInfo(2);
+				ItemSlot->SetSlotInfo(EItemContainer::Backpack, ItemSlots.Num() - 1);
+				ItemSlot->OnWidgetDragEnded.AddDynamic(this, &ThisClass::HandleItemSlotDragEnded);
 				ItemSlot->OnWidgetLeftClicked.AddDynamic(this, &ThisClass::HandleItemSlotClicked);
 			}
 		}
 	}
 }
 
+void UDZ_BackpackPanel::SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo)
+{
+	int32 i = 0;
+	for (; i < BackpackInfo.Num(); i++)
+	{
+		const FDZ_ItemStack& Info = BackpackInfo[i];
+		ItemSlots[i]->SetItemInfo(Info.ItemId, Info.Count);
+		ItemSlots[i]->Show();
+	}
+	for (; i < ItemSlots.Num(); i++)
+	{
+		ItemSlots[i]->Hide();
+	}
+}
+
 void UDZ_BackpackPanel::HandleItemSlotClicked(UWidget* Widget)
 {
 	OnItemSlotClicked.Broadcast(Cast<UDZ_ItemSlot>(Widget));
+}
+
+void UDZ_BackpackPanel::HandleItemSlotDragEnded(UWidget* From, UWidget* To)
+{
+	OnItemDrop.Broadcast(From, To);
 }
