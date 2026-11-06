@@ -9,52 +9,26 @@
 void UDZ_InteractProgress::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	AddToViewport();
+	Hide();
 	CacheMaterial = Img_RingFill->GetDynamicMaterial();
 }
 
-void UDZ_InteractProgress::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UDZ_InteractProgress::Show()
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
-	if (bIsCounting)
-	{
-		LeftSeconds -= InDeltaTime;
-		if (LeftSeconds <= 0)
-		{
-			CancelCountDown();
-			OnProgressComplete.Broadcast();
-			return;
-		}
-		UpdateProgress();
-	}
-}
-
-void UDZ_InteractProgress::StartCountDownSeconds(float Seconds)
-{
-	if (Seconds <= 0)
-	{
-		OnProgressComplete.Broadcast();
-		return;
-	}
-	
-	bIsCounting = true;
-	TotalSeconds = Seconds;
-	LeftSeconds = Seconds;
-	UpdateProgress();
 	SetVisibility(ESlateVisibility::Visible);
 }
 
-void UDZ_InteractProgress::CancelCountDown()
+void UDZ_InteractProgress::Hide()
 {
-	bIsCounting = false;
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UDZ_InteractProgress::UpdateProgress()
+void UDZ_InteractProgress::SetProgress(float Progress, float Remaining)
 {
-	Text_Time->SetText(FText::FromString(FString::Printf(TEXT("%.1f"), FMath::Max(0.f, LeftSeconds))));
+	Text_Time->SetText(FText::FromString(FString::Printf(TEXT("%.1f"), FMath::Max(0.f, Remaining))));
 	if (IsValid(CacheMaterial))
 	{
-		CacheMaterial->SetScalarParameterValue("Progress", 1 - LeftSeconds / TotalSeconds);
+		CacheMaterial->SetScalarParameterValue("Progress", Progress);
 	}
 }
-

@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "DZ_PlayerController.generated.h"
 
+struct FGameplayTag;
 class UDZ_InteractProgress;
 class UDZ_InteractPrompt;
 class UDZ_UIConfig;
@@ -20,20 +21,30 @@ class DECAYZONE_API ADZ_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+
 public:
+	virtual void Tick(float DeltaSeconds) override;
 	void Interact();
+	void UpdateInteractProgress();
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void HandleInteractableActorChanged(AActor* Actor);
-	virtual void OnPossess(APawn* InPawn) override;
-	
-	
+	virtual void AcknowledgePossession(APawn* InPawn) override;
+
 	UFUNCTION(Server, Reliable)
 	void ServerTakeItem(AActor* ContainerActor, int32 SlotIndex, int32 Count);
 	
+	UFUNCTION(Server, Reliable)
+	void ServerBeginInteract(AActor* ContainerActor);
+	
+	UFUNCTION(Client, Reliable)
+	void ClientInteractFinished(AActor* Target);
+	
 private:
+	void FinishInteract();
+	void ActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -54,4 +65,13 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TObjectPtr<UDZ_UIConfig> UIConfig;
+	
+	float TotalDuration = 0.f;
+	float ElapsedTime = 0.f;
+	
+	bool bIsInteracting = false;
+	
+	FTimerHandle InteractTimerHandle;
+	TWeakObjectPtr<AActor> InteractTarget;
 };
+

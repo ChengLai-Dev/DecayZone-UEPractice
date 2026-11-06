@@ -2,46 +2,58 @@
 	"schemaVersion": 1,
 	"assetPath": "/Game/UI/Loot/WBP_LootPanel",
 	"designSizeMode": "Desired",
-	"root": {
+	"root":
+	{
 		"class": "/Script/UMG.CanvasPanel",
 		"className": "CanvasPanel",
 		"name": "RootCanvas",
 		"isVariable": false,
-		"properties": {},
+		"properties":
+		{
+		},
 		"children": [
 			{
 				"class": "/Script/UMG.SizeBox",
 				"className": "SizeBox",
 				"name": "Size_Root",
 				"isVariable": false,
-				"properties": {
+				"properties":
+				{
 					"WidthOverride": 1408,
 					"HeightOverride": 858,
 					"bOverride_WidthOverride": true,
 					"bOverride_HeightOverride": true
 				},
-				"slot": {
+				"slot":
+				{
 					"class": "/Script/UMG.CanvasPanelSlot",
 					"className": "CanvasPanelSlot",
-					"properties": {
-						"LayoutData": {
-							"offsets": {
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
 								"left": -704,
 								"top": -429,
 								"right": 1408,
 								"bottom": 858
 							},
-							"anchors": {
-								"min": {
+							"anchors":
+							{
+								"min":
+								{
 									"x": 0.5,
 									"y": 0.5
 								},
-								"max": {
+								"max":
+								{
 									"x": 0.5,
 									"y": 0.5
 								}
 							},
-							"alignment": {
+							"alignment":
+							{
 								"x": 0,
 								"y": 0
 							}
@@ -54,24 +66,30 @@
 						"className": "Border",
 						"name": "Border_Outline",
 						"isVariable": false,
-						"properties": {
-							"Padding": {
+						"properties":
+						{
+							"Padding":
+							{
 								"left": 1,
 								"top": 1,
 								"right": 1,
 								"bottom": 1
 							},
-							"BrushColor": {
-								"r": 0.027321,
-								"g": 0.045186,
-								"b": 0.057806,
+							"BrushColor":
+							{
+								"r": 0.027320999652147293,
+								"g": 0.045186001807451248,
+								"b": 0.057806000113487244,
 								"a": 1
 							}
 						},
-						"slot": {
+						"slot":
+						{
 							"class": "/Script/UMG.SizeBoxSlot",
 							"className": "SizeBoxSlot",
-							"properties": {}
+							"properties":
+							{
+							}
 						},
 						"children": [
 							{
@@ -79,25 +97,31 @@
 								"className": "Border",
 								"name": "BG_Panel",
 								"isVariable": false,
-								"properties": {
-									"Padding": {
+								"properties":
+								{
+									"Padding":
+									{
 										"left": 20,
 										"top": 20,
 										"right": 20,
 										"bottom": 20
 									},
-									"BrushColor": {
-										"r": 0.007499,
-										"g": 0.012286,
-										"b": 0.015996,
-										"a": 0.97
+									"BrushColor":
+									{
+										"r": 0.0074990000575780869,
+										"g": 0.012285999953746796,
+										"b": 0.015995999798178673,
+										"a": 0.97000002861022949
 									}
 								},
-								"slot": {
+								"slot":
+								{
 									"class": "/Script/UMG.BorderSlot",
 									"className": "BorderSlot",
-									"properties": {
-										"Padding": {
+									"properties":
+									{
+										"Padding":
+										{
 											"left": 1,
 											"top": 1,
 											"right": 1,
@@ -111,12 +135,17 @@
 										"className": "VerticalBox",
 										"name": "VB_Main",
 										"isVariable": false,
-										"properties": {},
-										"slot": {
+										"properties":
+										{
+										},
+										"slot":
+										{
 											"class": "/Script/UMG.BorderSlot",
 											"className": "BorderSlot",
-											"properties": {
-												"Padding": {
+											"properties":
+											{
+												"Padding":
+												{
 													"left": 20,
 													"top": 20,
 													"right": 20,
@@ -130,12 +159,17 @@
 												"className": "HorizontalBox",
 												"name": "HB_Regions",
 												"isVariable": false,
-												"properties": {},
-												"slot": {
+												"properties":
+												{
+												},
+												"slot":
+												{
 													"class": "/Script/UMG.VerticalBoxSlot",
 													"className": "VerticalBoxSlot",
-													"properties": {
-														"Size": {
+													"properties":
+													{
+														"Size":
+														{
 															"value": 1,
 															"rule": "Fill"
 														}
@@ -147,16 +181,22 @@
 														"className": "WBP_EquipmentPanel_C",
 														"name": "EquipmentPanel",
 														"isVariable": true,
-														"properties": {},
-														"slot": {
+														"properties":
+														{
+														},
+														"slot":
+														{
 															"class": "/Script/UMG.HorizontalBoxSlot",
 															"className": "HorizontalBoxSlot",
-															"properties": {
-																"Size": {
+															"properties":
+															{
+																"Size":
+																{
 																	"value": 0.25,
 																	"rule": "Fill"
 																},
-																"Padding": {
+																"Padding":
+																{
 																	"left": 0,
 																	"top": 0,
 																	"right": 11,
@@ -170,16 +210,22 @@
 														"className": "WBP_BackpackPanel_C",
 														"name": "BackpackPanel",
 														"isVariable": true,
-														"properties": {},
-														"slot": {
+														"properties":
+														{
+														},
+														"slot":
+														{
 															"class": "/Script/UMG.HorizontalBoxSlot",
 															"className": "HorizontalBoxSlot",
-															"properties": {
-																"Size": {
-																	"value": 0.45,
+															"properties":
+															{
+																"Size":
+																{
+																	"value": 0.44999998807907104,
 																	"rule": "Fill"
 																},
-																"Padding": {
+																"Padding":
+																{
 																	"left": 0,
 																	"top": 0,
 																	"right": 11,
@@ -193,13 +239,18 @@
 														"className": "WBP_LootListPanel_C",
 														"name": "LootListPanel",
 														"isVariable": true,
-														"properties": {},
-														"slot": {
+														"properties":
+														{
+														},
+														"slot":
+														{
 															"class": "/Script/UMG.HorizontalBoxSlot",
 															"className": "HorizontalBoxSlot",
-															"properties": {
-																"Size": {
-																	"value": 0.3,
+															"properties":
+															{
+																"Size":
+																{
+																	"value": 0.30000001192092896,
 																	"rule": "Fill"
 																}
 															}
@@ -212,25 +263,31 @@
 												"className": "Border",
 												"name": "Panel_Footer",
 												"isVariable": false,
-												"properties": {
-													"Padding": {
+												"properties":
+												{
+													"Padding":
+													{
 														"left": 13,
 														"top": 4,
 														"right": 13,
 														"bottom": 4
 													},
-													"BrushColor": {
-														"r": 0.005182,
-														"g": 0.008023,
-														"b": 0.009721,
+													"BrushColor":
+													{
+														"r": 0.0051819998770952225,
+														"g": 0.0080230003222823143,
+														"b": 0.0097209997475147247,
 														"a": 1
 													}
 												},
-												"slot": {
+												"slot":
+												{
 													"class": "/Script/UMG.VerticalBoxSlot",
 													"className": "VerticalBoxSlot",
-													"properties": {
-														"Padding": {
+													"properties":
+													{
+														"Padding":
+														{
 															"left": 0,
 															"top": 11,
 															"right": 0,
@@ -244,12 +301,17 @@
 														"className": "HorizontalBox",
 														"name": "HB_Footer",
 														"isVariable": false,
-														"properties": {},
-														"slot": {
+														"properties":
+														{
+														},
+														"slot":
+														{
 															"class": "/Script/UMG.BorderSlot",
 															"className": "BorderSlot",
-															"properties": {
-																"Padding": {
+															"properties":
+															{
+																"Padding":
+																{
 																	"left": 13,
 																	"top": 4,
 																	"right": 13,
@@ -263,15 +325,18 @@
 																"className": "TextBlock",
 																"name": "Text_Hint",
 																"isVariable": false,
-																"properties": {
-																	"Text": "拖拽物品到背包",
+																"properties":
+																{
+																	"Text": "拖拽物品到背包，或点「拿取」",
 																	"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
 																	"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
 																},
-																"slot": {
+																"slot":
+																{
 																	"class": "/Script/UMG.HorizontalBoxSlot",
 																	"className": "HorizontalBoxSlot",
-																	"properties": {
+																	"properties":
+																	{
 																		"VerticalAlignment": "VAlign_Center"
 																	}
 																}
@@ -281,12 +346,17 @@
 																"className": "Spacer",
 																"name": "Spacer_Footer",
 																"isVariable": false,
-																"properties": {},
-																"slot": {
+																"properties":
+																{
+																},
+																"slot":
+																{
 																	"class": "/Script/UMG.HorizontalBoxSlot",
 																	"className": "HorizontalBoxSlot",
-																	"properties": {
-																		"Size": {
+																	"properties":
+																	{
+																		"Size":
+																		{
 																			"value": 1,
 																			"rule": "Fill"
 																		}
@@ -298,15 +368,18 @@
 																"className": "TextBlock",
 																"name": "Text_CloseHint",
 																"isVariable": false,
-																"properties": {
+																"properties":
+																{
 																	"Text": "[L] 关闭",
 																	"ColorAndOpacity": "(SpecifiedColor=(R=0.132868,G=0.187821,B=0.212231,A=1.000000))",
 																	"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)"
 																},
-																"slot": {
+																"slot":
+																{
 																	"class": "/Script/UMG.HorizontalBoxSlot",
 																	"className": "HorizontalBoxSlot",
-																	"properties": {
+																	"properties":
+																	{
 																		"VerticalAlignment": "VAlign_Center"
 																	}
 																}
@@ -324,5 +397,6 @@
 				]
 			}
 		]
-	}
+	},
+	"contentHash": "9a3f5370f6399a97dbe85c953a5fd5d7"
 }

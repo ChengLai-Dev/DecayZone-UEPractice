@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Item/DZ_InteractableActor.h"
+#include "Actor/DZ_InteractableActor.h"
 
 #include "DecayZone/DecayZone.h"
 

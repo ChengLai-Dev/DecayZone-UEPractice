@@ -41,6 +41,11 @@ ADZ_PlayerCharacter::ADZ_PlayerCharacter()
 	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnInteractableEndOverlap);
 }
 
+bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)
+{
+	return OverlappingInteractables.Find(Actor) != nullptr;
+}
+
 void ADZ_PlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -92,6 +97,7 @@ AActor* ADZ_PlayerCharacter::GetHighlightActor()
 
 void ADZ_PlayerCharacter::HighlightInteractable()
 {
+	if (!IsLocallyControlled()) return;
 	AActor* TargetActor = FindTargetInteractableActor();
 	if (TargetActor != CurrentInteractableActor)
 	{

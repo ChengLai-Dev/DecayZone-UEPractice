@@ -46,9 +46,9 @@ WBP_LootPanel
 |---|---|---|---|
 | `WBP_EquipmentPanel` | `UDZ_EquipmentPanel`（可选） | 8 个装备槽的显示/刷新 | `EquipSlot_*` |
 | `WBP_BackpackPanel` | `UDZ_BackpackPanel` | 20 格背包、负重文本/条、格子事件上报 | `Grid_Backpack`、`Text_WeightValue`、`WeightBar` |
-| `WBP_LootRow` | `UDZ_LootRow : UDZ_UserWidget` | 行数据、悬停/选中、拖影 | `Img_ItemIcon`、`Text_ItemName`、`Text_Quantity`、`Text_ItemWeight`、`Frame_RowBG`、`Frame_Selected` |
-| `WBP_LootListPanel` | `UDZ_LootListPanel` | 容器名/件数/关闭、行动态创建、空容器提示 | `Text_ContainerName`、`Text_LootCount`、`Btn_Close`、`ScrollBox_LootList`、`Text_EmptyHint` |
-| `WBP_LootPanel` | `UDZ_LootPanel` | 组合三栏、容器数据、拖放落格、刷新 | `EquipmentPanel`、`BackpackPanel`、`LootListPanel` |
+| `WBP_LootRow` | `UDZ_LootRow : UDZ_UserWidget` | 行数据、悬停、拖影、「拿取」按钮 | `Img_ItemIcon`、`Text_ItemName`、`Text_Quantity`、`Text_ItemWeight`、`Frame_RowBG`、`Btn_Take` |
+| `WBP_LootListPanel` | `UDZ_LootListPanel` | 容器名/件数/关闭、行动态创建、空容器提示、行拖拽与拿取上报 | `Text_ContainerName`、`Text_LootCount`、`Btn_Close`、`ScrollBox_LootList`、`Text_EmptyHint` |
+| `WBP_LootPanel` | `UDZ_LootPanel` | 组合三栏、容器数据、移入背包（落格 / 自动选格）、刷新 | `EquipmentPanel`、`BackpackPanel`、`LootListPanel` |
 | `WBP_InventoryPanel` | `UDZ_InventoryPanel`（瘦身） | 只组合装备/背包/详情，处理选中联动 | `EquipmentPanel`、`BackpackPanel`、`ItemDetail` |
 | `WBP_ItemSlot` | `UDZ_ItemSlot`（现有） | 共用格子；需要补数量显示与拖放悬停 | `Img_ItemIcon`、`Border_Selected`、`Text_Quantity` |
 | `WBP_WeightBar` | `UDZ_WeightBar`（可选） | 封装 `SetPercent` | `Bar_Weight` |
@@ -56,25 +56,23 @@ WBP_LootPanel
 建议让每个子面板自己向持有方发事件，而不是让 `UDZ_InventoryPanel` / `UDZ_LootPanel` 直接遍历子面板内部节点：
 
 - `UDZ_BackpackPanel`：格子选中 / 拖拽开始 / 拖放结束。
-- `UDZ_LootListPanel`：行选中 / 行拖拽开始 / 行拖拽结束 / 关闭点击。
-- `UDZ_LootPanel`：只负责把「战利品行 → 背包格」的落点、数量合并、行移除、负重刷新串起来。
+- `UDZ_LootListPanel`：行拖拽开始 / 行拖拽结束 / 行「拿取」（整叠或 1 件）/ 关闭点击。
+- `UDZ_LootPanel`：只负责把「战利品行 → 背包」的落点或自动选格、数量合并、行移除/减数量、负重刷新串起来。
 
 ---
 
-## 4. 拖拽数据流
+## 4. 移入背包数据流（拖拽 / 按钮共用）
 
-1. `WBP_LootRow` 继承 `UDZ_UserWidget`，开启拖拽；拖动时复制当前行作为拖影。
-2. 行被拖到 `WBP_BackpackPanel` 的背包格上，格子可以高亮表示可放下。
-3. `UDZ_LootPanel` 收到「哪一行 → 哪个格子」：
-   - 格子为空 → 放入该物品与数量；
-   - 格子是同物品 → 数量相加；
-   - 格子是不同物品 → 忽略，行保留；
-   - 落在面板空白处 → 忽略。
-4. 放入成功后：
-   - 从 `ScrollBox_LootList` 移除该行；
+1. 入口有两条：行拖拽、行内 `Btn_Take` 单击（按住 Shift 只取 1 件）。
+2. 两条入口都收敛到**同一个处理**：`把这一行移入背包(行, 目标格可空, 数量)`，不要各写一套。
+3. 目标格由拖拽落点给出；按钮路径传空 → 先并入同物品格，再找第一个空格。
+4. 数量：拖拽默认整叠；按钮默认整叠、Shift 为 1；落到同物品格则数量相加。
+5. 取不走（背包满、超重）→ 本期不做反馈，不改数据，行保留。
+6. 成功之后：
+   - 整叠移入 → 从 `ScrollBox_LootList` 移除该行；
+   - 取 1 件 → `Text_Quantity` 减 1，减到 0 再移除行；
    - 刷新 `Text_LootCount` 与 `Text_EmptyHint`；
-   - 刷新 `Text_WeightValue` 与 `WeightBar` 比例；
-   - 若移除的是选中行，清除选中。
+   - 刷新 `Text_WeightValue` 与 `WeightBar` 比例。
 
 > 现有的 `UDZ_UserWidget::NativeOnDrop` 是在**拖拽源**上广播 `OnWidgetDragEnded(Source, EndWidget)`，不是在落点格子上广播。绑定事件时注意这一点。
 

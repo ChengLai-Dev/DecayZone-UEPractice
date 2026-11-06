@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "DZ_GameInstance.generated.h"
 
+class UDZ_ContainerSpawnItemConfig;
 struct FDZ_ItemData;
 class UDZ_StartupAbilities;
 /**
@@ -22,6 +23,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UDZ_StartupAbilities> StartupAbilities;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UDZ_ContainerSpawnItemConfig> ContainerSpawnItemConfig;
 	
 	const FDZ_ItemData* GetItemData(int32 ItemId);
 	

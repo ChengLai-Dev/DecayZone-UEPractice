@@ -19,10 +19,10 @@ class DECAYZONE_API ADZ_PlayerCharacter : public ADZ_BaseCharacter
 	GENERATED_BODY()
 
 public:
+	ADZ_PlayerCharacter();
 	
 	virtual void Tick(float DeltaSeconds) override;
 	
-	ADZ_PlayerCharacter();
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	virtual void PossessedBy(AController* NewController) override;
@@ -41,6 +41,8 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnActorEvent OnFocusInteractableActorChanged;
+	
+	bool IsInteractableInRange(AActor* Actor);
 	
 protected:
 	virtual void BeginPlay() override;

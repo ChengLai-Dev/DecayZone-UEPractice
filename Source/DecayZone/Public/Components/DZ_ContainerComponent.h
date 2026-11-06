@@ -5,8 +5,11 @@
 #include "CoreMinimal.h"
 #include "DZ_DelegateTypes.h"
 #include "Components/ActorComponent.h"
+#include "Data/Item/FDZ_ItemStack.h"
 #include "DZ_ContainerComponent.generated.h"
 
+
+struct FDZ_ContainerSpawnItemInfo;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DECAYZONE_API UDZ_ContainerComponent : public UActorComponent
@@ -15,6 +18,7 @@ class DECAYZONE_API UDZ_ContainerComponent : public UActorComponent
 
 public:
 	UDZ_ContainerComponent();
+	virtual void BeginPlay() override;
 	
 	const TArray<FDZ_ItemStack>& GetContents() const;
 	
@@ -30,7 +34,11 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_Items)
 	TArray<FDZ_ItemStack> Items;
-
+	
 	UFUNCTION()
 	void OnRep_Items();
+	
+	const FDZ_ContainerSpawnItemInfo* GetSpawnItemInfo();
+
+	void GenerateContainerItems();
 };

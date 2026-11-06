@@ -18,15 +18,11 @@ class DECAYZONE_API UDZ_InteractProgress : public UDZ_UserWidget
 
 public:
 	virtual void NativeOnInitialized() override;
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	void Show();
+	void Hide();
 
-	void StartCountDownSeconds(float Seconds);
-	void CancelCountDown();
-	void UpdateProgress();
+	void SetProgress(float Progress, float Remaining);
 
-	UPROPERTY(BlueprintAssignable)
-	FOnEvent OnProgressComplete;
-	
 private:
 	bool bIsCounting = false;
 	float LeftSeconds = 0.f;

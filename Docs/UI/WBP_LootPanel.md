@@ -28,7 +28,7 @@
 | `VB_Main` / `HB_Regions` | VerticalBox / HorizontalBox | 三栏与底栏的主布局 |
 | `Panel_Footer` / `HB_Footer` | Border / HorizontalBox | 底栏布局 |
 | `Spacer_Footer` | Spacer | 把关闭提示推到右侧 |
-| `Text_Hint` | TextBlock | 固定提示「拖拽物品到背包」 |
+| `Text_Hint` | TextBlock | 固定提示 `拖拽物品到背包，或点「拿取」` |
 | `Text_CloseHint` | TextBlock | 固定文案 `[L] 关闭` |
 
 ---
@@ -39,13 +39,16 @@
 |---|---|---|
 | 外部 | 打开搜刮 | 把本面板加入视口，切到 `GameAndUI` + 显示鼠标；若背包面板已打开先关闭 |
 | `LootListPanel` 的 `Btn_Close` | 左键单击 | 关闭面板：从视口移除，恢复 `GameOnly` + 隐藏鼠标 |
-| `LootListPanel` 的行 | 左键单击 | 选中该行：清除上一行选中，选中当前行；同一时间最多一行 |
 | `LootListPanel` 的行 | 左键拖拽 | 开始拖拽；拖影复制当前行；松手时判断落点 |
+| `LootListPanel` 的行内 `Btn_Take` | 左键单击 | 整叠移入背包：先并入同物品格，再找第一个空格；成功则移除该行 |
+| `LootListPanel` 的行内 `Btn_Take` | 左键单击 + Shift | 只移入 1 件：该行数量减 1，减到 0 再移除行 |
 | `BackpackPanel` 的背包格 | 收到拖放 | 空格 → 放入该物品和数量；同物品 → 数量相加；不同物品 → 忽略；落在面板空白处 → 忽略 |
-| 拖放成功 | — | 1) 从 `LootListPanel` 移除该行；2) 刷新件数与空容器提示；3) 刷新 `BackpackPanel` 负重文本/条；4) 该行若为选中行则清除选中 |
+| 移入成功（拖放 / 按钮） | — | 1) 从 `LootListPanel` 移除该行（按钮取 1 件时改为减数量）；2) 刷新件数与空容器提示；3) 刷新 `BackpackPanel` 负重文本/条 |
+| 背包满 / 超重 | — | 本期不做反馈：操作不生效，行保留，界面无提示 |
 | 容器变空 | — | 只显示「容器已空」，**不自动关闭**面板 |
 
 > 拖拽的源是 `WBP_LootRow`，落点是 `WBP_BackpackPanel` 里的 `WBP_ItemSlot`。行只负责开始拖拽，落点判断和数量合并归本面板。
+> 「拿取」按钮与拖拽必须走**同一条**移入背包的处理（目标格可为空 → 自动选格），不要各写一套规则。
 
 ---
 
@@ -57,7 +60,6 @@
 | 容器有物品 | `LootListPanel` | 列表显示、件数为总数量 |
 | 容器空 | `LootListPanel` | 列表清空、显示「容器已空」 |
 | 负重变化 | `BackpackPanel` | 负重文本与负重条比例同步 |
-| 行选中 | `LootListPanel` 内的行 | 见 [WBP_LootRow.md](WBP_LootRow.md) |
 | 拖拽悬停 | `BackpackPanel` 内的格子 | 格子边框刷亮金色，表示可放下 |
 
 ---

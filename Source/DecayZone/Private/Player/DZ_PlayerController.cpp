@@ -3,6 +3,8 @@
 
 #include "Player/DZ_PlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
@@ -41,25 +43,110 @@ void ADZ_PlayerController::SetupInputComponent()
 
 void ADZ_PlayerController::BeginPlay()
 {
+	if (!IsLocalController()) return;
 	Super::BeginPlay();
 	InventoryWidget = CreateWidget<UDZ_InventoryPanel>(this, UIConfig->InventoryWidgetClass);
 	InteractPromptWidget = CreateWidget<UDZ_InteractPrompt>(this, UIConfig->InteractPromptClass);
 	InteractProgressWidget = CreateWidget<UDZ_InteractProgress>(this, UIConfig->InteractProgressClass);
 }
+
+void ADZ_PlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (bIsInteracting && IsLocalController())
+	{
+		ElapsedTime += DeltaSeconds;
+		UpdateInteractProgress();
+	}
+}
+
 void ADZ_PlayerController::Interact()
 {
-	InteractProgressWidget->
+	// ActivateAbilityByTag(DZGameplayTags::Ability_Interact);
+	if (!IsLocalController()) return;
+	
+	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	AActor* InteractActor = PlayerCharacter->GetHighlightActor();
+	if (Cast<IDZ_Interactable>(InteractActor))
+	{
+		TotalDuration = IDZ_Interactable::Execute_GetInteractDuration(InteractActor);
+		ElapsedTime = 0;
+		if (TotalDuration == 0.f)
+		{
+			InteractProgressWidget->Hide();
+			return;
+		}
+		InteractProgressWidget->Show();
+		bIsInteracting = true;
+		InteractPromptWidget->SetVisibility(ESlateVisibility::Collapsed);
+		ServerBeginInteract(InteractActor);
+	}
+}
+
+void ADZ_PlayerController::UpdateInteractProgress()
+{
+	if (!IsLocalController()) return;
+	InteractProgressWidget->SetProgress(FMath::Clamp(ElapsedTime / TotalDuration, 0, 1), TotalDuration - ElapsedTime);
+}
+
+void ADZ_PlayerController::ServerBeginInteract_Implementation(AActor* ContainerActor)
+{
+	if (!IsValid(ContainerActor)) return;
+	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!IsValid(PlayerCharacter)) return;
+	if (!Cast<IDZ_Interactable>(ContainerActor)) return;
+	
+	float Duration = IDZ_Interactable::Execute_GetInteractDuration(ContainerActor);
+	GetWorldTimerManager().ClearTimer(InteractTimerHandle);
+	InteractTarget = ContainerActor;
+	
+	if (Duration <= 0.f)
+	{
+		FinishInteract();
+		return;
+	}
+	GetWorldTimerManager().SetTimer(InteractTimerHandle, this, &ADZ_PlayerController::FinishInteract, Duration, false);
+}
+
+void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target)
+{
+	InteractProgressWidget->Hide();
+	InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
+	bIsInteracting = false;
+}
+
+void ADZ_PlayerController::FinishInteract()
+{
+	AActor* Target = InteractTarget.Get();
+	InteractTarget = nullptr;
+
+	if (!IsValid(Target)) return;
+	
+	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!PlayerCharacter || !PlayerCharacter->IsInteractableInRange(Target)) return;
+
+	ClientInteractFinished(Target);
+}
+
+void ADZ_PlayerController::ActivateAbilityByTag(const FGameplayTag& AbilityTag)
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+	if (!IsValid(ASC)) return;
+    
+	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }
 
 void ADZ_PlayerController::HandleInteractableActorChanged(AActor* Actor)
 {
+	if (!IsLocalController()) return;
+	
 	if (!IsValid(Actor))
 	{
 		InteractPromptWidget->RemoveFromParent();
 		return;
 	}
 	
-	if (IDZ_Interactable* InteractableActor = Cast<IDZ_Interactable>(Actor))
+	if (Cast<IDZ_Interactable>(Actor))
 	{
 		InteractPromptWidget->AddToViewport();
 		FText InteractPrompt = IDZ_Interactable::Execute_GetInteractPromptText(Actor);
@@ -77,9 +164,9 @@ void ADZ_PlayerController::HandleInteractableActorChanged(AActor* Actor)
 	}
 }
 
-void ADZ_PlayerController::OnPossess(APawn* InPawn)
+void ADZ_PlayerController::AcknowledgePossession(APawn* InPawn)
 {
-	Super::OnPossess(InPawn);
+	Super::AcknowledgePossession(InPawn);
 	if (ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(InPawn))
 	{
 		PlayerCharacter->OnFocusInteractableActorChanged.AddDynamic(this, &ADZ_PlayerController::HandleInteractableActorChanged);

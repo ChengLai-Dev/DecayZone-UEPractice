@@ -33,7 +33,9 @@
 | `Size_Divider_Header` / `Divider_Header` | SizeBox / Border | 标题下分隔线 |
 | `HB_Columns` / `Spacer_Columns` | HorizontalBox / Spacer | 列标题行布局 |
 | `Text_ColItem` / `Text_ColQty` / `Text_ColWeight` | TextBlock | 固定列标题「物品」「数量」「重量」 |
-| `Size_QtyHeader` / `Size_WeightHeader` | SizeBox | 列标题的宽度对齐容器 |
+| `Size_QtyHeader` | SizeBox | 数量列标题宽度 44，对齐行的 `Size_Quantity` |
+| `Size_WeightHeader` | SizeBox | 重量列标题宽度 64，对齐行的 `Size_Weight` |
+| `Size_TakeHeader` | SizeBox | 拿取列占位 44，对齐行的 `Size_Take`；留空不放文字 |
 | `Size_Divider_Columns` / `Divider_Columns` | SizeBox / Border | 列标题下分隔线 |
 | `Overlay_List` | Overlay | 列表与空容器提示的叠放容器 |
 | `LootRow_1` … `LootRow_5` | `WBP_LootRow` | 设计器占位行，运行时清空重建 |
@@ -45,11 +47,12 @@
 | 节点 | 事件 | 程序要做什么 |
 |---|---|---|
 | `Btn_Close` | 左键单击 | 通知持有方（`WBP_LootPanel`）关闭搜刮面板 |
-| `WBP_LootRow` | 左键单击 | 通知列表/面板「这一行被选中」；由持有方切换选中态 |
 | `WBP_LootRow` | 左键拖拽结束 | 把「哪一行 → 落在哪个格子」上报给持有方；本控件不判断落点 |
+| `WBP_LootRow` 内的 `Btn_Take` | 左键单击 | 上报「这一行整叠拿取」给持有方 |
+| `WBP_LootRow` 内的 `Btn_Take` | 左键单击 + Shift | 上报「这一行拿取 1 件」给持有方 |
 | `ScrollBox_LootList` | 滚轮 / 拖动滚动条 | 默认滚动，无需额外处理 |
 
-> 跨控件流程（拖到背包、成功后移除行、刷新件数/空提示）写在持有方 [WBP_LootPanel.md](WBP_LootPanel.md)。
+> 跨控件流程（移入背包、成功后移除行 / 减数量、刷新件数/空提示）写在持有方 [WBP_LootPanel.md](WBP_LootPanel.md)。
 
 ---
 
@@ -59,7 +62,6 @@
 |---|---|---|
 | 有物品 | `ScrollBox_LootList` + `Text_EmptyHint` | 列表显示；空提示隐藏；`Text_LootCount` = 总件数 |
 | 空容器 | `ScrollBox_LootList` + `Text_EmptyHint` | 列表清空；空提示显示；`Text_LootCount` = `0 件` |
-| 行选中 | `WBP_LootRow` | 左侧金条显示、行底色加深；见 [WBP_LootRow.md](WBP_LootRow.md) |
 
 ---
 
@@ -67,4 +69,4 @@
 
 | 节点 | 资产 | 程序要做什么 | 交互文档 |
 |---|---|---|---|
-| `ScrollBox_LootList` 中的行 | `WBP_LootRow` | 按容器数据动态创建；每个行设置图标/名称/数量/重量并绑定点击与拖拽 | 见 [WBP_LootRow.md](WBP_LootRow.md) |
+| `ScrollBox_LootList` 中的行 | `WBP_LootRow` | 按容器数据动态创建；每个行设置图标/名称/数量/重量并绑定拖拽与「拿取」按钮 | 见 [WBP_LootRow.md](WBP_LootRow.md) |
