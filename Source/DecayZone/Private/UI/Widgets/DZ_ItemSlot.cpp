@@ -15,7 +15,7 @@ void UDZ_ItemSlot::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UDZ_ItemSlot::SetItemInfo(int32 ItemID, int32 Quantity=0)
+void UDZ_ItemSlot::SetItemInfo(int32 ItemID, int32 Quantity)
 {
 	CurrentItemID = ItemID;
 	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, ItemID);
@@ -76,7 +76,7 @@ UDZ_UserWidget* UDZ_ItemSlot::CreateDragVisualWidget()
 	UDZ_ItemSlot* VisualWidget = CreateWidget<UDZ_ItemSlot>(GetOwningPlayer(), GetClass());
 	if (VisualWidget)
 	{
-		VisualWidget->SetItemInfo(CurrentItemID);
+		VisualWidget->SetItemInfo(CurrentItemID, 1);
 	}
 	return VisualWidget;
 }

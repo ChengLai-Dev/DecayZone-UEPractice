@@ -6,11 +6,11 @@
 #include "Library/UIHelper.h"
 #include "UI/DZ_UserWidget.h"
 
-void UUIManager::OpenWidget(UDZ_UserWidget* Widget, bool bEnableKeyClose)
+void UUIManager::OpenWidget(UDZ_UserWidget* Widget, bool bResident)
 {
 	int32 ZOrder = UIHelper::GetZOrder(Widget);
 	
-	if (!bEnableKeyClose)
+	if (bResident)
 	{
 		Widget->AddToViewport(ZOrder);
 		return;

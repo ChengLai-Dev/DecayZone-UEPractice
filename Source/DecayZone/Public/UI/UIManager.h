@@ -15,7 +15,7 @@ class DECAYZONE_API UUIManager : public ULocalPlayerSubsystem
 {
 	GENERATED_BODY()
 public:
-	void OpenWidget(UDZ_UserWidget* Widget, bool bEnableKeyClose=true);
+	void OpenWidget(UDZ_UserWidget* Widget, bool bResident=false);
 	void CloseWidget(UDZ_UserWidget* Widget);
 	void CloseTopWidget();
 	void UpdateInputMode();

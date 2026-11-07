@@ -9,6 +9,7 @@ void UDZ_UserWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	UIManager = ULocalPlayer::GetSubsystem<UUIManager>(GetOwningLocalPlayer());
+	OnInitializeComplete.Broadcast();
 }
 
 FReply UDZ_UserWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -102,7 +103,7 @@ void UDZ_UserWidget::SetDragEnabled(bool bEnable)
 
 void UDZ_UserWidget::Open()
 {
-	UIManager->OpenWidget(this, bEnableKeyClose);
+	UIManager->OpenWidget(this, bResident);
 }
 
 void UDZ_UserWidget::Close()

@@ -42,7 +42,9 @@
 | `BackpackPanel` 的格子（见 [WBP_ItemSlot.md](WBP_ItemSlot.md)） | 格子被左键点击 | 1) 遍历背包格：被点的格子刷金框，其余刷回灰框（保证同时最多一个选中）；2) 该格有物品 → `ItemDetail` 切到详情态并填入该物品；3) 该格为空 → 按待定方案处理（取消选中或忽略） |
 | `BackpackPanel` 的格子 | 拖拽开始 / 拖放结束 | 背包面板只上报事件；跨栏拖放（战利品 → 背包）由 `WBP_LootPanel` 处理，本面板不处理战利品行 |
 | `ItemDetail` 的按钮（见 [WBP_ItemDetail.md](WBP_ItemDetail.md)） | 使用 / 装备 / 丢弃 | 对当前选中物品执行对应操作，并把结果反映到格子与详情 |
-| `EquipmentPanel` | 装备槽点击 | 当前不接；见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) 的「待定」 |
+| `EquipmentPanel` 的 4 个装备槽（主武器 / 近战武器 / 护甲 / 背包） | 拖入 / 拖出 | 装备面板把 4 个槽的拖拽聚合成 `OnItemDrop`，本面板接到既有的 `OnItemMoveRequested`，最终由 Controller 发 Server RPC；合法性由服务器判定 |
+| `EquipmentPanel` 的 `CharacterStats` | — | 纯显示，由 `InventoryPanel::SetCharacterStats` 逐层转发刷新，不产生交互事件 |
+| `EquipmentPanel` 的装备槽 | 左键单击 | 当前不接；见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) 的「M1 不处理」 |
 | 面板空白处 | 左键单击 | **待定**：取消选中 / 无响应 |
 | `ESC` | 按键 | 关闭面板（按键不在 UI 节点上） |
 
@@ -67,6 +69,6 @@
 
 | 节点 | 资产 | 程序要做什么 | 交互文档 |
 |---|---|---|---|
-| `EquipmentPanel` | `WBP_EquipmentPanel` | 设置 8 个装备槽的图标/名称/选中 | 见 [WBP_EquipmentPanel.md](WBP_EquipmentPanel.md) |
+| `EquipmentPanel` | `WBP_EquipmentPanel` | 设置 4 个装备槽的图标/名称；转发属性区刷新 | 见 [WBP_EquipmentPanel.md](WBP_EquipmentPanel.md) |
 | `BackpackPanel` | `WBP_BackpackPanel` | 设置 20 格物品/数量/负重；接收格子点击与拖放 | 见 [WBP_BackpackPanel.md](WBP_BackpackPanel.md) |
 | `ItemDetail` | `WBP_ItemDetail` | 切换汇总/详情态、填物品数据 | 见 [WBP_ItemDetail.md](WBP_ItemDetail.md) |

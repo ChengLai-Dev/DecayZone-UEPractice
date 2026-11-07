@@ -14,14 +14,11 @@ enum class EItemContainer: uint8
 UENUM(BlueprintType)
 enum class EEquipSlot: uint8
 {
-	Helmet,
 	Armor,
 	Primary,
-	Secondary,
 	Melee,
 	Backpack,
-	ChestRig,
-	Headset,
+	None,
 };
 
 USTRUCT(BlueprintType)

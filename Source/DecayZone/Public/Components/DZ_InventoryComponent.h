@@ -7,7 +7,9 @@
 #include "Components/ActorComponent.h"
 #include "DZ_InventoryComponent.generated.h"
 
+enum class EEquipSlot : uint8;
 struct FDZ_ItemStack;
+struct FDZ_ItemSlotHandle;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DECAYZONE_API UDZ_InventoryComponent : public UActorComponent
@@ -19,10 +21,16 @@ public:
 	UDZ_InventoryComponent();
 	virtual void BeginPlay() override;
 	const TArray<FDZ_ItemStack>& GetItems();
+	const TArray<int32>& GetEquipments();
+	
+	bool IsEquipSlotValid(int32 SlotIndex);
+	void SetEquipments(int32 SlotIndex, int32 Item);
+	void ClearEquipment(int32 SlotIndex);
+	
 	bool AddItem(int32 Index, int32 ItemID, int32 Count);
 	void RemoveItem(int32 Index, int32 Count = 1);
 	void RemoveItemsAll(int32 Index);
-	bool MoveItem(int32 FromIndex, int32 ToIndex);
+	bool MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	bool AddItemAutoPos(int32 ItemID, int32 Count);
 	bool IsSlotValid(int32 SlotIndex);
 	
@@ -33,9 +41,15 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_Items)
 	TArray<FDZ_ItemStack> Items;
 	
+	UPROPERTY(ReplicatedUsing = OnRep_Equipments)
+	TArray<int32> Equipments;
+	
 	UPROPERTY(EditDefaultsOnly)
 	int32 DefaultCapacity = 5;
 	
 	UFUNCTION()
 	void OnRep_Items();
+	
+	UFUNCTION()
+	void OnRep_Equipments();
 };

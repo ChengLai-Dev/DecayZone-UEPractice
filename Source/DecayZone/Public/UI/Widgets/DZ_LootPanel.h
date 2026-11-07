@@ -19,10 +19,17 @@ class DECAYZONE_API UDZ_LootPanel : public UDZ_UserWidget
 	
 public:
 	
+	virtual void NativeOnInitialized() override;
 	void SetLootListInfo(const TArray<FDZ_ItemStack>& LootList);
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnWidgetDragEndedEvent OnItemMoveRequested;
+	
 private:
+	UFUNCTION()
+	void HandleItemDrop(UWidget* From, UWidget* To);
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_LootListPanel> LootListPanel;
 	

@@ -12,6 +12,34 @@ void UDZ_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxEnergy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Armor, COND_None, REPNOTIFY_Always);
+}
+
+void UDZ_AttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+	
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0, GetMaxHealth());
+	}
+	if (Attribute == GetEnergyAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
+	}
+}
+
+void UDZ_AttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0, GetMaxHealth());
+	}
+	if (Attribute == GetEnergyAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
+	}
 }
 
 void UDZ_AttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
@@ -32,4 +60,9 @@ void UDZ_AttributeSet::OnRep_Energy(const FGameplayAttributeData& OldValue)
 void UDZ_AttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MaxEnergy, OldValue);
+}
+
+void UDZ_AttributeSet::OnRep_Armor(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Armor, OldValue);
 }

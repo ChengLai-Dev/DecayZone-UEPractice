@@ -1,0 +1,37 @@
+{
+  "id": "T_UI_Icon_Armor",
+  "source_png": "outputs/moss/T_UI_Icon_Armor__seed770007.png",
+  "master_png": "icons/work/moss/T_UI_Icon_Armor.png",
+  "runtime_png": "icons/runtime/moss/T_UI_Icon_Armor.png",
+  "source_size": [
+    1024,
+    1024
+  ],
+  "master_size": [
+    512,
+    512
+  ],
+  "runtime_size": [
+    256,
+    256
+  ],
+  "bg_std": 0.66,
+  "bg_tolerance": 10.0,
+  "foreground_ratio": 0.3695,
+  "content_box": [
+    166,
+    130,
+    815,
+    883
+  ],
+  "metrics": {
+    "coverage": 0.5456,
+    "corner_alpha_max": 0.0,
+    "fringe_delta": 127.9,
+    "halo_ratio": 0.428
+  },
+  "verdict": {
+    "status": "pass",
+    "reasons": []
+  }
+}

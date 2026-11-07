@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DZ_ItemSlotBase.h"
 #include "UI/DZ_UserWidget.h"
 #include "DZ_LootListPanel.generated.h"
 
@@ -15,15 +16,26 @@ class UTextBlock;
  * 
  */
 UCLASS()
-class DECAYZONE_API UDZ_LootListPanel : public UDZ_UserWidget
+class DECAYZONE_API UDZ_LootListPanel : public UDZ_ItemSlotBase
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeOnInitialized() override;
 	void SetContainerName(const FText& Name);
+
 	void SetLootListInfo(const TArray<FDZ_ItemStack>& ItemList);
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnWidgetDragEndedEvent LootItemMoveRequest;
+	
+protected:
+	
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 private:
+
+	UFUNCTION()
+	void HandleLootRowItemDrop(UWidget* From, UWidget* To);
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> Text_LootCount;
 	

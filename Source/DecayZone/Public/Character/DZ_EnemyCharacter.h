@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "DZ_BaseCharacter.h"
+#include "GameplayEffect.h"
 #include "DZ_EnemyCharacter.generated.h"
 
 class UDZ_AbilitySystemComponent;
@@ -23,4 +24,7 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
+	TSubclassOf<UGameplayEffect> InitializeGEClass;
 };

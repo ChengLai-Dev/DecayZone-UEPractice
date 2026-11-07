@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+enum class EEquipSlot : uint8;
 struct FDZ_ItemSlotHandle;
 class UDZ_ContainerComponent;
 class UDZ_InventoryComponent;
@@ -15,4 +16,5 @@ public:
 	
 	static bool MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, 
 		const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
+	
 };

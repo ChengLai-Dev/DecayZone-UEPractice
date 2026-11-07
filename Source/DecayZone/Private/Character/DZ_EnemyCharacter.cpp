@@ -23,6 +23,8 @@ void ADZ_EnemyCharacter::BeginPlay()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	if (HasAuthority())
 	{
+		const FGameplayEffectSpecHandle& SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeGEClass, 1, GetAbilitySystemComponent()->MakeEffectContext());
+		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 		GiveStartupAbilities();
 	}
 }

@@ -1,30 +1,48 @@
 # WBP_EquipmentPanel 交互文档
 
+背包界面左侧的装备列：上方 4 个装备槽，下方角色属性区。
+
 | 项 | 值 |
 |---|---|
 | 资产 | `/Game/UI/Inventory/WBP_EquipmentPanel` |
-| 父类 | `UUserWidget`（未接 C++，建议 `UDZ_EquipmentPanel`） |
+| 父类 | `UDZ_EquipmentPanel`（已重绑，编译通过） |
 | 源文件 | `UIWidgets/UI/Inventory/WBP_EquipmentPanel.json` |
-| 尺寸 | 宽随父级、高随父级（整列容器） |
+| 尺寸 | 宽随父级（占背包面板 28%）、高随父级 |
 
 ---
 
-## 需要程序接的节点
+## 1. 结构
+
+```
+Panel_Equipment (Border)
+└─ VB_Equipment
+   ├─ Text_EquipTitle      "EQUIPMENT"
+   ├─ Size_Divider_Equip → Divider_Equip
+   ├─ Row_Equip_1
+   │  ├─ Cell_Primary   → Text_Label_Primary "主武器" + EquipSlot_Primary
+   │  └─ Cell_Melee     → Text_Label_Melee   "近战武器" + EquipSlot_Melee
+   ├─ Row_Equip_2
+   │  ├─ Cell_Armor     → Text_Label_Armor   "护甲" + EquipSlot_Armor
+   │  └─ Cell_Backpack  → Text_Label_Backpack "背包" + EquipSlot_Backpack
+   ├─ Spacer_Fill         吃掉剩余高度，把属性区压到底部
+   └─ CharacterStats      WBP_CharacterStats（见 WBP_CharacterStats.md）
+```
+
+原来是 4 行 8 槽，M1 精简为 2 行 4 槽，腾出的空间给属性区。
+
+---
+
+## 2. 需要程序接的节点
 
 | 节点 | 类型 | 程序用它做什么 |
 |---|---|---|
-| `EquipSlot_Helmet` | `WBP_EquipmentSlot` | 头盔槽：设置图标、名称、选中 |
-| `EquipSlot_Armor` | `WBP_EquipmentSlot` | 护甲槽 |
-| `EquipSlot_Primary` | `WBP_EquipmentSlot` | 主武器槽 |
-| `EquipSlot_Secondary` | `WBP_EquipmentSlot` | 副武器槽 |
-| `EquipSlot_Melee` | `WBP_EquipmentSlot` | 近战武器槽 |
-| `EquipSlot_Backpack` | `WBP_EquipmentSlot` | 背包槽 |
-| `EquipSlot_ChestRig` | `WBP_EquipmentSlot` | 胸挂槽 |
-| `EquipSlot_Headset` | `WBP_EquipmentSlot` | 耳机槽 |
+| `EquipSlot_Primary` | `UDZ_EquipmentSlot` | 主武器槽：设置图标/名称、拖放目标 |
+| `EquipSlot_Melee` | `UDZ_EquipmentSlot` | 近战武器槽：同上 |
+| `EquipSlot_Armor` | `UDZ_EquipmentSlot` | 护甲槽：同上 |
+| `EquipSlot_Backpack` | `UDZ_EquipmentSlot` | 背包槽：同上 |
+| `CharacterStats` | `UDZ_CharacterStats` | 属性区：转发刷新 |
 
-> 节点名一律写对象名（`GetName()` / JSON 的 `name` 字段）。装备槽内部节点见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md)。
-
-## 不需要接的节点
+## 3. 不需要接的节点
 
 | 节点 | 类型 | 说明 |
 |---|---|---|
@@ -32,41 +50,72 @@
 | `VB_Equipment` | VerticalBox | 列内布局 |
 | `Text_EquipTitle` | TextBlock | 固定标题 `EQUIPMENT` |
 | `Size_Divider_Equip` / `Divider_Equip` | SizeBox / Border | 分隔线 |
-| `Row_Equip_1` … `Row_Equip_4` | HorizontalBox | 四行装备排布 |
-| `Cell_Helmet` / `Cell_Armor` / `Cell_Primary` / `Cell_Secondary` / `Cell_Melee` / `Cell_Backpack` / `Cell_ChestRig` / `Cell_Headset` | VerticalBox | 单个装备单元 |
-| `Text_Label_Helmet` / `Text_Label_Armor` / `Text_Label_Primary` / `Text_Label_Secondary` / `Text_Label_Melee` / `Text_Label_Backpack` / `Text_Label_ChestRig` / `Text_Label_Headset` | TextBlock | 固定槽位标签（头盔/护甲/主武器…） |
+| `Row_Equip_1` / `Row_Equip_2` | HorizontalBox | 两行装备排布 |
+| `Cell_*` | VerticalBox | 单个装备单元 |
+| `Text_Label_*` | TextBlock | 固定槽位标签 |
+| `Spacer_Fill` | Spacer | 布局占位 |
 
 ---
 
-## 交互
+## 4. 交互
 
-无。纯显示控件，本身不接收事件。
+| 触发 | 在哪 | 程序要做什么 |
+|---|---|---|
+| 装备槽拖入 / 拖出 | 槽内部 | 槽广播 `OnWidgetDragEnded(Source, Target)`，面板聚合成 `OnItemDrop(From, To)` |
+| 面板对外事件 | `UDZ_EquipmentPanel::OnItemDrop` | 由 `WBP_InventoryPanel` 在 `NativeOnInitialized` 里接住，转成自身的 `OnItemMoveRequested`，最终由 Controller 发 Server RPC |
 
-> 装备槽单击行为见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md)；当前为「待定」，由持有方决定查看详情/卸下/不响应。
+**客户端不判断"这件物品能不能放进这个槽"**，只负责把来源句柄和目标句柄交上去；合法性由服务器校验，失败则两边都不动。
 
 ---
 
-## 状态
-
-本控件没有独立状态节点，所有表现都落在 8 个装备槽上：
+## 5. 状态
 
 | 状态 | 哪个节点变 | 变成什么 |
 |---|---|---|
 | 空槽 | 装备槽的 `Img_EquipIcon` + `Text_EquipName` | 图标隐藏，文字「未装备」 |
 | 已装备 | 装备槽的 `Img_EquipIcon` + `Text_EquipName` | 图标显示，文字为装备名 |
-| 选中 | 装备槽的 `Border_Selected` | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| 属性变化 | `CharacterStats` 内部 | 见 [WBP_CharacterStats.md](WBP_CharacterStats.md) |
 
 ---
 
-## 含有的子控件
+## 6. 槽位索引约定
+
+`FDZ_ItemSlotHandle.SlotIndex` 在装备容器下直接使用 `EEquipSlot` 的数值：
+
+| `EEquipSlot` | 数值 | M1 |
+|---|---|---|
+| `Helmet` | 0 | — |
+| `Armor` | 1 | 接线 |
+| `Primary` | 2 | 接线 |
+| `Secondary` | 3 | — |
+| `Melee` | 4 | 接线 |
+| `Backpack` | 5 | 接线 |
+| `ChestRig` | 6 | — |
+| `Headset` | 7 | — |
+| `None` | 8 | 不可装备标记 |
+
+> 枚举 8 个值全部保留，只是 UI 不再显示其中 4 个。以后加回槽位只需补 JSON 节点，不动枚举和已存数据。
+> 新增枚举值时只能往后追加，不能插队，否则已存的槽位索引会整体错位。
+
+---
+
+## 7. 程序侧待实现（M1）
+
+1. `UDZ_EquipmentPanel` 声明 4 个槽 + `CharacterStats` 的 `BindWidget`。
+2. `SetEquipmentInfo(const TArray<FDZ_ItemStack>& Equipment)`：按 `EEquipSlot` 数值取下标，刷 4 个槽。
+3. `SetCharacterStats(...)`：转发给 `CharacterStats`。
+4. `NativeOnInitialized` 里把 4 个槽的 `OnWidgetDragEnded` 接到面板的 `HandleItemDrop`，聚合成 `OnItemDrop`。
+5. `UDZ_InventoryPanel` 增加 `EquipmentPanel` 的 `BindWidget`，接住 `OnItemDrop` 与 `SetCharacterStats`。
+6. ✅ 已完成：`WBP_EquipmentPanel` 父类已重绑为 `UDZ_EquipmentPanel`。
+
+---
+
+## 8. 含有的子控件
 
 | 节点 | 资产 | 程序要做什么 | 交互文档 |
 |---|---|---|---|
-| `EquipSlot_Helmet` | `WBP_EquipmentSlot` | 设置头盔图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Armor` | `WBP_EquipmentSlot` | 设置护甲图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Primary` | `WBP_EquipmentSlot` | 设置主武器图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Secondary` | `WBP_EquipmentSlot` | 设置副武器图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Melee` | `WBP_EquipmentSlot` | 设置近战武器图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Backpack` | `WBP_EquipmentSlot` | 设置背包图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_ChestRig` | `WBP_EquipmentSlot` | 设置胸挂图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
-| `EquipSlot_Headset` | `WBP_EquipmentSlot` | 设置耳机图标/名称/选中 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| `EquipSlot_Primary` | `WBP_EquipmentSlot` | 设置图标/名称、拖放目标 | [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| `EquipSlot_Melee` | `WBP_EquipmentSlot` | 同上 | [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| `EquipSlot_Armor` | `WBP_EquipmentSlot` | 同上 | [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| `EquipSlot_Backpack` | `WBP_EquipmentSlot` | 同上 | [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
+| `CharacterStats` | `WBP_CharacterStats` | 转发属性刷新 | [WBP_CharacterStats.md](WBP_CharacterStats.md) |

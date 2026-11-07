@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "FDZ_ItemSlotHandle.h"
 #include "FDZ_ItemData.generated.h"
 
 UENUM(BlueprintType)
@@ -12,6 +13,13 @@ enum class EItemUseType : uint8
 	Throw,
 	Equip,
 	Buff
+};
+
+UENUM(BlueprintType)
+enum class EItemType : uint8
+{
+	Normal,
+	Equipment,
 };
 
 USTRUCT(BlueprintType)
@@ -26,8 +34,17 @@ struct FDZ_ItemData: public FTableRowBase
 	FText ItemName;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EItemType ItemType = EItemType::Normal;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float Weight = 0.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> Icon;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	EEquipSlot EquipSlot = EEquipSlot::None;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ArmorBonus = 0.0f;
 };

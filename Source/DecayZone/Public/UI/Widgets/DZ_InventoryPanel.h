@@ -6,6 +6,7 @@
 #include "UI/DZ_UserWidget.h"
 #include "DZ_InventoryPanel.generated.h"
 
+class UDZ_EquipmentPanel;
 struct FDZ_ItemStack;
 class UDZ_BackpackPanel;
 class UDZ_ItemDetail;
@@ -19,8 +20,7 @@ class DECAYZONE_API UDZ_InventoryPanel : public UDZ_UserWidget
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION()
-	void HandleItemDrop(UWidget* From, UWidget* To);
+
 	virtual void NativeOnInitialized() override;
 	
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
@@ -30,11 +30,17 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_BackpackPanel> BackpackPanel;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UDZ_EquipmentPanel> EquipmentPanel;
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetDragEndedEvent OnItemMoveRequested;
 	
 private:
+	UFUNCTION()
+	void HandleItemDrop(UWidget* From, UWidget* To);
+	
 	UFUNCTION()
 	void HandleItemSlotClicked(UWidget* Widget);
 	

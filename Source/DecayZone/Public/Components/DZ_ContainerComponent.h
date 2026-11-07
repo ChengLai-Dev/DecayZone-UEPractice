@@ -33,6 +33,9 @@ public:
 	
 	bool IsSlotValid(int32 SlotIndex);
 	void RemoveItemsAll(int32 SlotIndex);
+	void RemoveItems(int32 SlotIndex, int32 Count=1);
+	
+	bool AddItem(int32 ItemID, int32 Count);
 	
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

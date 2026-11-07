@@ -180,9 +180,9 @@
 										{
 											"Text": "未装备",
 											"ColorAndOpacity": "(SpecifiedColor=(R=0.132868,G=0.187821,B=0.212231,A=1.000000))",
-											"Justification": "Center",
 											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
-											"TextOverflowPolicy": "Ellipsis"
+											"TextOverflowPolicy": "Ellipsis",
+											"Justification": "Center"
 										},
 										"slot":
 										{
@@ -201,5 +201,5 @@
 			}
 		]
 	},
-	"contentHash": "d411e6ce07dad3905e0de63575d3fd0c"
+	"contentHash": "391157796a50bc0dfe9c9fa70960f9b7"
 }

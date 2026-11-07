@@ -17,6 +17,10 @@ class DECAYZONE_API UDZ_EquipmentSlot : public UDZ_UserWidget
 	GENERATED_BODY()
 	
 public:
+	void SetItemInfo(int32 ItemId);
+	void SetEmpty();
+
+private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> Text_EquipName;
 	

@@ -6,8 +6,10 @@
 #include "AbilitySystemInterface.h"
 #include "DZ_BaseCharacter.h"
 #include "DZ_DelegateTypes.h"
+#include "GameplayEffectTypes.h"
 #include "DZ_PlayerCharacter.generated.h"
 
+class UGameplayEffect;
 class UDZ_InventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -29,7 +31,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	
+
 	virtual void OnRep_PlayerState() override;
 
 	UFUNCTION()
@@ -42,6 +44,12 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnActorEvent OnFocusInteractableActorChanged;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnEvent OnASCInitialized;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnEvent OnAttributesInitialized;
 	
 	bool IsInteractableInRange(AActor* Actor);
 	
@@ -71,4 +79,10 @@ private:
 	TObjectPtr<UBoxComponent> InteractionBox;
 	
 	TWeakObjectPtr<AActor> CurrentInteractableActor;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
+	TSubclassOf<UGameplayEffect> InitializeGEClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
+	TSubclassOf<UGameplayEffect> EnergyRegenGEClass;
 };

@@ -8,7 +8,7 @@
 
 UDZ_InteractProgress::UDZ_InteractProgress()
 {
-	bEnableKeyClose = false;
+	bResident = true;
 }
 
 void UDZ_InteractProgress::NativeOnInitialized()

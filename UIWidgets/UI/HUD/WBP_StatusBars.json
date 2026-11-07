@@ -1,0 +1,369 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/HUD/WBP_StatusBars",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "Size_Status",
+				"isVariable": false,
+				"properties":
+				{
+					"WidthOverride": 340,
+					"HeightOverride": 64,
+					"bOverride_WidthOverride": true,
+					"bOverride_HeightOverride": true
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 40,
+								"top": -40,
+								"right": 340,
+								"bottom": 64
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0,
+									"y": 1
+								},
+								"max":
+								{
+									"x": 0,
+									"y": 1
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 1
+							}
+						}
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.VerticalBox",
+						"className": "VerticalBox",
+						"name": "VB_Status",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.HorizontalBox",
+								"className": "HorizontalBox",
+								"name": "HB_Health",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.VerticalBoxSlot",
+									"className": "VerticalBoxSlot",
+									"properties":
+									{
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_HealthLabel",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "生命",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.420000,G=0.520000,B=0.560000,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=11.000000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.Spacer",
+										"className": "Spacer",
+										"name": "Spacer_Health",
+										"isVariable": false,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Size":
+												{
+													"value": 1,
+													"rule": "Fill"
+												}
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_HealthValue",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "100 / 100",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=11.000000,MonospacedWidth=1.000000)",
+											"Justification": "Right"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_HealthBar",
+								"isVariable": false,
+								"properties":
+								{
+									"HeightOverride": 8,
+									"bOverride_HeightOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.VerticalBoxSlot",
+									"className": "VerticalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 0,
+											"top": 3,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.ProgressBar",
+										"className": "ProgressBar",
+										"name": "Bar_Health",
+										"isVariable": true,
+										"properties":
+										{
+											"Percent": 1,
+											"FillColorAndOpacity":
+											{
+												"r": 0.72200000286102295,
+												"g": 0.18000000715255737,
+												"b": 0.18000000715255737,
+												"a": 1
+											}
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.HorizontalBox",
+								"className": "HorizontalBox",
+								"name": "HB_Energy",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.VerticalBoxSlot",
+									"className": "VerticalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 0,
+											"top": 8,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_EnergyLabel",
+										"isVariable": false,
+										"properties":
+										{
+											"Text": "能量",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.420000,G=0.520000,B=0.560000,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=11.000000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.Spacer",
+										"className": "Spacer",
+										"name": "Spacer_Energy",
+										"isVariable": false,
+										"properties":
+										{
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Size":
+												{
+													"value": 1,
+													"rule": "Fill"
+												}
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_EnergyValue",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "100 / 100",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=11.000000,MonospacedWidth=1.000000)",
+											"Justification": "Right"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_EnergyBar",
+								"isVariable": false,
+								"properties":
+								{
+									"HeightOverride": 6,
+									"bOverride_HeightOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.VerticalBoxSlot",
+									"className": "VerticalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 0,
+											"top": 3,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.ProgressBar",
+										"className": "ProgressBar",
+										"name": "Bar_Energy",
+										"isVariable": true,
+										"properties":
+										{
+											"Percent": 1,
+											"FillColorAndOpacity":
+											{
+												"r": 0.18000000715255737,
+												"g": 0.55000001192092896,
+												"b": 0.62000000476837158,
+												"a": 1
+											}
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "e8f953cf674429ba82a8a144af1598e5"
+}

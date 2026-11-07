@@ -8,8 +8,7 @@
 
 UDZ_InteractPrompt::UDZ_InteractPrompt()
 {
-	bEnableKeyClose = false;
-	
+	bResident = true;
 }
 
 void UDZ_InteractPrompt::SetKeyText(const FText& KeyText)

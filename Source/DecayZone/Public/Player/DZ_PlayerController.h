@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/PlayerController.h"
 #include "DZ_PlayerController.generated.h"
 
+class UDZ_StatusBars;
+struct FGameplayAttributeData;
 class UDZ_UserWidget;
 class UDZ_LootPanel;
 struct FGameplayTag;
@@ -31,8 +34,9 @@ public:
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	void HandleInteractableActorChanged(AActor* Actor);
+
+	virtual void OnRep_PlayerState() override;
+	
 	virtual void AcknowledgePossession(APawn* InPawn) override;
 
 	UFUNCTION(Server, Reliable)
@@ -46,13 +50,27 @@ public:
 	
 	UFUNCTION(Client, Reliable)
 	void ClientInteractFinished(AActor* Target, bool bSucceeded);
-
+	
+	void RefreshUIAll(bool bForceRefresh = true);
+	
 private:
+	
+	void OnAttributeValueChanged(const FOnAttributeChangeData& Data);
+	
+	UFUNCTION()
+	void RefreshStatusBars();
+
+	UFUNCTION()
+	void HandleInteractableActorChanged(AActor* Actor);
+	
 	UFUNCTION()
 	void HandleItemMoveRequested(UWidget* From, UWidget* To);
 	
 	UFUNCTION()
 	void HandleInventoryItemsChanged();
+	
+	UFUNCTION()
+	void HandleContainerItemsChanged();
 	
 	void FinishInteract();
 	void ActivateAbilityByTag(const FGameplayTag& AbilityTag);
@@ -78,6 +96,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
 	
+	UPROPERTY()
+	TObjectPtr<UDZ_StatusBars> StatusBarsWidget;
+	
 	float TotalDuration = 0.f;
 	float ElapsedTime = 0.f;
 	
@@ -85,5 +106,9 @@ private:
 	
 	FTimerHandle InteractTimerHandle;
 	TWeakObjectPtr<AActor> InteractTarget;
+	
+	TWeakObjectPtr<UDZ_ContainerComponent> InteractContainerComp;
+	
+	TWeakObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };
 

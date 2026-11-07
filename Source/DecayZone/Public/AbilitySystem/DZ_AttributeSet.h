@@ -19,6 +19,12 @@ class DECAYZONE_API UDZ_AttributeSet : public UAttributeSet
 public:
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Health);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxHealth);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Energy);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxEnergy);
+	
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	
 	
 private:
 	
@@ -34,6 +40,9 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_MaxEnergy)
 	FGameplayAttributeData MaxEnergy;
 	
+	UPROPERTY(ReplicatedUsing = OnRep_Armor)
+	FGameplayAttributeData Armor;
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);
 	
@@ -46,4 +55,6 @@ private:
 	UFUNCTION()
 	void OnRep_MaxEnergy(const FGameplayAttributeData& OldValue);
 	
+	UFUNCTION()
+	void OnRep_Armor(const FGameplayAttributeData& OldValue);
 };

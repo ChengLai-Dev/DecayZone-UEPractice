@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "AbilitySystem/DZ_AttributeSet.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/DZ_PlayerCharacter.h"
 #include "Components/DZ_ContainerComponent.h"
@@ -19,12 +20,14 @@
 #include "GameFramework/Character.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/ItemHelper.h"
+#include "Player/DZ_PlayerState.h"
 #include "UI/UIManager.h"
 #include "UI/Widgets/DZ_InteractProgress.h"
 #include "UI/Widgets/DZ_InventoryPanel.h"
 #include "UI/Widgets/DZ_InteractPrompt.h"
 #include "UI/Widgets/DZ_ItemSlotBase.h"
 #include "UI/Widgets/DZ_LootPanel.h"
+#include "UI/Widgets/DZ_StatusBars.h"
 
 
 void ADZ_PlayerController::SetupInputComponent()
@@ -57,8 +60,38 @@ void ADZ_PlayerController::BeginPlay()
 	InteractPromptWidget = CreateWidget<UDZ_InteractPrompt>(this, UIConfig->InteractPromptClass);
 	InteractProgressWidget = CreateWidget<UDZ_InteractProgress>(this, UIConfig->InteractProgressClass);
 	LootPanelWidget = CreateWidget<UDZ_LootPanel>(this, UIConfig->LootPanelClass);
+	StatusBarsWidget = CreateWidget<UDZ_StatusBars>(this, UIConfig->StatusBarsClass);
 	
 	InventoryPanelWidget->OnItemMoveRequested.AddDynamic(this, &ADZ_PlayerController::HandleItemMoveRequested);
+	LootPanelWidget->OnItemMoveRequested.AddDynamic(this, &ADZ_PlayerController::HandleItemMoveRequested);
+	StatusBarsWidget->Open();
+}
+void ADZ_PlayerController::OnAttributeValueChanged(const FOnAttributeChangeData& Data)
+{
+	RefreshStatusBars();
+}
+
+void ADZ_PlayerController::RefreshStatusBars()
+{
+	float Enegy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetEnergyAttribute());
+	float MaxEnegy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxEnergyAttribute());
+	float Health = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetHealthAttribute());
+	float MaxHealth = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxHealthAttribute());
+	StatusBarsWidget->SetHealthInfo(Health, MaxHealth);
+	StatusBarsWidget->SetEnergyInfo(Enegy, MaxEnegy);
+}
+
+void ADZ_PlayerController::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	AbilitySystemComponent = GetPlayerState<ADZ_PlayerState>()->GetAbilitySystemComponent();
+	if (AbilitySystemComponent.IsValid())
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetEnergyAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetMaxEnergyAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetMaxHealthAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
+	}
 }
 
 void ADZ_PlayerController::Tick(float DeltaSeconds)
@@ -124,14 +157,17 @@ void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target,
 	InteractProgressWidget->Close();
 	InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
 	bIsInteracting = false;
-
 	if (!bSucceeded) return;
-	LootPanelWidget->Open();
-	UDZ_ContainerComponent* ContainerComp = Target->FindComponentByClass<UDZ_ContainerComponent>();
-	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
 	
-	LootPanelWidget->SetLootListInfo(ContainerComp->GetContents());
-	LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+	if (InteractContainerComp.IsValid())
+	{
+		InteractContainerComp->OnContentsChanged.RemoveAll(this);
+	}
+	InteractContainerComp = Target->FindComponentByClass<UDZ_ContainerComponent>();
+	if (!InteractContainerComp.IsValid()) return;
+	InteractContainerComp->OnContentsChanged.AddDynamic(this, &ThisClass::HandleContainerItemsChanged);
+	LootPanelWidget->Open();
+	RefreshUIAll(false);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 }
 
 void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent* InventoryComp,
@@ -139,8 +175,27 @@ void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent*
 {
 	if (ItemHelper::MoveItem(InventoryComp, ContainerComp, From, To))
 	{
+		RefreshUIAll(false);
+	}
+}
+
+
+void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
+{
+	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
+	if (bForceRefresh || IsValid(InventoryPanelWidget) && InventoryPanelWidget->IsInViewport())
+	{
 		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 	}
+	if (bForceRefresh || IsValid(LootPanelWidget) && LootPanelWidget->IsInViewport())
+	{
+		LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+		if (InteractContainerComp.IsValid())
+		{
+			LootPanelWidget->SetLootListInfo(InteractContainerComp->GetItems());
+		}
+	}
+	RefreshStatusBars();
 }
 
 
@@ -151,15 +206,18 @@ void ADZ_PlayerController::HandleItemMoveRequested(UWidget* From, UWidget* To)
 	if (!FromWidget || !ToWidget) return;
 	
 	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
-	ServerMoveItem(InventoryComp, nullptr, FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
+
+	ServerMoveItem(InventoryComp, InteractContainerComp.Get(), FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
 }
 
 void ADZ_PlayerController::HandleInventoryItemsChanged()
 {
-	if (UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>())
-	{
-		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
-	}
+	RefreshUIAll(false);
+}
+
+void ADZ_PlayerController::HandleContainerItemsChanged()
+{
+	RefreshUIAll(false);
 }
 
 void ADZ_PlayerController::FinishInteract()
@@ -181,10 +239,7 @@ void ADZ_PlayerController::FinishInteract()
 
 void ADZ_PlayerController::ActivateAbilityByTag(const FGameplayTag& AbilityTag)
 {
-	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
-	if (!IsValid(ASC)) return;
-    
-	ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
+	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }
 
 void ADZ_PlayerController::HandleInteractableActorChanged(AActor* Actor)
@@ -225,6 +280,7 @@ void ADZ_PlayerController::AcknowledgePossession(APawn* InPawn)
 		{
 			InventoryComp->OnItemsChanged.AddDynamic(this, &ADZ_PlayerController::HandleInventoryItemsChanged);
 		}
+		PlayerCharacter->OnAttributesInitialized.AddDynamic(this, &ADZ_PlayerController::RefreshStatusBars);
 	}
 }
 

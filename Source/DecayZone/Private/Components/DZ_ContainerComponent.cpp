@@ -91,6 +91,31 @@ void UDZ_ContainerComponent::RemoveItemsAll(int32 SlotIndex)
 	Items.RemoveAt(SlotIndex);
 }
 
+void UDZ_ContainerComponent::RemoveItems(int32 SlotIndex, int32 Count)
+{
+	if (!GetOwner()->HasAuthority()) return;
+	if (!IsSlotValid(SlotIndex)) return;
+	Items[SlotIndex].Count -= Count;
+	if (Items[SlotIndex].Count <= 0)
+	{
+		Items.RemoveAt(SlotIndex);
+	}
+}
+
+bool UDZ_ContainerComponent::AddItem(int32 ItemID, int32 Count)
+{
+	for (FDZ_ItemStack& ItemStack: Items)
+	{
+		if (ItemStack.Count == 0 || ItemStack.ItemId == ItemID)
+		{
+			ItemStack.Count += Count;
+			return true;
+		}
+	}
+	Items.Add(FDZ_ItemStack(ItemID, Count));
+	return true;
+}
+
 void UDZ_ContainerComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

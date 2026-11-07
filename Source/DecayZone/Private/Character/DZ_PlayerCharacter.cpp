@@ -4,6 +4,7 @@
 #include "Character/DZ_PlayerCharacter.h"
 
 #include "AbilitySystem/DZ_AbilitySystemComponent.h"
+#include "AbilitySystem/DZ_AttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/DZ_InventoryComponent.h"
@@ -65,6 +66,11 @@ void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 	ADZ_PlayerState* DZ_PlayerState = Cast<ADZ_PlayerState>(GetPlayerState());
 	AbilitySystemComponent = Cast<UDZ_AbilitySystemComponent>(DZ_PlayerState->GetAbilitySystemComponent());
 	AbilitySystemComponent->InitAbilityActorInfo(DZ_PlayerState, this);
+	const FGameplayEffectSpecHandle& SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(InitializeGEClass, 1, AbilitySystemComponent->MakeEffectContext());
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	const FGameplayEffectSpecHandle& EnergyRegenSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(EnergyRegenGEClass, 1, AbilitySystemComponent->MakeEffectContext());
+	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EnergyRegenSpecHandle.Data);
+	OnAttributesInitialized.Broadcast();
 	GiveStartupAbilities();
 }
 

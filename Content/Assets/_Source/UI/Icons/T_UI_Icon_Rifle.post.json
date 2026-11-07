@@ -1,0 +1,44 @@
+{
+  "id": "T_UI_Icon_Rifle",
+  "source_png": "outputs/moss/T_UI_Icon_Rifle__seed770008.png",
+  "master_png": "icons/work/moss/T_UI_Icon_Rifle.png",
+  "runtime_png": "icons/runtime/moss/T_UI_Icon_Rifle.png",
+  "source_size": [
+    1024,
+    1024
+  ],
+  "master_size": [
+    512,
+    512
+  ],
+  "runtime_size": [
+    256,
+    256
+  ],
+  "bg_std": 8.46,
+  "bg_tolerance": 33.38,
+  "foreground_ratio": 0.136,
+  "content_box": [
+    29,
+    281,
+    999,
+    738
+  ],
+  "metrics": {
+    "coverage": 0.1438,
+    "corner_alpha_max": 0.0,
+    "fringe_delta": 79.28,
+    "halo_ratio": 0.288
+  },
+  "verdict": {
+    "status": "fail",
+    "reasons": [
+      "背景不纯净(std=8.5)"
+    ]
+  },
+  "postprocess": {
+    "rotation_deg": 45.0,
+    "fit_ratio": 0.92,
+    "reason": "原图背景有渐变导致 bg_std 判定失败；抠图边缘干净（corner_alpha_max=0），仅重排构图填满方形槽位"
+  }
+}
