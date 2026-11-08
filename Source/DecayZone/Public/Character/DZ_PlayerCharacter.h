@@ -59,6 +59,11 @@ protected:
 private:
 	void HighlightInteractable();
 	AActor* FindTargetInteractableActor();
+	
+	void RecalculateArmor();
+	
+	UFUNCTION()
+	void HandleEquipmentsChanged();
 
 	UPROPERTY()
 	TSet<AActor*> OverlappingInteractables;
@@ -85,4 +90,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TSubclassOf<UGameplayEffect> EnergyRegenGEClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
+	TSubclassOf<UGameplayEffect> EquipmentArmorGEClass;
+	
+	FActiveGameplayEffectHandle ArmorGEHandle;
 };

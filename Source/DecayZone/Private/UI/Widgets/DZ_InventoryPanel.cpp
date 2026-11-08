@@ -33,6 +33,11 @@ void UDZ_InventoryPanel::SetEquipmentPanel(const TArray<int32>& EquipmentInfo)
 	EquipmentPanel->SetEquipmentInfo(EquipmentInfo);
 }
 
+void UDZ_InventoryPanel::SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInfo)
+{
+	EquipmentPanel->SetCharacterStatsInfo(StatsInfo);
+}
+
 void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
 {
 	UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Widget);

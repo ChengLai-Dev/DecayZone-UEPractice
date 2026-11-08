@@ -12,6 +12,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameplayEffect.h"
+#include "GameplayTags/DZGameplayTags.h"
 #include "Library/DZ_BlueprintLibrary.h"
 #include "Player/DZ_PlayerState.h"
 
@@ -53,6 +55,10 @@ bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)
 void ADZ_PlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	if (InventoryComponent)
+	{
+		InventoryComponent->OnEquipmentsChanged.AddDynamic(this, &ThisClass::HandleEquipmentsChanged);
+	}
 }
 
 void ADZ_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -72,6 +78,33 @@ void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EnergyRegenSpecHandle.Data);
 	OnAttributesInitialized.Broadcast();
 	GiveStartupAbilities();
+	RecalculateArmor();
+}
+
+void ADZ_PlayerCharacter::RecalculateArmor()
+{
+	if (!HasAuthority()) return;
+	if (!AbilitySystemComponent) return;
+	
+	if (ArmorGEHandle.IsValid())
+	{
+		AbilitySystemComponent->RemoveActiveGameplayEffect(ArmorGEHandle);
+	}
+	
+	if (!EquipmentArmorGEClass || !InventoryComponent) return;
+	const float TotalArmor = InventoryComponent->GetTotalArmor();
+	if (TotalArmor <= 0.f) return;
+	
+	FGameplayEffectContextHandle Context = AbilitySystemComponent->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipmentArmorGEClass, 1, Context);
+	if (!SpecHandle.IsValid()) return;
+	SpecHandle.Data->SetSetByCallerMagnitude(DZGameplayTags::SetByCaller_Armor, TotalArmor);
+	ArmorGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+}
+
+void ADZ_PlayerCharacter::HandleEquipmentsChanged()
+{
+	RecalculateArmor();
 }
 
 UAbilitySystemComponent* ADZ_PlayerCharacter::GetAbilitySystemComponent() const

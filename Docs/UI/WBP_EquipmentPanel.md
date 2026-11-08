@@ -99,14 +99,14 @@ Panel_Equipment (Border)
 
 ---
 
-## 7. 程序侧待实现（M1）
+## 7. 程序侧完成情况（M1）
 
-1. `UDZ_EquipmentPanel` 声明 4 个槽 + `CharacterStats` 的 `BindWidget`。
-2. `SetEquipmentInfo(const TArray<FDZ_ItemStack>& Equipment)`：按 `EEquipSlot` 数值取下标，刷 4 个槽。
-3. `SetCharacterStats(...)`：转发给 `CharacterStats`。
-4. `NativeOnInitialized` 里把 4 个槽的 `OnWidgetDragEnded` 接到面板的 `HandleItemDrop`，聚合成 `OnItemDrop`。
-5. `UDZ_InventoryPanel` 增加 `EquipmentPanel` 的 `BindWidget`，接住 `OnItemDrop` 与 `SetCharacterStats`。
-6. ✅ 已完成：`WBP_EquipmentPanel` 父类已重绑为 `UDZ_EquipmentPanel`。
+1. ✅ `UDZ_EquipmentPanel` 声明 4 个槽 + `CharacterStats` 的 `BindWidget`。
+2. ✅ `SetEquipmentInfo(const TArray<int32>& Equipments)`：按 `EEquipSlot` 数值取下标，刷 4 个槽。
+3. ✅ `SetCharacterStatsInfo(const FDZ_CharacterStatsInfo&)`：转发给 `CharacterStats`。
+4. ✅ `NativeOnInitialized` 里把 4 个槽的 `OnWidgetDragEnded` 接到 `HandleEquipSlotDrop`，聚合成 `OnItemDrop`。
+5. ✅ `UDZ_InventoryPanel` / `UDZ_LootPanel` 已有 `EquipmentPanel` 的 `BindWidget`，接住 `OnItemDrop` 与 `SetCharacterStatsInfo`。
+6. ✅ `WBP_EquipmentPanel` 父类已重绑为 `UDZ_EquipmentPanel`。
 
 ---
 

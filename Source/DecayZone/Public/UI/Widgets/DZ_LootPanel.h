@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UI/DZ_UserWidget.h"
+#include "UI/Widgets/DZ_EquipmentPanel.h"
 #include "DZ_LootPanel.generated.h"
 
 struct FDZ_ItemStack;
 class UDZ_LootListPanel;
 class UDZ_BackpackPanel;
-class UDZ_EquipmentPanel;
 /**
  * 
  */
@@ -24,6 +24,7 @@ public:
 	void SetLootListInfo(const TArray<FDZ_ItemStack>& LootList);
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
 	void SetEquipmentPanel(const TArray<int32>& EquipmentInfo);
+	void SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInfo);
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetDragEndedEvent OnItemMoveRequested;

@@ -29,6 +29,11 @@ void UDZ_LootPanel::SetEquipmentPanel(const TArray<int32>& EquipmentInfo)
 	EquipmentPanel->SetEquipmentInfo(EquipmentInfo);
 }
 
+void UDZ_LootPanel::SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInfo)
+{
+	EquipmentPanel->SetCharacterStatsInfo(StatsInfo);
+}
+
 void UDZ_LootPanel::HandleItemDrop(UWidget* From, UWidget* To)
 {
 	OnItemMoveRequested.Broadcast(From, To);

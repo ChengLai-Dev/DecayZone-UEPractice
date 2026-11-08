@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UI/DZ_UserWidget.h"
+#include "UI/Widgets/DZ_EquipmentPanel.h"
 #include "DZ_InventoryPanel.generated.h"
 
-class UDZ_EquipmentPanel;
 struct FDZ_ItemStack;
 class UDZ_BackpackPanel;
 class UDZ_ItemDetail;
@@ -25,6 +25,7 @@ public:
 	
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
 	void SetEquipmentPanel(const TArray<int32>& EquipmentInfo);
+	void SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInfo);
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_ItemDetail> ItemDetail;

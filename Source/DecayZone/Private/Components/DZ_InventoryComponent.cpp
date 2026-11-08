@@ -34,18 +34,6 @@ UDZ_InventoryComponent::UDZ_InventoryComponent()
 void UDZ_InventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!GetOwner()->HasAuthority()) return;
-
-	UDZ_GameInstance* GI = Cast<UDZ_GameInstance>(GetWorld()->GetGameInstance());
-	int32 SlotIndex = 0;
-	for (int32 ItemId = 0; ItemId <= 10 && SlotIndex < 4; ItemId++)
-	{
-		if (GI->GetItemData(ItemId))
-		{
-			AddItem(SlotIndex, ItemId, 1);
-			SlotIndex++;
-		}
-	}
 }
 
 const TArray<FDZ_ItemStack>& UDZ_InventoryComponent::GetItems()
@@ -69,6 +57,7 @@ void UDZ_InventoryComponent::SetEquipments(int32 SlotIndex, int32 Item)
 	if (!IsEquipSlotValid(SlotIndex)) return;
 	
 	Equipments[SlotIndex] = Item;
+	OnEquipmentsChanged.Broadcast();
 }
 
 void UDZ_InventoryComponent::ClearEquipment(int32 SlotIndex)
@@ -77,6 +66,7 @@ void UDZ_InventoryComponent::ClearEquipment(int32 SlotIndex)
 	if (!IsEquipSlotValid(SlotIndex)) return;
 	
 	Equipments[SlotIndex] = DZItem::EmptyId;
+	OnEquipmentsChanged.Broadcast();
 }
 
 
@@ -145,6 +135,9 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 		if (!IsEquipSlotValid(FromIndex)) return false;
 		if (Equipments[FromIndex] == DZItem::EmptyId) return false;
 
+		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Equipments[FromIndex]);
+		if (!Data || !CanAddWeight(Data->Weight)) return false;
+
 		if (!AddItem(ToIndex, Equipments[FromIndex], 1)) return false;
 		ClearEquipment(FromIndex);
 		return true;
@@ -161,7 +154,14 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 		if (Equipments[ToIndex] != DZItem::EmptyId)
 		{
 			if (Equipments[ToIndex] == Items[FromIndex].ItemId) return false;
-			Swap(Equipments[ToIndex], Items[FromIndex].ItemId);
+			const int32 OldItemId = Equipments[ToIndex];
+			const FDZ_ItemData* OldData = ItemHelper::GetItemData(this, OldItemId);
+			if (!OldData || !CanAddWeight(OldData->Weight - Data->Weight)) return false;
+			
+			Equipments[ToIndex] = Items[FromIndex].ItemId;
+			Items[FromIndex].ItemId = OldItemId;
+			Items[FromIndex].Count = 1;
+			OnEquipmentsChanged.Broadcast();
 		}
 		else
 		{
@@ -203,7 +203,7 @@ bool UDZ_InventoryComponent::IsSlotValid(int32 SlotIndex)
 	return SlotIndex >= 0 && SlotIndex < Items.Num();
 }
 
-float UDZ_InventoryComponent::GetTotalWeight()
+float UDZ_InventoryComponent::GetTotalWeight() const
 {
 	float TotalWeight = 0;
 	for (int32 Index = 0; Index < Items.Num(); Index++)
@@ -217,9 +217,28 @@ float UDZ_InventoryComponent::GetTotalWeight()
 	return TotalWeight;
 }
 
-bool UDZ_InventoryComponent::CanAddWeight(float Delta)
+float UDZ_InventoryComponent::GetMaxWeight() const
 {
-	return GetTotalWeight() + Delta <= MaxWeight;
+	return MaxWeight;
+}
+
+bool UDZ_InventoryComponent::CanAddWeight(float Delta) const
+{
+	return GetTotalWeight() + Delta <= MaxWeight + KINDA_SMALL_NUMBER;
+}
+
+float UDZ_InventoryComponent::GetTotalArmor() const
+{
+	float TotalArmor = 0;
+	for (int32 SlotIndex = 0; SlotIndex < Equipments.Num(); SlotIndex++)
+	{
+		if (Equipments[SlotIndex] == DZItem::EmptyId) continue;
+		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Equipments[SlotIndex]);
+		if (!Data) continue;
+		
+		TotalArmor += Data->ArmorBonus;
+	}
+	return TotalArmor;
 }
 
 void UDZ_InventoryComponent::OnRep_Items()

@@ -14,31 +14,31 @@ class UDZ_EquipmentSlot;
  * 
  */
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FDZ_CharacterStatsInfo
 {
 	GENERATED_BODY()
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 Health;
+	int32 Health = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 MaxHealth;
+	int32 MaxHealth = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 Weight;
+	int32 Weight = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 MaxWeight;
+	int32 MaxWeight = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 Energy;
+	int32 Energy = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 MaxEnergy;
+	int32 MaxEnergy = 0;
 	
 	UPROPERTY(BlueprintReadOnly)
-	int32 Armor;
+	int32 Armor = 0;
 };
 
 UCLASS()

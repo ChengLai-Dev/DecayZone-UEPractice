@@ -8,7 +8,7 @@
 |---|---|
 | 资产路径 | `/Game/UI/Inventory/WBP_CharacterStats` |
 | JSON 源 | `UIWidgets/UI/Inventory/WBP_CharacterStats.json` |
-| 父类 | `UDZ_CharacterStats`（**待建**；未建前导入时先用 `UserWidget`，之后重绑） |
+| 父类 | `UDZ_CharacterStats`（已重绑并编译通过，4 个 `BindWidget` 均绑定成功） |
 | 设计尺寸 | `Desired` |
 | 挂载位置 | `WBP_EquipmentPanel` 的 `VB_Equipment` 末尾，`CharacterStats` 节点 |
 
@@ -60,9 +60,9 @@ Panel_Stats (Border, Padding 12, 底色 #04070A 之上的一层)
 
 ```
 ADZ_PlayerController::RefreshUIAll
-  → InventoryPanel::SetCharacterStats(...)
-     → EquipmentPanel::SetCharacterStats(...)
-        → CharacterStats::SetHealthInfo / SetEnergyInfo / SetArmorInfo / SetWeightInfo
+  → InventoryPanel::SetCharacterStatsInfo(FDZ_CharacterStatsInfo)
+     → EquipmentPanel::SetCharacterStatsInfo(...)
+        → CharacterStats::SetHealth / SetEnergy / SetArmor / SetWeight
 ```
 
 **不在 UI 里查数据表，不自己判定规则。** 负重汇总由组件提供，UI 只负责显示。
@@ -76,16 +76,18 @@ ADZ_PlayerController::RefreshUIAll
 | 护甲 | `%.0f` | `25` |
 | 负重 | `%.1f / %.1f` | `12.5 / 40.0` |
 
-## 6. 程序侧未完成项
+## 6. 程序侧完成情况
 
-1. 新建 `UDZ_CharacterStats : UDZ_UserWidget`，声明上面 4 个 `BindWidget`。
-2. 实现 `SetHealthInfo` / `SetEnergyInfo` / `SetArmorInfo` / `SetWeightInfo`，签名与 `UDZ_StatusBars` 保持一致。
-3. `UDZ_EquipmentPanel` 增加 `CharacterStats` 的 `BindWidget` 与转发方法。
-4. `UDZ_InventoryPanel` 增加 `EquipmentPanel` 的 `BindWidget` 与转发方法。
-5. `UDZ_InventoryComponent` 增加 `MaxWeight`（`EditDefaultsOnly`，默认 40）与 `GetTotalWeight()`。
-6. `ADZ_PlayerController::RefreshUIAll` 里补一次 `SetCharacterStats` 调用。
-7. `Armor` 属性变化要能触发刷新：`OnRep_PlayerState` 里加 `Armor` 的委托。
-8. `UDZ_AttributeSet` 的 `Armor` 还缺 `ATTRIBUTE_ACCESSORS_BASIC` 与 `OnRep_Armor` 实现。
+1. ✅ `UDZ_CharacterStats`：4 个 `BindWidget` + `SetHealth` / `SetEnergy` / `SetArmor` / `SetWeight`，私有 `SetTextValue` 统一格式化。
+2. ✅ `UDZ_EquipmentPanel`：`CharacterStats` 的 `BindWidget` + `SetCharacterStatsInfo(const FDZ_CharacterStatsInfo&)`。
+3. ✅ `UDZ_InventoryPanel` / `UDZ_LootPanel`：`SetCharacterStatsInfo` 转发。
+4. ✅ `UDZ_InventoryComponent`：`MaxWeight`、`GetMaxWeight()`、`GetTotalWeight()`、`CanAddWeight()`。
+5. ✅ `ADZ_PlayerController::RefreshUIAll`：组装 `FDZ_CharacterStatsInfo` 并下发；`OnRep_PlayerState` 已加 `Armor` 委托，属性变化统一走 `RefreshUIAll`。
+6. ✅ `UDZ_AttributeSet`：`Armor` 的 `ATTRIBUTE_ACCESSORS_BASIC` 与 `OnRep_Armor` 均已就绪。
+
+### 已知偏差
+
+- `FDZ_CharacterStatsInfo` 的 7 个字段目前全是 `int32`，`SetTextValue` 也按整数格式化，所以**负重会丢掉小数**（7.5 显示成 7），与第 5 节的 `%.1f` 不符。要修就把 `Weight` / `MaxWeight` 改 `float`，`SetWeight` 单独走一位小数格式化。
 
 ## 7. 验收
 

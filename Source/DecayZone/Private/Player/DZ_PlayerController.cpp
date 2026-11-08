@@ -68,7 +68,7 @@ void ADZ_PlayerController::BeginPlay()
 }
 void ADZ_PlayerController::OnAttributeValueChanged(const FOnAttributeChangeData& Data)
 {
-	RefreshStatusBars();
+	RefreshUIAll(false);
 }
 
 void ADZ_PlayerController::RefreshStatusBars()
@@ -91,6 +91,7 @@ void ADZ_PlayerController::OnRep_PlayerState()
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetMaxEnergyAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetHealthAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetMaxHealthAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);;
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetArmorAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);
 	}
 }
 
@@ -183,22 +184,39 @@ void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent*
 void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
 {
 	if (!IsLocalController()) return;
+	RefreshStatusBars();
+	
 	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
+	if (!InventoryComp) return;
+	
+	FDZ_CharacterStatsInfo StatsInfo;
+	StatsInfo.Weight = FMath::RoundToInt(InventoryComp->GetTotalWeight());
+	StatsInfo.MaxWeight = FMath::RoundToInt(InventoryComp->GetMaxWeight());
+	if (AbilitySystemComponent.IsValid())
+	{
+		StatsInfo.Health = FMath::RoundToInt(AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetHealthAttribute()));
+		StatsInfo.MaxHealth = FMath::RoundToInt(AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxHealthAttribute()));
+		StatsInfo.Energy = FMath::RoundToInt(AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetEnergyAttribute()));
+		StatsInfo.MaxEnergy = FMath::RoundToInt(AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxEnergyAttribute()));
+		StatsInfo.Armor = FMath::RoundToInt(AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetArmorAttribute()));
+	}
+	
 	if (bForceRefresh || IsValid(InventoryPanelWidget) && InventoryPanelWidget->IsInViewport())
 	{
 		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 		InventoryPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
+		InventoryPanelWidget->SetCharacterStatsInfo(StatsInfo);
 	}
 	if (bForceRefresh || IsValid(LootPanelWidget) && LootPanelWidget->IsInViewport())
 	{
 		LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 		LootPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
+		LootPanelWidget->SetCharacterStatsInfo(StatsInfo);
 		if (InteractContainerComp.IsValid())
 		{
 			LootPanelWidget->SetLootListInfo(InteractContainerComp->GetItems());
 		}
 	}
-	RefreshStatusBars();
 }
 
 
@@ -337,10 +355,6 @@ void ADZ_PlayerController::OpenOrCloseInventoryPanel()
 	else
 	{
 		InventoryPanelWidget->Open();
-		UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
-		if (InventoryComp)
-		{
-			InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
-		}
+		RefreshUIAll(false);
 	}
 }

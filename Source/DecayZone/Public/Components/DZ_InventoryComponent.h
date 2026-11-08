@@ -33,11 +33,16 @@ public:
 	bool MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	bool AddItemAutoPos(int32 ItemID, int32 Count);
 	bool IsSlotValid(int32 SlotIndex);
-	float GetTotalWeight();
-	bool CanAddWeight(float Delta);
+	float GetTotalWeight() const;
+	float GetMaxWeight() const;
+	float GetTotalArmor() const;
+	bool CanAddWeight(float Delta) const;
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnItemsChanged;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnEvent OnEquipmentsChanged;
 	
 private:
 	UPROPERTY(ReplicatedUsing = OnRep_Items)

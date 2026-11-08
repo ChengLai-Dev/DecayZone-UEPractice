@@ -42,6 +42,8 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 		if (!ContainerComp || !ContainerComp->IsSlotValid(From.SlotIndex)) return false;
 		int32 ItemID = ContainerComp->GetItems()[From.SlotIndex].ItemId;
 		int32 Count = ContainerComp->GetItems()[From.SlotIndex].Count;
+		const FDZ_ItemData* Data = GetItemData(InventoryComp, ItemID);
+		if (!Data || !InventoryComp->CanAddWeight(Data->Weight * Count)) return false;
 		if (!InventoryComp->AddItem(To.SlotIndex, ItemID, Count)) return false;
 		ContainerComp->RemoveItemsAll(From.SlotIndex);
 		return true;
@@ -59,6 +61,11 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 		
 		
 		int32 OldItemID = InventoryComp->GetEquipments()[To.SlotIndex];
+		if (OldItemID != DZItem::EmptyId)
+		{
+			const FDZ_ItemData* OldData = GetItemData(InventoryComp, OldItemID);
+			if (!OldData || !InventoryComp->CanAddWeight(OldData->Weight)) return false;
+		}
 		ContainerComp->RemoveItems(From.SlotIndex, 1);
 		InventoryComp->SetEquipments(To.SlotIndex, ItemID);
 		if (OldItemID == DZItem::EmptyId) return true;
