@@ -25,6 +25,12 @@ void UDZ_InventoryPanel::NativeOnInitialized()
 void UDZ_InventoryPanel::SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo)
 {
 	BackpackPanel->SetBackpackPanel(BackpackInfo);
+	RefreshItemDetail();
+}
+
+void UDZ_InventoryPanel::SetEquipmentPanel(const TArray<int32>& EquipmentInfo)
+{
+	EquipmentPanel->SetEquipmentInfo(EquipmentInfo);
 }
 
 void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
@@ -36,14 +42,23 @@ void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
 	}
 	if (CurrentSelectedItem == ItemSlot || ItemSlot->IsEmptyState())
 	{
-		ItemDetail->SwitchShowType(ItemDetailShowType::Bag);
 		CurrentSelectedItem = nullptr;
 	}
 	else
 	{
-		ItemDetail->SwitchShowType(ItemDetailShowType::Item);
-		ItemDetail->SetItemInfo(ItemSlot->GetItemID());
-		ItemSlot->SetSelected(true);
 		CurrentSelectedItem = ItemSlot;
+		ItemSlot->SetSelected(true);
 	}
+	RefreshItemDetail();
+}
+
+void UDZ_InventoryPanel::RefreshItemDetail()
+{
+	if (!CurrentSelectedItem.IsValid())
+	{
+		ItemDetail->SwitchShowType(ItemDetailShowType::Bag);
+		return;
+	}
+	ItemDetail->SwitchShowType(ItemDetailShowType::Item);
+	ItemDetail->SetItemInfo(CurrentSelectedItem->GetItemID());
 }

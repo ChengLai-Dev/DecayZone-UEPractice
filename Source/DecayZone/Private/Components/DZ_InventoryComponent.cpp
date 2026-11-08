@@ -4,9 +4,12 @@
 #include "Components/DZ_InventoryComponent.h"
 
 #include "Data/Item/FDZ_ItemStack.h"
+#include "Data/Item/DZ_ItemDefines.h"
+#include "Data/Item/FDZ_ItemData.h"
 #include "Game/DZ_GameInstance.h"
 #include "Net/UnrealNetwork.h"
 #include "Data/Item/FDZ_ItemSlotHandle.h"
+#include "Library/ItemHelper.h"
 
 void UDZ_InventoryComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -24,7 +27,7 @@ UDZ_InventoryComponent::UDZ_InventoryComponent()
 	}
 	for (int32 Index = 0; Index < static_cast<int32>(EEquipSlot::None); Index++)
 	{
-		Equipments.Add(-1);
+		Equipments.Add(DZItem::EmptyId);
 	}
 }
 
@@ -39,7 +42,7 @@ void UDZ_InventoryComponent::BeginPlay()
 	{
 		if (GI->GetItemData(ItemId))
 		{
-			AddItem(SlotIndex, ItemId, 3);
+			AddItem(SlotIndex, ItemId, 1);
 			SlotIndex++;
 		}
 	}
@@ -73,21 +76,24 @@ void UDZ_InventoryComponent::ClearEquipment(int32 SlotIndex)
 	if (!GetOwner()->HasAuthority()) return;
 	if (!IsEquipSlotValid(SlotIndex)) return;
 	
-	Equipments[SlotIndex] = -1;
+	Equipments[SlotIndex] = DZItem::EmptyId;
 }
+
 
 bool UDZ_InventoryComponent::AddItem(int32 Index, int32 ItemID, int32 Count)
 {
 	if (!GetOwner()->HasAuthority()) return false;
+	int32 MaxStack = ItemHelper::GetMaxStack(this, ItemID);
+	if (ItemID == DZItem::EmptyId || Count <= 0 || Count > MaxStack) return false;
 	if (Index < 0 || Index >= Items.Num()) return false;
-	if (Items[Index].Count == 0)
+	if (Items[Index].IsEmpty())
 	{
 		Items[Index].ItemId = ItemID;
 		Items[Index].Count = Count;
 		return true;
 	}
 	
-	if (Items[Index].ItemId == ItemID)
+	if (Items[Index].ItemId == ItemID && Items[Index].Count + Count <= MaxStack)
 	{
 		Items[Index].Count += Count;
 		return true;
@@ -107,6 +113,7 @@ void UDZ_InventoryComponent::RemoveItemsAll(int32 Index)
 {
 	if (!GetOwner()->HasAuthority()) return;
 	if (Index < 0 || Index >= Items.Num()) return;
+	Items[Index].ItemId = DZItem::EmptyId;
 	Items[Index].Count = 0;
 }
 
@@ -120,13 +127,14 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 	{
 		if (FromIndex < 0 || FromIndex >= Items.Num()) return false;
 		if (ToIndex < 0 || ToIndex >= Items.Num()) return false;
+		if (Items[FromIndex].IsEmpty()) return false;
 	
 		if (Items[FromIndex].ItemId != Items[ToIndex].ItemId)
 		{
 			Swap(Items[FromIndex] ,Items[ToIndex]);
 			return true;
 		}
-		AddItem(ToIndex, Items[FromIndex].ItemId, Items[FromIndex].Count);
+		if (!AddItem(ToIndex, Items[FromIndex].ItemId, Items[FromIndex].Count)) return false;
 		RemoveItemsAll(FromIndex);
 		return true;
 	}
@@ -135,8 +143,9 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 	{
 		if (!IsSlotValid(ToIndex)) return false;
 		if (!IsEquipSlotValid(FromIndex)) return false;
+		if (Equipments[FromIndex] == DZItem::EmptyId) return false;
 
-		AddItem(ToIndex, Equipments[FromIndex], 1);
+		if (!AddItem(ToIndex, Equipments[FromIndex], 1)) return false;
 		ClearEquipment(FromIndex);
 		return true;
 	}
@@ -145,9 +154,13 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 	{
 		if (!IsSlotValid(FromIndex)) return false;
 		if (!IsEquipSlotValid(ToIndex)) return false;
-
-		if (Equipments[ToIndex] != -1)
+		if (Items[FromIndex].IsEmpty()) return false;
+		
+		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Items[FromIndex].ItemId);
+		if (!Data || static_cast<int32>(Data->EquipSlot) != ToIndex) return false;
+		if (Equipments[ToIndex] != DZItem::EmptyId)
 		{
+			if (Equipments[ToIndex] == Items[FromIndex].ItemId) return false;
 			Swap(Equipments[ToIndex], Items[FromIndex].ItemId);
 		}
 		else
@@ -163,9 +176,11 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 bool UDZ_InventoryComponent::AddItemAutoPos(int32 ItemID, int32 Count)
 {
 	if (!GetOwner()->HasAuthority()) return false;
+	int32 MaxStack = ItemHelper::GetMaxStack(this, ItemID);
+	if (ItemID == DZItem::EmptyId || Count <= 0 || Count > MaxStack) return false;
 	for (int32 Index = 0; Index < Items.Num(); Index++)
 	{
-		if (Items[Index].ItemId == ItemID)
+		if (Items[Index].ItemId == ItemID && Items[Index].Count + Count <= MaxStack)
 		{
 			Items[Index].Count += Count;
 			return true;
@@ -173,7 +188,7 @@ bool UDZ_InventoryComponent::AddItemAutoPos(int32 ItemID, int32 Count)
 	}
 	for (int32 Index = 0; Index < Items.Num(); Index++)
 	{
-		if (Items[Index].Count == 0)
+		if (Items[Index].IsEmpty())
 		{
 			Items[Index].ItemId = ItemID;
 			Items[Index].Count = Count;
@@ -186,6 +201,25 @@ bool UDZ_InventoryComponent::AddItemAutoPos(int32 ItemID, int32 Count)
 bool UDZ_InventoryComponent::IsSlotValid(int32 SlotIndex)
 {
 	return SlotIndex >= 0 && SlotIndex < Items.Num();
+}
+
+float UDZ_InventoryComponent::GetTotalWeight()
+{
+	float TotalWeight = 0;
+	for (int32 Index = 0; Index < Items.Num(); Index++)
+	{
+		if (Items[Index].IsEmpty()) continue;
+		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Items[Index].ItemId);
+		if (!Data) continue;
+		
+		TotalWeight += Data->Weight * Items[Index].Count;
+	}
+	return TotalWeight;
+}
+
+bool UDZ_InventoryComponent::CanAddWeight(float Delta)
+{
+	return GetTotalWeight() + Delta <= MaxWeight;
 }
 
 void UDZ_InventoryComponent::OnRep_Items()

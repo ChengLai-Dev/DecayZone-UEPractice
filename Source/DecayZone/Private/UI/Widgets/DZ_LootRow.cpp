@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Data/Item/FDZ_ItemData.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "Library/ItemHelper.h"
 #include "UI/Widgets/DZ_ItemSlot.h"
 
@@ -22,6 +23,7 @@ bool UDZ_LootRow::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent
 
 void UDZ_LootRow::SetItemInfo(int32 ItemID, int32 Quantity)
 {
+	if (ItemID == DZItem::EmptyId) return;
 	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, ItemID);
 	Text_ItemWeight->SetText(FText::FromString(FString::Printf(TEXT("%.1f KG"), Data->Weight)));
 	Text_ItemName->SetText(Data->ItemName);

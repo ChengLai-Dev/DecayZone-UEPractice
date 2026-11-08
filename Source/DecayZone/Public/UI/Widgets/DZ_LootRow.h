@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DZ_ItemSlotBase.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "DZ_LootRow.generated.h"
 
 class UDZ_ItemSlot;
@@ -40,5 +41,5 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDZ_ItemSlot> DragVisualClass;
 	
-	int32 CurrentItemID = 0;
+	int32 CurrentItemID = DZItem::EmptyId;
 };

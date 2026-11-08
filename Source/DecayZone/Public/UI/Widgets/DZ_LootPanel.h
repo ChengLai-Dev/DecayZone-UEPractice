@@ -9,6 +9,7 @@
 struct FDZ_ItemStack;
 class UDZ_LootListPanel;
 class UDZ_BackpackPanel;
+class UDZ_EquipmentPanel;
 /**
  * 
  */
@@ -22,6 +23,7 @@ public:
 	virtual void NativeOnInitialized() override;
 	void SetLootListInfo(const TArray<FDZ_ItemStack>& LootList);
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
+	void SetEquipmentPanel(const TArray<int32>& EquipmentInfo);
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetDragEndedEvent OnItemMoveRequested;
@@ -35,5 +37,8 @@ private:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_BackpackPanel> BackpackPanel;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UDZ_EquipmentPanel> EquipmentPanel;
 	
 };

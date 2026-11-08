@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DZ_ItemSlotBase.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "UI/DZ_UserWidget.h"
 #include "DZ_ItemSlot.generated.h"
@@ -45,6 +46,6 @@ public:
 	int32 GetItemID();
 
 private:
-	bool bIsEmptyState;
-	int32 CurrentItemID = 0;
+	bool bIsEmptyState = true;
+	int32 CurrentItemID = DZItem::EmptyId;
 };

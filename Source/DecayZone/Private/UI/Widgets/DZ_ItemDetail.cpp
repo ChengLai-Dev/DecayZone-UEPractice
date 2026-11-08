@@ -8,6 +8,7 @@
 #include "Components/VerticalBox.h"
 #include "Components/WidgetSwitcher.h"
 #include "Data/Item/FDZ_ItemData.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "Library/ItemHelper.h"
 #include "Library/UIHelper.h"
 
@@ -23,6 +24,7 @@ void UDZ_ItemDetail::SwitchShowType(ItemDetailShowType ShowType)
 
 void UDZ_ItemDetail::SetItemState(int32 ItemID)
 {
+	if (ItemID == DZItem::EmptyId) return;
 	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, ItemID);
 	
 	UTextBlock* Text_ItemName = Cast<UTextBlock>(UIHelper::GetChildByName(VB_ItemState, "Text_ItemName"));

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
+#include "DZ_ItemDefines.h"
 #include "FDZ_RandomSpawnItemInfo.generated.h" 
 
 USTRUCT(BlueprintType)
@@ -8,7 +9,7 @@ struct FDZ_RandomSpawnItemInfo
 	GENERATED_BODY()
 	
 	UPROPERTY(EditDefaultsOnly)
-	int32 ItemID = 0;
+	int32 ItemID = DZItem::EmptyId;
 	
 	UPROPERTY(EditDefaultsOnly)
 	int32 MinNum = 0;

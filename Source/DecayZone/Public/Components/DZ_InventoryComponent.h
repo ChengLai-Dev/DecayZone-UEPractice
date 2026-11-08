@@ -33,6 +33,8 @@ public:
 	bool MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	bool AddItemAutoPos(int32 ItemID, int32 Count);
 	bool IsSlotValid(int32 SlotIndex);
+	float GetTotalWeight();
+	bool CanAddWeight(float Delta);
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnItemsChanged;
@@ -46,6 +48,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 	int32 DefaultCapacity = 5;
+	
+	UPROPERTY(EditDefaultsOnly)
+	float MaxWeight = 40;
 	
 	UFUNCTION()
 	void OnRep_Items();

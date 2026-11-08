@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "DZ_ItemDefines.h"
 #include "Engine/DataTable.h"
 #include "FDZ_ItemSlotHandle.h"
 #include "FDZ_ItemData.generated.h"
@@ -28,7 +29,7 @@ struct FDZ_ItemData: public FTableRowBase
 	GENERATED_BODY()
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 ItemId = 0;
+	int32 ItemId = DZItem::EmptyId;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText ItemName;

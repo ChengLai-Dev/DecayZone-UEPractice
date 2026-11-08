@@ -4,6 +4,7 @@
 #include "UI/Widgets/DZ_LootPanel.h"
 
 #include "UI/Widgets/DZ_BackpackPanel.h"
+#include "UI/Widgets/DZ_EquipmentPanel.h"
 #include "UI/Widgets/DZ_LootListPanel.h"
 
 void UDZ_LootPanel::NativeOnInitialized()
@@ -21,6 +22,11 @@ void UDZ_LootPanel::SetLootListInfo(const TArray<FDZ_ItemStack>& LootList)
 void UDZ_LootPanel::SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo)
 {
 	BackpackPanel->SetBackpackPanel(BackpackInfo);
+}
+
+void UDZ_LootPanel::SetEquipmentPanel(const TArray<int32>& EquipmentInfo)
+{
+	EquipmentPanel->SetEquipmentInfo(EquipmentInfo);
 }
 
 void UDZ_LootPanel::HandleItemDrop(UWidget* From, UWidget* To)

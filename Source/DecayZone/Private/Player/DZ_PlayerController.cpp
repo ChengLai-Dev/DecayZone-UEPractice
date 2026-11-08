@@ -182,14 +182,17 @@ void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent*
 
 void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
 {
+	if (!IsLocalController()) return;
 	UDZ_InventoryComponent* InventoryComp = GetPawn()->FindComponentByClass<UDZ_InventoryComponent>();
 	if (bForceRefresh || IsValid(InventoryPanelWidget) && InventoryPanelWidget->IsInViewport())
 	{
 		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+		InventoryPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
 	}
 	if (bForceRefresh || IsValid(LootPanelWidget) && LootPanelWidget->IsInViewport())
 	{
 		LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
+		LootPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
 		if (InteractContainerComp.IsValid())
 		{
 			LootPanelWidget->SetLootListInfo(InteractContainerComp->GetItems());

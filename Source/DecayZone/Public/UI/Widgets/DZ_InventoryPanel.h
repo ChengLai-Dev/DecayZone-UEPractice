@@ -24,6 +24,7 @@ public:
 	virtual void NativeOnInitialized() override;
 	
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
+	void SetEquipmentPanel(const TArray<int32>& EquipmentInfo);
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_ItemDetail> ItemDetail;
@@ -43,6 +44,7 @@ private:
 	
 	UFUNCTION()
 	void HandleItemSlotClicked(UWidget* Widget);
-	
+	void RefreshItemDetail();
+
 	TWeakObjectPtr<UDZ_ItemSlot> CurrentSelectedItem;
 };

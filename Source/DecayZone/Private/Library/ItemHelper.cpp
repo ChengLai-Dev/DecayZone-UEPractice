@@ -3,6 +3,7 @@
 #include "Components/DZ_ContainerComponent.h"
 #include "Components/DZ_InventoryComponent.h"
 #include "Data/Item/FDZ_ItemData.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "Data/Item/FDZ_ItemStack.h"
 #include "Game/DZ_GameInstance.h"
@@ -41,8 +42,9 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 		if (!ContainerComp || !ContainerComp->IsSlotValid(From.SlotIndex)) return false;
 		int32 ItemID = ContainerComp->GetItems()[From.SlotIndex].ItemId;
 		int32 Count = ContainerComp->GetItems()[From.SlotIndex].Count;
+		if (!InventoryComp->AddItem(To.SlotIndex, ItemID, Count)) return false;
 		ContainerComp->RemoveItemsAll(From.SlotIndex);
-		return InventoryComp->AddItem(To.SlotIndex, ItemID, Count);
+		return true;
 	}
 	// 搜刮物品->装备
 	if (From.Container == EItemContainer::Loot && To.Container == EItemContainer::Equipment)
@@ -50,27 +52,52 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 		if (!ContainerComp || !ContainerComp->IsSlotValid(From.SlotIndex)) return false;
 		if (!InventoryComp->IsEquipSlotValid(To.SlotIndex)) return false;
 		int32 ItemID = ContainerComp->GetItems()[From.SlotIndex].ItemId;
+		const FDZ_ItemData* Data = GetItemData(InventoryComp, ItemID);
+		if (!Data) return false;
+		int32 EquipSlot = static_cast<int32>(Data->EquipSlot);
+		if (EquipSlot != To.SlotIndex) return false;
+		
+		
+		int32 OldItemID = InventoryComp->GetEquipments()[To.SlotIndex];
 		ContainerComp->RemoveItems(From.SlotIndex, 1);
 		InventoryComp->SetEquipments(To.SlotIndex, ItemID);
+		if (OldItemID == DZItem::EmptyId) return true;
+		if (!InventoryComp->AddItemAutoPos(OldItemID, 1))
+		{
+			ContainerComp->AddItem(OldItemID, 1);
+		}
 		return true;
 	}
 	// 背包->搜刮物品
 	if (From.Container == EItemContainer::Backpack && To.Container == EItemContainer::Loot)
 	{
 		if (!InventoryComp || !InventoryComp->IsSlotValid(From.SlotIndex)) return false;
+		if (!ContainerComp) return false;
 		int32 ItemID = InventoryComp->GetItems()[From.SlotIndex].ItemId;
 		int32 Count = InventoryComp->GetItems()[From.SlotIndex].Count;
+		if (!ContainerComp->AddItem(ItemID, Count)) return false;
 		InventoryComp->RemoveItemsAll(From.SlotIndex);
-		return ContainerComp->AddItem(ItemID, Count);
+		return true;
 	}
 	// 装备->搜刮物品
 	if (From.Container == EItemContainer::Equipment && To.Container == EItemContainer::Loot)
 	{
 		if (!InventoryComp || !InventoryComp->IsEquipSlotValid(From.SlotIndex)) return false;
+		if (!ContainerComp) return false;
 		int32 ItemID = InventoryComp->GetEquipments()[From.SlotIndex];
-		if (ItemID == -1) return false;
-		InventoryComp->RemoveItemsAll(From.SlotIndex);
-		return ContainerComp->AddItem(ItemID, 1);
+		if (ItemID == DZItem::EmptyId) return false;
+		InventoryComp->ClearEquipment(From.SlotIndex);
+		ContainerComp->AddItem(ItemID, 1);
+		return true;
 	}
 	return false;
+}
+
+int32 ItemHelper::GetMaxStack(const UObject* WorldContextObject, int32 ItemId)
+{
+	const FDZ_ItemData* Data = GetItemData(WorldContextObject, ItemId);
+	if (!Data) return 1;
+	if (Data->ItemType == EItemType::Equipment) return 1;
+	
+	return TNumericLimits<int32>::Max();
 }

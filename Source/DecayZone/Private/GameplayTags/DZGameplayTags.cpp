@@ -4,4 +4,6 @@
 namespace DZGameplayTags
 {
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Interact, "Ability.Interact");
+	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Armor, "SetByCaller.Armor");
+	
 }

@@ -21,6 +21,7 @@ public:
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxHealth);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Energy);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxEnergy);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Armor);
 	
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;

@@ -8,6 +8,7 @@
 #include "Components/Overlay.h"
 #include "Components/TextBlock.h"
 #include "Data/Item/FDZ_ItemData.h"
+#include "Data/Item/DZ_ItemDefines.h"
 #include "Library/ItemHelper.h"
 
 void UDZ_ItemSlot::NativeConstruct()
@@ -18,21 +19,17 @@ void UDZ_ItemSlot::NativeConstruct()
 void UDZ_ItemSlot::SetItemInfo(int32 ItemID, int32 Quantity)
 {
 	CurrentItemID = ItemID;
-	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, ItemID);
-	if (!Data || !Data->Icon)
-	{
-		Img_ItemIcon->SetVisibility(ESlateVisibility::Collapsed);
-		return;
-	}
-	Img_ItemIcon->SetVisibility(ESlateVisibility::Visible);
-	Img_ItemIcon->SetBrushFromTexture(Data->Icon);
-	Text_Quantity->SetText(FText::AsNumber(Quantity));
-
-	if (Quantity == 0)
+	if (ItemID == DZItem::EmptyId || Quantity <= 0)
 	{
 		SetEmptyState(true);
 		return;
 	}
+
+	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, ItemID);
+	Img_ItemIcon->SetVisibility(ESlateVisibility::Visible);
+	Img_ItemIcon->SetBrushFromTexture(Data->Icon);
+	Text_Quantity->SetText(FText::AsNumber(Quantity));
+
 	SetEmptyState(false);
 	if (Quantity == 1)
 	{

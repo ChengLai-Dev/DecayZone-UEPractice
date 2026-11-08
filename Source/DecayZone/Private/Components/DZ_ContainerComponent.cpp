@@ -5,6 +5,7 @@
 
 #include "Data/Item/DZ_ContainerSpawnItemConfig.h"
 #include "Game/DZ_GameInstance.h"
+#include "Library/ItemHelper.h"
 #include "Net/UnrealNetwork.h"
 
 UDZ_ContainerComponent::UDZ_ContainerComponent()
@@ -41,10 +42,12 @@ void UDZ_ContainerComponent::GenerateContainerItems()
 	{
 		for (const FDZ_ItemStack ItemStack: Info->CertainItems)
 		{
+			if (ItemStack.IsEmpty()) continue;
 			ItemCounts.FindOrAdd(ItemStack.ItemId) +=  ItemStack.Count;
 		}
 		for (const FDZ_RandomSpawnItemInfo& RandomInfo: Info->RandomItems)
 		{
+			if (RandomInfo.ItemID == DZItem::EmptyId) continue;
 			if (FMath::FRand() >= RandomInfo.DropRate) continue;
 			
 			const int32 RandomNum = FMath::RandRange(RandomInfo.MinNum, RandomInfo.MaxNum);
@@ -53,7 +56,19 @@ void UDZ_ContainerComponent::GenerateContainerItems()
 	}
 	for (const TTuple<int32, int32>& P: ItemCounts)
 	{
-		Items.Add(FDZ_ItemStack(P.Key, P.Value));
+		int32 ItemID = P.Key;
+		int32 Count = P.Value;
+		int32 MaxStack = ItemHelper::GetMaxStack(this, ItemID);
+		if (MaxStack <= 0) continue;
+		while (Count > MaxStack)
+		{
+			Items.Add(FDZ_ItemStack(ItemID, MaxStack));
+			Count -= MaxStack;
+		}
+		if (Count > 0)
+		{
+			Items.Add(FDZ_ItemStack(ItemID, Count));
+		}
 	}
 }
 
@@ -104,9 +119,10 @@ void UDZ_ContainerComponent::RemoveItems(int32 SlotIndex, int32 Count)
 
 bool UDZ_ContainerComponent::AddItem(int32 ItemID, int32 Count)
 {
+	int32 MaxStack = ItemHelper::GetMaxStack(this, ItemID);
 	for (FDZ_ItemStack& ItemStack: Items)
 	{
-		if (ItemStack.Count == 0 || ItemStack.ItemId == ItemID)
+		if (ItemStack.ItemId == ItemID && ItemStack.Count + Count <= MaxStack)
 		{
 			ItemStack.Count += Count;
 			return true;
