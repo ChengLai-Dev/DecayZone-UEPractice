@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/Test/HashLoop",
+	"designSizeMode": "FillScreen",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "CanvasPanel_0",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_CN",
+				"isVariable": false,
+				"properties":
+				{
+					"Text": "开始游戏"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+					}
+				}
+			}
+		]
+	},
+	"contentHash": "6c155d8f1d6960873da7dfcff91de553"
+}

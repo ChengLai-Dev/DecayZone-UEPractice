@@ -18,8 +18,10 @@
 #include "DecayZone/DecayZone.h"
 #include "Game/DZ_GameInstance.h"
 #include "GameFramework/Character.h"
+#include "GameplayTags/DZGameplayTags.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/ItemHelper.h"
+#include "Library/UIHelper.h"
 #include "Player/DZ_PlayerState.h"
 #include "UI/UIManager.h"
 #include "UI/Widgets/DZ_InteractProgress.h"
@@ -48,6 +50,8 @@ void ADZ_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(InputConfig->OpenOrCloseInventoryAction, ETriggerEvent::Started, this, &ADZ_PlayerController::OpenOrCloseInventoryPanel);
 	EnhancedInputComponent->BindAction(InputConfig->InteractAction, ETriggerEvent::Started, this, &ADZ_PlayerController::Interact);
 	EnhancedInputComponent->BindAction(InputConfig->CloseTopWidgetAction, ETriggerEvent::Started, this, &ADZ_PlayerController::CloseTopWidget);
+	EnhancedInputComponent->BindAction(InputConfig->KickAction, ETriggerEvent::Started, this, &ADZ_PlayerController::Kick);
+	EnhancedInputComponent->BindAction(InputConfig->WeaponAttackAction, ETriggerEvent::Started, this, &ADZ_PlayerController::WeaponAttack);
 	
 }
 
@@ -64,6 +68,7 @@ void ADZ_PlayerController::BeginPlay()
 	
 	InventoryPanelWidget->OnItemMoveRequested.AddDynamic(this, &ADZ_PlayerController::HandleItemMoveRequested);
 	LootPanelWidget->OnItemMoveRequested.AddDynamic(this, &ADZ_PlayerController::HandleItemMoveRequested);
+	LootPanelWidget->OnTakeItemRequested.AddDynamic(this, &ADZ_PlayerController::HandleTakeItemRequested);
 	StatusBarsWidget->Open();
 }
 void ADZ_PlayerController::OnAttributeValueChanged(const FOnAttributeChangeData& Data)
@@ -132,6 +137,16 @@ void ADZ_PlayerController::UpdateInteractProgress()
 {
 	if (!IsLocalController()) return;
 	InteractProgressWidget->SetProgress(FMath::Clamp(ElapsedTime / TotalDuration, 0, 1), TotalDuration - ElapsedTime);
+}
+
+void ADZ_PlayerController::WeaponAttack()
+{
+	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Weapon);
+}
+
+void ADZ_PlayerController::Kick()
+{
+	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Kick);
 }
 
 void ADZ_PlayerController::ServerBeginInteract_Implementation(AActor* ContainerActor)
@@ -206,12 +221,14 @@ void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
 		InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 		InventoryPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
 		InventoryPanelWidget->SetCharacterStatsInfo(StatsInfo);
+		InventoryPanelWidget->SetWeightInfo(InventoryComp->GetTotalWeight(), InventoryComp->GetMaxWeight());
 	}
 	if (bForceRefresh || IsValid(LootPanelWidget) && LootPanelWidget->IsInViewport())
 	{
 		LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 		LootPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
 		LootPanelWidget->SetCharacterStatsInfo(StatsInfo);
+		LootPanelWidget->SetWeightInfo(InventoryComp->GetTotalWeight(), InventoryComp->GetMaxWeight());
 		if (InteractContainerComp.IsValid())
 		{
 			LootPanelWidget->SetLootListInfo(InteractContainerComp->GetItems());
@@ -311,8 +328,26 @@ void ADZ_PlayerController::ServerTakeItem_Implementation(AActor* ContainerActor,
 
 	UDZ_ContainerComponent* Container = ContainerActor->FindComponentByClass<UDZ_ContainerComponent>();
 	if (!Container) return;
+	
+	APawn* LocalPawn = GetPawn();
+	if (!LocalPawn) return;
+	UDZ_InventoryComponent* InventoryComp = LocalPawn->FindComponentByClass<UDZ_InventoryComponent>();
+	if (!InventoryComp) return;
+	
+	if (ItemHelper::TakeItem(InventoryComp, Container, SlotIndex, Count))
+	{
+		RefreshUIAll(false);
+	}
+}
 
-	Container->TryTake(SlotIndex, Count);
+void ADZ_PlayerController::HandleTakeItemRequested(UWidget* Row)
+{
+	UDZ_ItemSlotBase* RowWidget = Cast<UDZ_ItemSlotBase>(Row);
+	if (!RowWidget) return;
+	if (!InteractTarget.IsValid()) return;
+	
+	const FDZ_ItemSlotHandle Handle = RowWidget->GetSlotHandle();
+	ServerTakeItem(InteractTarget.Get(), Handle.SlotIndex, 1);
 }
 
 void ADZ_PlayerController::Move(const FInputActionValue& Value)
@@ -336,6 +371,7 @@ void ADZ_PlayerController::Look(const FInputActionValue& Value)
 void ADZ_PlayerController::Jump(const FInputActionValue& Value)
 {
 	GetCharacter()->Jump();
+	UIHelper::ShowTips(this, FText::FromString("Jumping"), 3);
 }
 
 void ADZ_PlayerController::CloseTopWidget()

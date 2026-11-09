@@ -17,15 +17,36 @@ class DECAYZONE_API ADZ_BaseCharacter : public ACharacter, public IAbilitySystem
 public:
 	ADZ_BaseCharacter();
 	
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UFUNCTION(BlueprintPure)
+	bool IsAlive();
 	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	void UseItem(int32 ItemID);
+	bool IsFriendly(AActor* TargetActor);
+	
+
+	UFUNCTION()
+	virtual void Death();
+	
+	virtual void ClientHandleDeath();
 	
 protected:
+	void BindDeathHandle();
 	
 	void GiveStartupAbilities();
 	
+	UPROPERTY(ReplicatedUsing = OnRep_IsDead)
+	bool bIsDead = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DecayZone|Character")
+	TObjectPtr<UAnimMontage> DeathMontage;
+	
 private:
+	
+	UFUNCTION()
+	void OnRep_IsDead();
+	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UDZ_StartupAbilities> StartupAbilities;
 };

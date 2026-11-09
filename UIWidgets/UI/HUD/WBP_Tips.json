@@ -1,0 +1,258 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/HUD/WBP_Tips",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.SizeBox",
+				"className": "SizeBox",
+				"name": "Size_Tips",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 0,
+								"top": 0,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.20000000298023224
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.20000000298023224
+								}
+							},
+							"alignment":
+							{
+								"x": 0.5,
+								"y": 0.5
+							}
+						},
+						"bAutoSize": true
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Border_TipsOutline",
+						"isVariable": false,
+						"properties":
+						{
+							"Padding":
+							{
+								"left": 1,
+								"top": 1,
+								"right": 1,
+								"bottom": 1
+							},
+							"BrushColor":
+							{
+								"r": 0.068478003144264221,
+								"g": 0.10218899697065353,
+								"b": 0.12478700280189514,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.SizeBoxSlot",
+							"className": "SizeBoxSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Border",
+								"className": "Border",
+								"name": "Border_TipsFill",
+								"isVariable": false,
+								"properties":
+								{
+									"Padding":
+									{
+										"left": 20,
+										"top": 10,
+										"right": 20,
+										"bottom": 10
+									},
+									"BrushColor":
+									{
+										"r": 0.027320999652147293,
+										"g": 0.045186001807451248,
+										"b": 0.057805001735687256,
+										"a": 1
+									}
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.BorderSlot",
+									"className": "BorderSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 1,
+											"top": 1,
+											"right": 1,
+											"bottom": 1
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Tips",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "提示消息",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=20.000000,MonospacedWidth=1.000000)",
+											"Justification": "Center"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.BorderSlot",
+											"className": "BorderSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 20,
+													"top": 10,
+													"right": 20,
+													"bottom": 10
+												},
+												"HorizontalAlignment": "HAlign_Center",
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"animations": [
+		{
+			"name": "Anim_FadeIn",
+			"duration": 0.25,
+			"frameRate": 60,
+			"tracks": [
+				{
+					"target": "Size_Tips",
+					"property": "RenderOpacity",
+					"keys": [
+						{
+							"time": 0,
+							"value": 0,
+							"interp": "cubic"
+						},
+						{
+							"time": 0.25,
+							"value": 1
+						}
+					]
+				},
+				{
+					"target": "Size_Tips",
+					"property": "RenderTransform.Translation",
+					"keys": [
+						{
+							"time": 0,
+							"value":
+							{
+								"x": 0,
+								"y": 24
+							}
+						},
+						{
+							"time": 0.25,
+							"value":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Anim_FadeOut",
+			"duration": 0.29999999999999999,
+			"frameRate": 60,
+			"tracks": [
+				{
+					"target": "Size_Tips",
+					"property": "RenderOpacity",
+					"keys": [
+						{
+							"time": 0,
+							"value": 1
+						},
+						{
+							"time": 0.29999999999999999,
+							"value": 0
+						}
+					]
+				},
+				{
+					"target": "Size_Tips",
+					"property": "RenderTransform.Translation",
+					"keys": [
+						{
+							"time": 0,
+							"value":
+							{
+								"x": 0,
+								"y": 0
+							}
+						},
+						{
+							"time": 0.29999999999999999,
+							"value":
+							{
+								"x": 0,
+								"y": -12
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"contentHash": "3f3b0b58af29c167e8d0075a54e3ffbf"
+}

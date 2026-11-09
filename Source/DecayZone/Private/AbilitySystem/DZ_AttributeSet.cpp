@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/DZ_AttributeSet.h"
 
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 void UDZ_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -39,6 +40,23 @@ void UDZ_AttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	if (Attribute == GetEnergyAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
+	}
+}
+
+void UDZ_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float Damage = GetIncomingDamage();
+		const float DamageReduction = 1 - FMath::Clamp(GetArmor(), 0, 80) / 100;
+		const float HealthValue = FMath::Clamp(GetHealth() - Damage * DamageReduction, 0, GetMaxHealth());
+		SetIncomingDamage(0);
+		SetHealth(HealthValue);
+		if (HealthValue <= 0.0f)
+		{
+			OnDeath.Broadcast();
+		}
 	}
 }
 

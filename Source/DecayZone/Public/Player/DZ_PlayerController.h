@@ -31,6 +31,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	void Interact();
 	void UpdateInteractProgress();
+	void WeaponAttack();
+	void Kick();
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 
@@ -65,6 +67,9 @@ private:
 	
 	UFUNCTION()
 	void HandleItemMoveRequested(UWidget* From, UWidget* To);
+	
+	UFUNCTION()
+	void HandleTakeItemRequested(UWidget* Row);
 	
 	UFUNCTION()
 	void HandleInventoryItemsChanged();

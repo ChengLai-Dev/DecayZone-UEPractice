@@ -26,6 +26,7 @@ public:
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
 	void SetEquipmentPanel(const TArray<int32>& EquipmentInfo);
 	void SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInfo);
+	void SetWeightInfo(float Current, float Max);
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UDZ_ItemDetail> ItemDetail;

@@ -3,6 +3,7 @@
 
 #include "UI/Widgets/DZ_LootRow.h"
 
+#include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Data/Item/FDZ_ItemData.h"
@@ -13,6 +14,20 @@
 UDZ_LootRow::UDZ_LootRow()
 {
 	SetDragEnabled(true);
+}
+
+void UDZ_LootRow::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	if (Btn_Take)
+	{
+		Btn_Take->OnClicked.AddDynamic(this, &ThisClass::HandleTakeClicked);
+	}
+}
+
+void UDZ_LootRow::HandleTakeClicked()
+{
+	OnTakeRequested.Broadcast(this);
 }
 
 bool UDZ_LootRow::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,

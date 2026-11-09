@@ -28,6 +28,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnWidgetDragEndedEvent LootItemMoveRequest;
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnWidgetEvent OnTakeRequested;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnEvent OnCloseRequested;
+	
 protected:
 	
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
@@ -35,6 +41,12 @@ private:
 
 	UFUNCTION()
 	void HandleLootRowItemDrop(UWidget* From, UWidget* To);
+	
+	UFUNCTION()
+	void HandleLootRowTakeRequested(UWidget* Row);
+	
+	UFUNCTION()
+	void HandleCloseClicked();
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> Text_LootCount;

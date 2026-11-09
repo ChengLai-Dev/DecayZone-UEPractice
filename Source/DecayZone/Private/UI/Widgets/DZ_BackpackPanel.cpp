@@ -4,9 +4,11 @@
 #include "UI/Widgets/DZ_BackpackPanel.h"
 
 #include "Components/UniformGridPanel.h"
+#include "Components/TextBlock.h"
 #include "Data/Item/FDZ_ItemStack.h"
 #include "Library/UIHelper.h"
 #include "UI/Widgets/DZ_ItemSlot.h"
+#include "UI/Widgets/DZ_WeightBar.h"
 
 void UDZ_BackpackPanel::NativeConstruct()
 {
@@ -45,6 +47,12 @@ void UDZ_BackpackPanel::SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackIn
 	{
 		ItemSlots[i]->Hide();
 	}
+}
+
+void UDZ_BackpackPanel::SetWeightInfo(float Current, float Max)
+{
+	Text_WeightValue->SetText(FText::FromString(FString::Printf(TEXT("%.1f / %.1f"), Current, Max)));
+	WeightBar->SetWeight(Current, Max);
 }
 
 void UDZ_BackpackPanel::HandleItemSlotClicked(UWidget* Widget)

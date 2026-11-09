@@ -100,6 +100,23 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 	return false;
 }
 
+bool ItemHelper::TakeItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, int32 SlotIndex, int32 Count)
+{
+	if (!InventoryComp || !ContainerComp) return false;
+	if (!ContainerComp->IsSlotValid(SlotIndex)) return false;
+	
+	const FDZ_ItemStack Stack = ContainerComp->GetItems()[SlotIndex];
+	if (Stack.IsEmpty()) return false;
+	
+	const int32 TakeCount = FMath::Min(Count, Stack.Count);
+	const FDZ_ItemData* Data = GetItemData(InventoryComp, Stack.ItemId);
+	if (!Data || !InventoryComp->CanAddWeight(Data->Weight * TakeCount)) return false;
+	
+	if (!InventoryComp->AddItemAutoPos(Stack.ItemId, TakeCount)) return false;
+	ContainerComp->RemoveItems(SlotIndex, TakeCount);
+	return true;
+}
+
 int32 ItemHelper::GetMaxStack(const UObject* WorldContextObject, int32 ItemId)
 {
 	const FDZ_ItemData* Data = GetItemData(WorldContextObject, ItemId);

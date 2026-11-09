@@ -39,4 +39,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UInputAction> CloseTopWidgetAction;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> KickAction;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> WeaponAttackAction;
+	
 };

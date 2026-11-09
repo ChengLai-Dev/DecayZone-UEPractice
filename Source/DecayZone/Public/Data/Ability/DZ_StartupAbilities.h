@@ -24,7 +24,7 @@ struct FStartupAbilityInfo
 	TArray<TSubclassOf<UGameplayAbility>> Abilities;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	bool bActivateOnGiven = true;
+	TArray<TSubclassOf<UGameplayAbility>> ActiveOnGivenAbilities;
 };
 
 UCLASS()

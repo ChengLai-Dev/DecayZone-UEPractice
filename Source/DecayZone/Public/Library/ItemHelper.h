@@ -17,6 +17,8 @@ public:
 	static bool MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, 
 		const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	
+	static bool TakeItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, int32 SlotIndex, int32 Count);
+	
 	static int32 GetMaxStack(const UObject* WorldContextObject, int32 ItemId);
 	
 };

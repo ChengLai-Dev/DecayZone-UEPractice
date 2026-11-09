@@ -11,7 +11,10 @@ void UDZ_LootPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	BackpackPanel->OnItemDrop.AddDynamic(this, &ThisClass::HandleItemDrop);
+	EquipmentPanel->OnItemDrop.AddDynamic(this, &ThisClass::HandleItemDrop);
 	LootListPanel->LootItemMoveRequest.AddDynamic(this, &ThisClass::HandleItemDrop);
+	LootListPanel->OnTakeRequested.AddDynamic(this, &ThisClass::HandleTakeRequested);
+	LootListPanel->OnCloseRequested.AddDynamic(this, &ThisClass::HandleCloseRequested);
 }
 
 void UDZ_LootPanel::SetLootListInfo(const TArray<FDZ_ItemStack>& LootList)
@@ -34,7 +37,22 @@ void UDZ_LootPanel::SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& StatsInf
 	EquipmentPanel->SetCharacterStatsInfo(StatsInfo);
 }
 
+void UDZ_LootPanel::SetWeightInfo(float Current, float Max)
+{
+	BackpackPanel->SetWeightInfo(Current, Max);
+}
+
 void UDZ_LootPanel::HandleItemDrop(UWidget* From, UWidget* To)
 {
 	OnItemMoveRequested.Broadcast(From, To);
+}
+
+void UDZ_LootPanel::HandleTakeRequested(UWidget* Row)
+{
+	OnTakeItemRequested.Broadcast(Row);
+}
+
+void UDZ_LootPanel::HandleCloseRequested()
+{
+	Close();
 }

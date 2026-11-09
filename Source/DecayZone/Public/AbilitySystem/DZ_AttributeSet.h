@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSet.h"
+#include "DZ_DelegateTypes.h"
 #include "DZ_AttributeSet.generated.h"
 
 /**
@@ -22,10 +23,14 @@ public:
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Energy);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxEnergy);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Armor);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, IncomingDamage);
 	
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
+	UPROPERTY(BlueprintAssignable)
+	FOnEvent OnDeath;
 	
 private:
 	
@@ -43,6 +48,9 @@ private:
 	
 	UPROPERTY(ReplicatedUsing = OnRep_Armor)
 	FGameplayAttributeData Armor;
+	
+	UPROPERTY()
+	FGameplayAttributeData IncomingDamage;
 	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);

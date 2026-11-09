@@ -4,6 +4,7 @@
 #include "DZ_ItemDefines.h"
 #include "Engine/DataTable.h"
 #include "FDZ_ItemSlotHandle.h"
+#include "FDZ_WeaponParams.h"
 #include "FDZ_ItemData.generated.h"
 
 UENUM(BlueprintType)
@@ -48,4 +49,7 @@ struct FDZ_ItemData: public FTableRowBase
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float ArmorBonus = 0.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FDZ_WeaponParams WeaponParams;
 };

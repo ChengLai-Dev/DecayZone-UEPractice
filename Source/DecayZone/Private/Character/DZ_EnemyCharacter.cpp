@@ -26,6 +26,7 @@ void ADZ_EnemyCharacter::BeginPlay()
 		const FGameplayEffectSpecHandle& SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeGEClass, 1, GetAbilitySystemComponent()->MakeEffectContext());
 		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 		GiveStartupAbilities();
+		BindDeathHandle();
 	}
 }
 

@@ -79,6 +79,7 @@ void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 	OnAttributesInitialized.Broadcast();
 	GiveStartupAbilities();
 	RecalculateArmor();
+	BindDeathHandle();
 }
 
 void ADZ_PlayerCharacter::RecalculateArmor()

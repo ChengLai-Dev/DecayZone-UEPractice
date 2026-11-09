@@ -7,6 +7,7 @@
 #include "UI/DZ_UserWidget.h"
 #include "DZ_UIConfig.generated.h"
 
+class UDZ_Tips;
 class UDZ_InteractProgress;
 class UDZ_InteractPrompt;
 class UDZ_InventoryPanel;
@@ -37,6 +38,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_StatusBars> StatusBarsClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_Tips> TipsClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TMap<TSubclassOf<UDZ_UserWidget>, int32> ZOrderMap;

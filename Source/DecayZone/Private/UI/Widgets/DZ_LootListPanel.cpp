@@ -2,6 +2,7 @@
 
 
 #include "UI/Widgets/DZ_LootListPanel.h"
+#include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "Components/TextBlock.h"
 #include "Data/Item/FDZ_ItemStack.h"
@@ -12,6 +13,10 @@ void UDZ_LootListPanel::NativeOnInitialized()
 	Super::NativeOnInitialized();
 	ScrollBox_LootList->ClearChildren();
 	SetSlotInfo(EItemContainer::Loot, -1);
+	if (Btn_Close)
+	{
+		Btn_Close->OnClicked.AddDynamic(this, &ThisClass::HandleCloseClicked);
+	}
 }
 
 void UDZ_LootListPanel::SetContainerName(const FText& Name)
@@ -36,6 +41,16 @@ void UDZ_LootListPanel::HandleLootRowItemDrop(UWidget* From, UWidget* To)
 	LootItemMoveRequest.Broadcast(From, To);
 }
 
+void UDZ_LootListPanel::HandleLootRowTakeRequested(UWidget* Row)
+{
+	OnTakeRequested.Broadcast(Row);
+}
+
+void UDZ_LootListPanel::HandleCloseClicked()
+{
+	OnCloseRequested.Broadcast();
+}
+
 void UDZ_LootListPanel::SetLootListInfo(const TArray<FDZ_ItemStack>& ItemList)
 {
 	if (ItemList.IsEmpty())
@@ -54,6 +69,7 @@ void UDZ_LootListPanel::SetLootListInfo(const TArray<FDZ_ItemStack>& ItemList)
 		ScrollBox_LootList->AddChild(NewItem);
 		NewItem->SetSlotInfo(EItemContainer::Loot, i);
 		NewItem->OnWidgetDragEnded.AddDynamic(this, &UDZ_LootListPanel::HandleLootRowItemDrop);
+		NewItem->OnTakeRequested.AddDynamic(this, &UDZ_LootListPanel::HandleLootRowTakeRequested);
 	}
 	for (int32 i = ChildrenCount - 1; i >= ItemList.Num(); i--)
 	{

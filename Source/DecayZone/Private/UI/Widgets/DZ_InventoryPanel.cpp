@@ -38,6 +38,11 @@ void UDZ_InventoryPanel::SetCharacterStatsInfo(const FDZ_CharacterStatsInfo& Sta
 	EquipmentPanel->SetCharacterStatsInfo(StatsInfo);
 }
 
+void UDZ_InventoryPanel::SetWeightInfo(float Current, float Max)
+{
+	BackpackPanel->SetWeightInfo(Current, Max);
+}
+
 void UDZ_InventoryPanel::HandleItemSlotClicked(UWidget* Widget)
 {
 	UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Widget);

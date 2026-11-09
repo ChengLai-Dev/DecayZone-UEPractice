@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/Test/SyncTest",
+	"designSizeMode": "FillScreen",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "CanvasPanel_0",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.TextBlock",
+				"className": "TextBlock",
+				"name": "Text_Sync",
+				"isVariable": false,
+				"properties":
+				{
+					"Text": "Editor Edited"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+					}
+				}
+			}
+		]
+	},
+	"contentHash": "4a21420ccf3525a26e3f6018bab5aa85"
+}

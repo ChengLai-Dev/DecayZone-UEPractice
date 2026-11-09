@@ -6,5 +6,13 @@
 namespace DZGameplayTags
 {
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Interact);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Attack_Kick);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Attack_Weapon);
+	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Armor);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
+	
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Attack_Melee);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Attack_Ranged);
+	
 }

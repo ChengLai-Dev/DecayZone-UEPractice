@@ -25,6 +25,7 @@ class DECAYZONE_API UDZ_BackpackPanel : public UDZ_UserWidget
 public:
 	
 	void SetBackpackPanel(const TArray<FDZ_ItemStack>& BackpackInfo);
+	void SetWeightInfo(float Current, float Max);
 	
 	UPROPERTY()
 	TArray<TObjectPtr<UDZ_ItemSlot>> ItemSlots;
