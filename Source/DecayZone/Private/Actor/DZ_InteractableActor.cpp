@@ -9,7 +9,7 @@ ADZ_InteractableActor::ADZ_InteractableActor()
 {
 	SetReplicates(true);
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	Mesh->SetCollisionObjectType(Interactable);
+	Mesh->SetCollisionObjectType(ECC_Interactable);
 }
 
 FText ADZ_InteractableActor::GetInteractPromptText_Implementation()
@@ -17,7 +17,7 @@ FText ADZ_InteractableActor::GetInteractPromptText_Implementation()
 	return InteractPromptText;
 }
 
-bool ADZ_InteractableActor::CanInteract_Implementation(AActor* Interactor)
+bool ADZ_InteractableActor::CanInteract_Implementation()
 {
 	return true;
 }

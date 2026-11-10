@@ -18,6 +18,21 @@ ADZ_BaseCharacter::ADZ_BaseCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+bool ADZ_BaseCharacter::CanInteract_Implementation()
+{
+	return bIsDead;
+}
+
+float ADZ_BaseCharacter::GetInteractDuration_Implementation()
+{
+	return InteractDuration;
+}
+
+FText ADZ_BaseCharacter::GetInteractPromptText_Implementation()
+{
+	return InteractPromptText;
+}
+
 void ADZ_BaseCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -54,9 +69,11 @@ void ADZ_BaseCharacter::Death()
 
 void ADZ_BaseCharacter::ClientHandleDeath()
 {
+	OnDeathEvent.Broadcast();
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->DisableMovement();
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 }
 
 void ADZ_BaseCharacter::BindDeathHandle()

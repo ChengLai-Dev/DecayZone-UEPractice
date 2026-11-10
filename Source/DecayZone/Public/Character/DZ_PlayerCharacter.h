@@ -9,6 +9,7 @@
 #include "GameplayEffectTypes.h"
 #include "DZ_PlayerCharacter.generated.h"
 
+class UDZ_ContainerComponent;
 class UGameplayEffect;
 class UDZ_InventoryComponent;
 class UCameraComponent;
@@ -52,11 +53,12 @@ public:
 	FOnEvent OnAttributesInitialized;
 	
 	bool IsInteractableInRange(AActor* Actor);
-	
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
+	virtual void Death() override;
 	void HighlightInteractable();
 	AActor* FindTargetInteractableActor();
 	
@@ -95,4 +97,7 @@ private:
 	TSubclassOf<UGameplayEffect> EquipmentArmorGEClass;
 	
 	FActiveGameplayEffectHandle ArmorGEHandle;
+	
+	UPROPERTY()
+	TObjectPtr<UDZ_ContainerComponent> ContainerComponent;
 };

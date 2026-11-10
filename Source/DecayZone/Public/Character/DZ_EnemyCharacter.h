@@ -8,6 +8,7 @@
 #include "GameplayEffect.h"
 #include "DZ_EnemyCharacter.generated.h"
 
+class UDZ_ContainerComponent;
 class UDZ_AbilitySystemComponent;
 
 UCLASS()
@@ -27,4 +28,11 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TSubclassOf<UGameplayEffect> InitializeGEClass;
+	
+private:
+	
+	virtual void ClientHandleDeath() override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
+	TObjectPtr<UDZ_ContainerComponent> ContainerComponent;
 };

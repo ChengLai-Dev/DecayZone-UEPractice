@@ -18,7 +18,7 @@ public:
 	ADZ_InteractableActor();
 	virtual FText GetInteractPromptText_Implementation() override;
 	
-	virtual bool CanInteract_Implementation(AActor* Interactor) override;
+	virtual bool CanInteract_Implementation() override;
 	virtual float GetInteractDuration_Implementation() override;
 	
 protected:

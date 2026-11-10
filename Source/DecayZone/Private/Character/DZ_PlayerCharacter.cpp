@@ -13,7 +13,9 @@
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameplayEffect.h"
+#include "Components/DZ_ContainerComponent.h"
 #include "GameplayTags/DZGameplayTags.h"
+#include "Interface/DZ_Interactable.h"
 #include "Library/DZ_BlueprintLibrary.h"
 #include "Player/DZ_PlayerState.h"
 
@@ -40,11 +42,14 @@ ADZ_PlayerCharacter::ADZ_PlayerCharacter()
 	InteractionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	InteractionBox->SetCollisionObjectType(ECC_WorldDynamic);
 	InteractionBox->SetCollisionResponseToAllChannels(ECR_Ignore);
-	InteractionBox->SetCollisionResponseToChannel(Interactable, ECR_Overlap);
+	InteractionBox->SetCollisionResponseToChannel(ECC_Interactable, ECR_Overlap);
+	InteractionBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnInteractableBeginOverlap);
 	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnInteractableEndOverlap);
 	
 	InventoryComponent = CreateDefaultSubobject<UDZ_InventoryComponent>("InventoryComponent");
+	
+	ContainerComponent = CreateDefaultSubobject<UDZ_ContainerComponent>("ContainerComponent");
 }
 
 bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)
@@ -59,6 +64,15 @@ void ADZ_PlayerCharacter::BeginPlay()
 	{
 		InventoryComponent->OnEquipmentsChanged.AddDynamic(this, &ThisClass::HandleEquipmentsChanged);
 	}
+}
+
+void ADZ_PlayerCharacter::Death()
+{
+	if (!HasAuthority()) return;
+	Super::Death();
+	ContainerComponent->SetContents(InventoryComponent->GetAllItems());
+
+	InventoryComponent->ClearAll();
 }
 
 void ADZ_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -158,6 +172,8 @@ AActor* ADZ_PlayerCharacter::FindTargetInteractableActor()
 	for (AActor* Actor : OverlappingInteractables)
 	{
 		if (!IsValid(Actor)) continue;
+		if (Actor == this) continue;
+		if (!Actor->Implements<UDZ_Interactable>() || !IDZ_Interactable::Execute_CanInteract(Actor)) continue;
 		const FVector ToInteractable = Actor->GetActorLocation() - GetActorLocation();
 		float Dot = FVector::DotProduct(GetActorForwardVector(), ToInteractable.GetSafeNormal());
 		if (Dot > MaxDot)

@@ -4,12 +4,14 @@
 #include "Character/DZ_EnemyCharacter.h"
 
 #include "AbilitySystem/DZ_AbilitySystemComponent.h"
+#include "Components/DZ_ContainerComponent.h"
 
 
 ADZ_EnemyCharacter::ADZ_EnemyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	AbilitySystemComponent = CreateDefaultSubobject<UDZ_AbilitySystemComponent>("AbilitySystemComponent");
+	ContainerComponent = CreateDefaultSubobject<UDZ_ContainerComponent>("ContainerComponent");
 }
 
 UAbilitySystemComponent* ADZ_EnemyCharacter::GetAbilitySystemComponent() const
@@ -28,5 +30,13 @@ void ADZ_EnemyCharacter::BeginPlay()
 		GiveStartupAbilities();
 		BindDeathHandle();
 	}
+}
+
+void ADZ_EnemyCharacter::ClientHandleDeath()
+{
+	Super::ClientHandleDeath();
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetMesh()->SetAllBodiesSimulatePhysics(true);
+	GetMesh()->bBlendPhysics = true;
 }
 

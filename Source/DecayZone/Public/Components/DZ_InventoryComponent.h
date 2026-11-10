@@ -37,7 +37,8 @@ public:
 	float GetMaxWeight() const;
 	float GetTotalArmor() const;
 	bool CanAddWeight(float Delta) const;
-	
+	void ClearAll();
+	TArray<FDZ_ItemStack> GetAllItems();
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnItemsChanged;
 	

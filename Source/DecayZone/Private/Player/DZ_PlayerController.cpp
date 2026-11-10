@@ -117,15 +117,16 @@ void ADZ_PlayerController::Interact()
 	
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
 	AActor* InteractActor = PlayerCharacter->GetHighlightActor();
-	if (Cast<IDZ_Interactable>(InteractActor))
+	if (!InteractActor) return;
+	if (InteractActor->Implements<UDZ_Interactable>() && IDZ_Interactable::Execute_CanInteract(InteractActor))
 	{
 		TotalDuration = IDZ_Interactable::Execute_GetInteractDuration(InteractActor);
 		ElapsedTime = 0;
-		if (TotalDuration == 0.f)
-		{
-			InteractProgressWidget->Close();
-			return;
-		}
+		// if (TotalDuration == 0.f)
+		// {
+		// 	InteractProgressWidget->Close();
+		// 	return;
+		// }
 		InteractProgressWidget->Open();
 		bIsInteracting = true;
 		InteractPromptWidget->Hide();

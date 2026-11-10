@@ -227,6 +227,34 @@ bool UDZ_InventoryComponent::CanAddWeight(float Delta) const
 	return GetTotalWeight() + Delta <= MaxWeight + KINDA_SMALL_NUMBER;
 }
 
+void UDZ_InventoryComponent::ClearAll()
+{
+	Items.Empty();
+	Equipments.Empty();
+}
+
+TArray<FDZ_ItemStack> UDZ_InventoryComponent::GetAllItems()
+{
+	TMap<int32, int32> AllItems;
+	for (int32 Index = 0; Index < Items.Num(); Index++)
+	{
+		if (Items[Index].IsEmpty()) continue;
+		AllItems.FindOrAdd(Items[Index].ItemId) += Items[Index].Count;
+	}
+	for (int32 Index = 0; Index < Equipments.Num(); Index++)
+	{
+		if (Equipments[Index] == DZItem::EmptyId) continue;
+		AllItems.FindOrAdd(Equipments[Index]) += 1;
+	}
+	
+	TArray<FDZ_ItemStack> Result;
+	for (const TTuple<int32, int32>& Pair : AllItems)
+	{
+		Result.Add(FDZ_ItemStack(Pair.Key, Pair.Value));
+	}
+	return Result;
+}
+
 float UDZ_InventoryComponent::GetTotalArmor() const
 {
 	float TotalArmor = 0;
