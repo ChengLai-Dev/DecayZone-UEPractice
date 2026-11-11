@@ -6,6 +6,8 @@
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "DZ_BaseEnemyController.generated.h"
 
+struct FGameplayTag;
+
 UENUM(BlueprintType)
 enum class EEnemyState: uint8
 {
@@ -22,7 +24,14 @@ class DECAYZONE_API ADZ_BaseEnemyController : public AAIController
 public:
 	ADZ_BaseEnemyController();
 	
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
+	
 private:
 	UFUNCTION()
 	void HandlePerceptionUpdate(const TArray<AActor*>& Actors);
+	
+	void HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount);
+	
+	FDelegateHandle MovementLockTagHandle;
 };

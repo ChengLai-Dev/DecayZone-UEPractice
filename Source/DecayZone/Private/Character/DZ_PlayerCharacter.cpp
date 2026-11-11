@@ -94,7 +94,6 @@ void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 	GiveStartupAbilities();
 	RecalculateArmor();
 	BindDeathHandle();
-	BindCommon();
 }
 
 void ADZ_PlayerCharacter::RecalculateArmor()
@@ -134,7 +133,6 @@ void ADZ_PlayerCharacter::OnRep_PlayerState()
 	ADZ_PlayerState* DZ_PlayerState = Cast<ADZ_PlayerState>(GetPlayerState());
 	AbilitySystemComponent = Cast<UDZ_AbilitySystemComponent>(DZ_PlayerState->GetAbilitySystemComponent());
 	AbilitySystemComponent->InitAbilityActorInfo(DZ_PlayerState, this);
-	BindCommon();
 }
 
 void ADZ_PlayerCharacter::OnInteractableBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

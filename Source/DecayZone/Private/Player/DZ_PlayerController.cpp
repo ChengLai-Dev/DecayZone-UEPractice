@@ -78,12 +78,12 @@ void ADZ_PlayerController::OnAttributeValueChanged(const FOnAttributeChangeData&
 
 void ADZ_PlayerController::RefreshStatusBars()
 {
-	float Enegy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetEnergyAttribute());
-	float MaxEnegy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxEnergyAttribute());
-	float Health = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetHealthAttribute());
-	float MaxHealth = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxHealthAttribute());
+	const float Energy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetEnergyAttribute());
+	const float MaxEnergy = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxEnergyAttribute());
+	const float Health = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetHealthAttribute());
+	const float MaxHealth = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMaxHealthAttribute());
 	StatusBarsWidget->SetHealthInfo(Health, MaxHealth);
-	StatusBarsWidget->SetEnergyInfo(Enegy, MaxEnegy);
+	StatusBarsWidget->SetEnergyInfo(Energy, MaxEnergy);
 }
 
 void ADZ_PlayerController::OnRep_PlayerState()
@@ -122,11 +122,6 @@ void ADZ_PlayerController::Interact()
 	{
 		TotalDuration = IDZ_Interactable::Execute_GetInteractDuration(InteractActor);
 		ElapsedTime = 0;
-		// if (TotalDuration == 0.f)
-		// {
-		// 	InteractProgressWidget->Close();
-		// 	return;
-		// }
 		InteractProgressWidget->Open();
 		bIsInteracting = true;
 		InteractPromptWidget->Hide();
@@ -351,8 +346,15 @@ void ADZ_PlayerController::HandleTakeItemRequested(UWidget* Row)
 	ServerTakeItem(InteractTarget.Get(), Handle.SlotIndex, 1);
 }
 
+bool ADZ_PlayerController::IsMovementLocked() const
+{
+	return AbilitySystemComponent.IsValid() && AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_MovementLocked);
+}
+
 void ADZ_PlayerController::Move(const FInputActionValue& Value)
 {
+	if (IsMovementLocked()) return;
+	if (!GetPawn()) return;
 	const FVector2D InputVector = Value.Get<FVector2D>();
 	const FRotator YawRotation = FRotator(0, GetControlRotation().Yaw, 0);
 	const FVector ForwardVector = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
@@ -371,6 +373,9 @@ void ADZ_PlayerController::Look(const FInputActionValue& Value)
 
 void ADZ_PlayerController::Jump(const FInputActionValue& Value)
 {
+	if (IsMovementLocked()) return;
+	if (!GetCharacter()) return;
+	
 	GetCharacter()->Jump();
 	UIHelper::ShowTips(this, FText::FromString("Jumping"), 3);
 }

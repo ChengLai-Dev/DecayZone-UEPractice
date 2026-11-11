@@ -80,6 +80,8 @@ private:
 	void FinishInteract();
 	void ActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	
+	bool IsMovementLocked() const;
+	
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
