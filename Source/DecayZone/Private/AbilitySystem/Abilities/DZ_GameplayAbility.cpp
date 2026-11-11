@@ -14,5 +14,6 @@ void UDZ_GameplayAbility::ApplyDamageEffectToTarget(AActor* Target)
 		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(DamageEffectClass, 1, ASC->MakeEffectContext());
 		SpecHandle.Data->SetSetByCallerMagnitude(DZGameplayTags::SetByCaller_Damage, BaseDamage);
 		ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Target, DZGameplayTags::Event_HitReact, FGameplayEventData());
 	}
 }

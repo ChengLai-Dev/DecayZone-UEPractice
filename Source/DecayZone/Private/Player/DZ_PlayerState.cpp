@@ -10,6 +10,8 @@ ADZ_PlayerState::ADZ_PlayerState()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UDZ_AbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet = CreateDefaultSubobject<UDZ_AttributeSet>("AttributeSet");
+	
+	AbilitySystemComponent->SetIsReplicated(true);
 }
 
 UAbilitySystemComponent* ADZ_PlayerState::GetAbilitySystemComponent() const

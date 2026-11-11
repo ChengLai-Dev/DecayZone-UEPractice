@@ -20,7 +20,8 @@ public class DecayZone : ModuleRules
 			"GameplayTasks",
 			"UMG",
 			"Slate",
-			"SlateCore"
+			"SlateCore",
+			"AIModule",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

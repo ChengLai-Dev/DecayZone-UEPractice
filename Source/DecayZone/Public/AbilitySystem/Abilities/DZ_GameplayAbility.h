@@ -22,7 +22,7 @@ protected:
 	TObjectPtr<UAnimMontage> Montage;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "DecayZone|Ability")
-	float BaseDamage;
+	float BaseDamage = 20.f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Ability")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;

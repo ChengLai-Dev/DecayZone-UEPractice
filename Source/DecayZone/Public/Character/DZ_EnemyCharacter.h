@@ -8,6 +8,8 @@
 #include "GameplayEffect.h"
 #include "DZ_EnemyCharacter.generated.h"
 
+class ADZ_PatrolRoute;
+class UDZ_AttributeSet;
 class UDZ_ContainerComponent;
 class UDZ_AbilitySystemComponent;
 
@@ -19,6 +21,10 @@ class DECAYZONE_API ADZ_EnemyCharacter : public ADZ_BaseCharacter
 public:
 	ADZ_EnemyCharacter();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	bool HasPatrolRoute();
+	
+	UFUNCTION(BlueprintCallable)
+	FVector GetNextPatrolLocation();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -26,12 +32,17 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
 	
+	UPROPERTY()
+	TObjectPtr<UDZ_AttributeSet> AttributeSet;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TSubclassOf<UGameplayEffect> InitializeGEClass;
 	
-private:
-	
 	virtual void ClientHandleDeath() override;
+	
+private:
+	UPROPERTY(EditAnywhere, Category = "DecayZone|AI")
+	TObjectPtr<ADZ_PatrolRoute> PatrolRoute;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TObjectPtr<UDZ_ContainerComponent> ContainerComponent;

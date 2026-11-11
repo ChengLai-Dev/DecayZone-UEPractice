@@ -9,6 +9,7 @@
 #include "Data/Ability/DZ_StartupAbilities.h"
 #include "Game/DZ_GameInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameplayTags/DZGameplayTags.h"
 #include "Library/DZ_BlueprintLibrary.h"
 #include "Library/ItemHelper.h"
 #include "Net/UnrealNetwork.h"
@@ -16,6 +17,12 @@
 ADZ_BaseCharacter::ADZ_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+}
+
+void ADZ_BaseCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	BaseMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 }
 
 bool ADZ_BaseCharacter::CanInteract_Implementation()
@@ -73,7 +80,15 @@ void ADZ_BaseCharacter::ClientHandleDeath()
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->DisableMovement();
 	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
+}
+
+void ADZ_BaseCharacter::BindCommon()
+{
+	GetAbilitySystemComponent()->RegisterGameplayTagEvent(
+		DZGameplayTags::State_MovementLocked, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HandleMovementLockedTagChanged);
+	
 }
 
 void ADZ_BaseCharacter::BindDeathHandle()
@@ -104,6 +119,18 @@ void ADZ_BaseCharacter::GiveStartupAbilities()
 			GetAbilitySystemComponent()->TryActivateAbilityByClass(Ability);
 		}
 		return;
+	}
+}
+
+void ADZ_BaseCharacter::HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount)
+{
+	if (NewCount > 0)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 0;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = BaseMaxWalkSpeed;
 	}
 }
 

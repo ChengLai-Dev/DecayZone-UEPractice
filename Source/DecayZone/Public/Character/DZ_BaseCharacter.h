@@ -9,6 +9,7 @@
 #include "Interface/DZ_Interactable.h"
 #include "DZ_BaseCharacter.generated.h"
 
+struct FGameplayTag;
 class FOnEvent;
 class UDZ_StartupAbilities;
 
@@ -19,6 +20,7 @@ class DECAYZONE_API ADZ_BaseCharacter : public ACharacter, public IAbilitySystem
 
 public:
 	ADZ_BaseCharacter();
+	virtual void BeginPlay() override;
 	virtual bool CanInteract_Implementation() override;
 	virtual float GetInteractDuration_Implementation() override;
 	virtual FText GetInteractPromptText_Implementation() override;
@@ -29,7 +31,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	void UseItem(int32 ItemID);
 	bool IsFriendly(AActor* TargetActor);
-
+	
 	UFUNCTION()
 	virtual void Death();
 	
@@ -37,6 +39,7 @@ public:
 	FOnEvent OnDeathEvent;
 	
 protected:
+	void BindCommon();
 	void BindDeathHandle();
 	
 	void GiveStartupAbilities();
@@ -48,7 +51,13 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DecayZone|Character")
 	TObjectPtr<UAnimMontage> DeathMontage;
+	
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DecayZone|Character")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 private:
+
+	void HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount);
 	
 	UFUNCTION()
 	void OnRep_IsDead();
@@ -61,4 +70,6 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 	float InteractDuration = 4.f;
+	
+	float BaseMaxWalkSpeed = 0.f;
 };
