@@ -9,6 +9,7 @@
 #include "DZ_EnemyCharacter.generated.h"
 
 class ADZ_PatrolRoute;
+struct FGameplayTag;
 class UDZ_AttributeSet;
 class UDZ_ContainerComponent;
 class UDZ_AbilitySystemComponent;
@@ -41,9 +42,17 @@ protected:
 	virtual void ClientHandleDeath() override;
 	
 private:
+	void HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount);
+	
 	UPROPERTY(EditAnywhere, Category = "DecayZone|AI")
 	TObjectPtr<ADZ_PatrolRoute> PatrolRoute;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TObjectPtr<UDZ_ContainerComponent> ContainerComponent;
+	
+	FDelegateHandle MovementLockTagHandle;
+	
+	float BaseMaxWalkSpeed = 0.f;
+	
+	FRotator BaseRotationRate = FRotator::ZeroRotator;
 };

@@ -7,6 +7,7 @@
 #include "AbilitySystem/DZ_AttributeSet.h"
 #include "Actor/DZ_PatrolRoute.h"
 #include "Components/DZ_ContainerComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameplayTags/DZGameplayTags.h"
 
 
@@ -41,10 +42,33 @@ void ADZ_EnemyCharacter::BeginPlay()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	if (HasAuthority())
 	{
+		BaseMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+		BaseRotationRate = GetCharacterMovement()->RotationRate;
+		MovementLockTagHandle = AbilitySystemComponent->RegisterGameplayTagEvent(DZGameplayTags::State_MovementLocked, EGameplayTagEventType::NewOrRemoved)
+			.AddUObject(this, &ThisClass::HandleMovementLockedTagChanged);
+		
 		const FGameplayEffectSpecHandle& SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeGEClass, 1, GetAbilitySystemComponent()->MakeEffectContext());
 		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 		GiveStartupAbilities();
 		BindDeathHandle();
+	}
+}
+
+void ADZ_EnemyCharacter::HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount)
+{
+	UCharacterMovementComponent* MovementComponent = GetCharacterMovement();
+	if (!MovementComponent) return;
+	
+	if (NewCount > 0)
+	{
+		MovementComponent->StopMovementImmediately();
+		MovementComponent->MaxWalkSpeed = 0.f;
+		MovementComponent->RotationRate = FRotator::ZeroRotator;
+	}
+	else
+	{
+		MovementComponent->MaxWalkSpeed = BaseMaxWalkSpeed;
+		MovementComponent->RotationRate = BaseRotationRate;
 	}
 }
 

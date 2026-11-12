@@ -11,6 +11,6 @@ EBTNodeResult::Type UBTT_TryActivateAbility::ExecuteTask(UBehaviorTreeComponent&
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(AIOwner->GetPawn());
 	if (!ASC) return EBTNodeResult::Failed;
 	
-	if (ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer())) return EBTNodeResult::Failed;
+	if (!ASC->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer())) return EBTNodeResult::Failed;
 	return EBTNodeResult::Succeeded;
 }

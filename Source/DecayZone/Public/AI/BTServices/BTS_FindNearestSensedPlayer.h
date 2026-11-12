@@ -14,7 +14,8 @@ UCLASS()
 class DECAYZONE_API UBTS_FindNearestSensedPlayer : public UBTService_BlueprintBase
 {
 	GENERATED_BODY()
-	
+public:
+	UBTS_FindNearestSensedPlayer();
 protected:
 	
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
@@ -26,6 +27,6 @@ private:
 	
 	TWeakObjectPtr<ADZ_BaseEnemyController> EnemyController;
 	
-	UPROPERTY(EditAnywhere)
-	float SwitchTargetRange = 50;
+	// UPROPERTY(EditAnywhere)
+	// float SwitchTargetRange = 500;
 };

@@ -5,8 +5,14 @@
 
 #include "AI/DZ_BaseEnemyController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Character/DZ_PlayerCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 
+
+UBTS_FindNearestSensedPlayer::UBTS_FindNearestSensedPlayer()
+{
+	bNotifyTick = true;
+}
 
 void UBTS_FindNearestSensedPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
@@ -20,7 +26,7 @@ void UBTS_FindNearestSensedPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	if (!Pawn) return;
 	UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
 	TArray<AActor*> SensedActors;
-	EnemyController->GetPerceptionComponent()->GetCurrentlyPerceivedActors(nullptr, SensedActors);
+	EnemyController->GetPerceptionComponent()->GetKnownPerceivedActors(nullptr, SensedActors);
 	if (SensedActors.IsEmpty())
 	{
 		Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, nullptr);
@@ -32,6 +38,8 @@ void UBTS_FindNearestSensedPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, u
 	
 	for (AActor* Actor : SensedActors)
 	{
+		ADZ_PlayerCharacter* Player = Cast<ADZ_PlayerCharacter>(Actor);
+		if (!Player || !Player->IsAlive()) continue;
 		float Distance = FVector::Dist2D(Pawn->GetActorLocation(), Actor->GetActorLocation());
 		if (!MinDisActor)
 		{
@@ -46,15 +54,16 @@ void UBTS_FindNearestSensedPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, u
 			MinDisActor = Actor;
 		}
 	}
-	AActor* CurActor = Cast<AActor>(Blackboard->GetValueAsObject(AttackTarget.SelectedKeyName));
-	if (!CurActor)
-	{
-		Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, MinDisActor);
-		return;
-	}
-	if (CurActor == MinDisActor) return;
-	if (FVector::Dist2D(Pawn->GetActorLocation(), CurActor->GetActorLocation()) >= SwitchTargetRange)
-	{
-		Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, MinDisActor);
-	}
+	Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, MinDisActor);
+	// AActor* CurActor = Cast<AActor>(Blackboard->GetValueAsObject(AttackTarget.SelectedKeyName));
+	// if (!CurActor)
+	// {
+	// 	Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, MinDisActor);
+	// 	return;
+	// }
+	// if (CurActor == MinDisActor) return;
+	// if (FVector::Dist2D(Pawn->GetActorLocation(), CurActor->GetActorLocation()) >= SwitchTargetRange)
+	// {
+	// 	Blackboard->SetValueAsObject(AttackTarget.SelectedKeyName, MinDisActor);
+	// }
 }
