@@ -22,6 +22,8 @@ public:
 	virtual bool CanInteract_Implementation() const override;
 	virtual float GetInteractDuration_Implementation() const override;
 	virtual FText GetInteractPromptText_Implementation() const override;
+	virtual bool IsAutoInteract_Implementation() const override;
+	virtual void OnInteractCompleted_Implementation(AActor* Interactor) override;
 	UFUNCTION(BlueprintPure)
 	bool IsAlive() const;
 	

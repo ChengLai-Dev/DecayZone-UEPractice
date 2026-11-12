@@ -27,7 +27,7 @@ protected:
 private:
 	UFUNCTION()
 	void OnInteractTimerFinished();
-	bool IsInteractTargetValid() const;
+	bool IsInteractValid() const;
 
 	UPROPERTY()
 	TObjectPtr<AActor> InteractTarget;

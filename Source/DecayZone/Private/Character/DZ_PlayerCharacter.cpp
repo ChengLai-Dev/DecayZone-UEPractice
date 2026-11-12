@@ -174,6 +174,7 @@ AActor* ADZ_PlayerCharacter::FindTargetInteractableActor()
 		if (!IsValid(Actor)) continue;
 		if (Actor == this) continue;
 		if (!Actor->Implements<UDZ_Interactable>() || !IDZ_Interactable::Execute_CanInteract(Actor)) continue;
+		if (IDZ_Interactable::Execute_IsAutoInteract(Actor)) continue;
 		const FVector ToInteractable = Actor->GetActorLocation() - GetActorLocation();
 		float Dot = FVector::DotProduct(GetActorForwardVector(), ToInteractable.GetSafeNormal());
 		if (Dot > MaxDot)

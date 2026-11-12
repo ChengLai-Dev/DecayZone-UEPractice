@@ -1,0 +1,154 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Settlement/WBP_SettlementStatCard",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Root_Size",
+		"isVariable": false,
+		"properties":
+		{
+			"HeightOverride": 118,
+			"bOverride_HeightOverride": true
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Border",
+				"className": "Border",
+				"name": "Border_Outline",
+				"isVariable": false,
+				"properties":
+				{
+					"Padding":
+					{
+						"left": 1,
+						"top": 1,
+						"right": 1,
+						"bottom": 1
+					},
+					"BrushColor":
+					{
+						"r": 0.027320999652147293,
+						"g": 0.045186001807451248,
+						"b": 0.057806000113487244,
+						"a": 1
+					}
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
+					"properties":
+					{
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "BG_Card",
+						"isVariable": false,
+						"properties":
+						{
+							"Padding":
+							{
+								"left": 12,
+								"top": 14,
+								"right": 12,
+								"bottom": 14
+							},
+							"BrushColor":
+							{
+								"r": 0.015208999626338482,
+								"g": 0.024157999083399773,
+								"b": 0.030712999403476715,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.BorderSlot",
+							"className": "BorderSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "VB_Card",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.BorderSlot",
+									"className": "BorderSlot",
+									"properties":
+									{
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_StatValue",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "0",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=34.000000,MonospacedWidth=1.000000)",
+											"Justification": "Center"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_StatLabel",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "标签",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)",
+											"Justification": "Center"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 8,
+													"right": 0,
+													"bottom": 0
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": ""
+}

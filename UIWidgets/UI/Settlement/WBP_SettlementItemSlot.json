@@ -1,0 +1,157 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Settlement/WBP_SettlementItemSlot",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Root_Size",
+		"isVariable": false,
+		"properties":
+		{
+			"WidthOverride": 88,
+			"HeightOverride": 88,
+			"bOverride_WidthOverride": true,
+			"bOverride_HeightOverride": true
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Border",
+				"className": "Border",
+				"name": "Border_Outline",
+				"isVariable": false,
+				"properties":
+				{
+					"Padding":
+					{
+						"left": 1,
+						"top": 1,
+						"right": 1,
+						"bottom": 1
+					},
+					"BrushColor":
+					{
+						"r": 0.027320999652147293,
+						"g": 0.045186001807451248,
+						"b": 0.057806000113487244,
+						"a": 1
+					}
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
+					"properties":
+					{
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Overlay",
+						"className": "Overlay",
+						"name": "Overlay_Slot",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.BorderSlot",
+							"className": "BorderSlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Border",
+								"className": "Border",
+								"name": "BG_Slot",
+								"isVariable": false,
+								"properties":
+								{
+									"BrushColor":
+									{
+										"r": 0.015208999626338482,
+										"g": 0.024157999083399773,
+										"b": 0.030712999403476715,
+										"a": 1
+									}
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"HorizontalAlignment": "HAlign_Fill",
+										"VerticalAlignment": "VAlign_Fill"
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.Image",
+								"className": "Image",
+								"name": "Img_ItemIcon",
+								"isVariable": true,
+								"properties":
+								{
+									"Visibility": "Collapsed"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 8,
+											"top": 8,
+											"right": 8,
+											"bottom": 8
+										},
+										"HorizontalAlignment": "HAlign_Fill",
+										"VerticalAlignment": "VAlign_Fill"
+									}
+								}
+							},
+							{
+								"class": "/Script/UMG.TextBlock",
+								"className": "TextBlock",
+								"name": "Text_Quantity",
+								"isVariable": true,
+								"properties":
+								{
+									"Text": "x1",
+									"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+									"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)",
+									"Justification": "Right"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.OverlaySlot",
+									"className": "OverlaySlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 0,
+											"top": 0,
+											"right": 6,
+											"bottom": 4
+										},
+										"HorizontalAlignment": "HAlign_Right",
+										"VerticalAlignment": "VAlign_Bottom"
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": ""
+}

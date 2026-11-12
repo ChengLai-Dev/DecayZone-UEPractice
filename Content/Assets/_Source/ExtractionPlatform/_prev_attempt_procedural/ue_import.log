@@ -1,0 +1,24 @@
+19:06:42 ======================================================================
+19:06:42 导入 D:\Code\UE Projects\DecayZone\Content\Assets\_Source\ExtractionPlatform\SM_ExtractionPlatform_01.glb
+19:06:42 产物 6 个:
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/Textures/T_ExtractionPlatform_01_N.T_ExtractionPlatform_01_N
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/Textures/T_ExtractionPlatform_01_BC.T_ExtractionPlatform_01_BC
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/Textures/T_ExtractionPlatform_01_ORM.T_ExtractionPlatform_01_ORM
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/Materials/M_ExtractionPlatform_01_Rim.M_ExtractionPlatform_01_Rim
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/Materials/M_ExtractionPlatform_01.M_ExtractionPlatform_01
+19:06:42   /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01/StaticMeshes/SM_ExtractionPlatform_01.SM_ExtractionPlatform_01
+19:06:43   平铺 T_ExtractionPlatform_01_N.T_ExtractionPlatform_01_N -> /Game/Assets/Props/ExtractionPlatform/T_ExtractionPlatform_01_N.T_ExtractionPlatform_01_N
+19:06:43   平铺 T_ExtractionPlatform_01_BC.T_ExtractionPlatform_01_BC -> /Game/Assets/Props/ExtractionPlatform/T_ExtractionPlatform_01_BC.T_ExtractionPlatform_01_BC
+19:06:43   平铺 T_ExtractionPlatform_01_ORM.T_ExtractionPlatform_01_ORM -> /Game/Assets/Props/ExtractionPlatform/T_ExtractionPlatform_01_ORM.T_ExtractionPlatform_01_ORM
+19:06:43   平铺 M_ExtractionPlatform_01_Rim.M_ExtractionPlatform_01_Rim -> /Game/Assets/Props/ExtractionPlatform/M_ExtractionPlatform_01_Rim.M_ExtractionPlatform_01_Rim
+19:06:43   平铺 M_ExtractionPlatform_01.M_ExtractionPlatform_01 -> /Game/Assets/Props/ExtractionPlatform/M_ExtractionPlatform_01.M_ExtractionPlatform_01
+19:06:43   平铺 SM_ExtractionPlatform_01.SM_ExtractionPlatform_01 -> /Game/Assets/Props/ExtractionPlatform/SM_ExtractionPlatform_01.SM_ExtractionPlatform_01
+19:06:43   贴图 T_ExtractionPlatform_01_BC compression=<TextureCompressionSettings.TC_DEFAULT: 0> sRGB=True
+19:06:43   贴图 T_ExtractionPlatform_01_N compression=<TextureCompressionSettings.TC_NORMALMAP: 1> sRGB=False
+19:06:43   贴图 T_ExtractionPlatform_01_ORM compression=<TextureCompressionSettings.TC_MASKS: 2> sRGB=False
+19:06:43 包围盒 cm X=600.0 Y=600.0 Z=30.1 (预期 600/600/30)
+19:06:43 原点/包围盒 min Z=0.00 (期望 0)
+19:06:43   材质槽 0 -> /Game/Assets/Props/ExtractionPlatform/M_ExtractionPlatform_01.M_ExtractionPlatform_01
+19:06:43   材质槽 1 -> /Game/Assets/Props/ExtractionPlatform/M_ExtractionPlatform_01_Rim.M_ExtractionPlatform_01_Rim
+19:06:43 Nanite=True 面数(LOD0)=256
+19:06:43 完成

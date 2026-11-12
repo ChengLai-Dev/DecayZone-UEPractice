@@ -6,12 +6,14 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/DZ_AttributeSet.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/DZ_ContainerComponent.h"
 #include "Data/Ability/DZ_StartupAbilities.h"
 #include "Game/DZ_GameInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Library/DZ_BlueprintLibrary.h"
 #include "Library/ItemHelper.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/DZ_PlayerController.h"
 
 ADZ_BaseCharacter::ADZ_BaseCharacter()
 {
@@ -31,6 +33,25 @@ float ADZ_BaseCharacter::GetInteractDuration_Implementation() const
 FText ADZ_BaseCharacter::GetInteractPromptText_Implementation() const
 {
 	return InteractPromptText;
+}
+
+bool ADZ_BaseCharacter::IsAutoInteract_Implementation() const
+{
+	return false;
+}
+
+void ADZ_BaseCharacter::OnInteractCompleted_Implementation(AActor* Interactor)
+{
+	APawn* Pawn = Cast<APawn>(Interactor);
+	if (!Pawn) return;
+
+	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
+	if (!PlayerController) return;
+	
+	if (UDZ_ContainerComponent* Container = FindComponentByClass<UDZ_ContainerComponent>())
+	{
+		PlayerController->ClientOpenLootPanel(Container);
+	}
 }
 
 void ADZ_BaseCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

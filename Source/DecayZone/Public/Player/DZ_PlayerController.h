@@ -30,9 +30,17 @@ class DECAYZONE_API ADZ_PlayerController : public APlayerController
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
+	void InteractHighlightActor();
+	
+	void OnAutoInteractStart(AActor* OtherActor);
+	
+	void OnAutoInteractCancel(AActor* OtherActor);
 
-	void Interact();
+	void StartAutoInteract(AActor* Target);
+	void StopAutoInteract();
+
 	void UpdateInteractProgress();
+	void UpdateAutoInteractProgress();
 	void WeaponAttack();
 	void Kick();
 	virtual void SetupInputComponent() override;
@@ -57,11 +65,23 @@ public:
 	
 	UFUNCTION(Client, Reliable)
 	void ClientInteractFinished(AActor* Target, bool bSucceeded);
+
+	UFUNCTION(Client, Reliable)
+	void ClientAutoInteractFinished(AActor* Target, bool bSucceeded);
+
+	UFUNCTION(Client, Reliable)
+	void ClientOpenLootPanel(UDZ_ContainerComponent* Container);
+	
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+	void ClientOpenSettlementPanel();
 	
 	void RefreshUIAll(bool bForceRefresh = true);
 	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
+	void NotifyAutoInteractFinished(AActor* Target, bool bSucceeded);
 
 private:
+	
+	void Interact(AActor* InteractActor);
 	
 	void OnAttributeValueChanged(const FOnAttributeChangeData& Data);
 	
@@ -107,6 +127,9 @@ private:
 	TObjectPtr<UDZ_InteractProgress> InteractProgressWidget;
 	
 	UPROPERTY()
+	TObjectPtr<UDZ_InteractProgress> AutoInteractProgressWidget;
+	
+	UPROPERTY()
 	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
 	
 	UPROPERTY()
@@ -116,6 +139,15 @@ private:
 	float ElapsedTime = 0.f;
 	
 	bool bIsInteracting = false;
+
+
+	// 自动交互读条：独立于按键交互，不锁移动
+	float AutoInteractDuration = 0.f;
+	float AutoInteractElapsed = 0.f;
+
+	bool bIsAutoInteracting = false;
+
+	TWeakObjectPtr<AActor> AutoInteractTarget;
 	
 	FTimerHandle InteractTimerHandle;
 	TWeakObjectPtr<AActor> InteractTarget;

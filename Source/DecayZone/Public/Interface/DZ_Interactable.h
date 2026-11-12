@@ -30,6 +30,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FText GetInteractPromptText() const;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool IsAutoInteract() const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnInteractStarted(AActor* Interactor);

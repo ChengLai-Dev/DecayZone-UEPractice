@@ -20,6 +20,8 @@ public:
 	
 	virtual bool CanInteract_Implementation() const override;
 	virtual float GetInteractDuration_Implementation() const override;
+	virtual bool IsAutoInteract_Implementation() const override;
+	virtual void OnInteractCompleted_Implementation(AActor* Interactor) override;
 	
 protected:
 	
@@ -28,8 +30,14 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Interaction")
 	FText InteractPromptText;
-private:
 	
+	UFUNCTION(BlueprintCallable)
+	void NotifyAutoInteractStart(AActor* Interactor);
+
+	UFUNCTION(BlueprintCallable)
+	void NotifyAutoInteractCancel(AActor* Interactor);
+	
+private:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 };

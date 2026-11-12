@@ -70,12 +70,31 @@ void UDZ_InteractAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 
 	if (ActorInfo)
 	{
+		const bool bAutoInteract = IsValid(InteractTarget) && InteractTarget->Implements<UDZ_Interactable>() 
+			&& IDZ_Interactable::Execute_IsAutoInteract(InteractTarget.Get());
 		if (ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(ActorInfo->PlayerController.Get()))
 		{
-			PlayerController->NotifyInteractFinished(InteractTarget.Get(), bSucceeded);
+			if (bAutoInteract)
+			{
+				PlayerController->NotifyAutoInteractFinished(InteractTarget.Get(), bSucceeded);
+			}
+			else
+			{
+				PlayerController->NotifyInteractFinished(InteractTarget.Get(), bSucceeded);
+			}
 		}
 	}
-
+	if (IsValid(InteractTarget) && InteractTarget->Implements<UDZ_Interactable>())
+	{
+		if (bSucceeded)
+		{
+			IDZ_Interactable::Execute_OnInteractCompleted(InteractTarget.Get(), GetAvatarActorFromActorInfo());
+		}
+		else
+		{
+			IDZ_Interactable::Execute_OnInteractCancelled(InteractTarget.Get(), GetAvatarActorFromActorInfo());
+		}
+	}
 	InteractTarget = nullptr;
 	WaitDelayTask = nullptr;
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
@@ -83,16 +102,19 @@ void UDZ_InteractAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 
 void UDZ_InteractAbility::OnInteractTimerFinished()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, !IsInteractTargetValid());
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, !IsInteractValid());
 }
 
-bool UDZ_InteractAbility::IsInteractTargetValid() const
+bool UDZ_InteractAbility::IsInteractValid() const
 {
 	if (!IsValid(InteractTarget)) return false;
 	if (!InteractTarget->Implements<UDZ_Interactable>()) return false;
-	if (!IDZ_Interactable::Execute_CanInteract(InteractTarget.Get())) return false;
+	if (!IDZ_Interactable::Execute_CanInteract(InteractTarget)) return false;
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetAvatarActorFromActorInfo());
 	if (!PlayerCharacter || !PlayerCharacter->IsAlive()) return false;
-
+	if (IDZ_Interactable::Execute_IsAutoInteract(InteractTarget))
+	{
+		return true;
+	}
 	return PlayerCharacter->IsInteractableInRange(InteractTarget);
 }
