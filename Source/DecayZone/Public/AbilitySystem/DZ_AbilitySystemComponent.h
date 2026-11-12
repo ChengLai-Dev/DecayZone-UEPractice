@@ -13,15 +13,9 @@ class DECAYZONE_API UDZ_AbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
+
 	UDZ_AbilitySystemComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	FGameplayAbilitySpec* FindAbilitySpecByTag(const FGameplayTag& AbilityTag);
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
 };

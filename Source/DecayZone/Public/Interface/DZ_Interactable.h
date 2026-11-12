@@ -23,13 +23,13 @@ class DECAYZONE_API IDZ_Interactable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool CanInteract();
+	bool CanInteract() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	float GetInteractDuration();
+	float GetInteractDuration() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FText GetInteractPromptText();
+	FText GetInteractPromptText() const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnInteractStarted(AActor* Interactor);

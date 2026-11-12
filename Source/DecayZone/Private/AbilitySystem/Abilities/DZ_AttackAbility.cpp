@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/Abilities/DZ_GameplayAbility.h"
+#include "AbilitySystem/Abilities/DZ_AttackAbility.h"
 
 #include "AbilitySystemComponent.h"
 #include "GameplayTags/DZGameplayTags.h"
 
-void UDZ_GameplayAbility::ApplyDamageEffectToTarget(AActor* Target)
+void UDZ_AttackAbility::ApplyDamageEffectToTarget(AActor* Target)
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())

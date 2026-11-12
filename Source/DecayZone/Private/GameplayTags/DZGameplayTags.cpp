@@ -14,9 +14,12 @@ namespace DZGameplayTags
 	
 	
 	UE_DEFINE_GAMEPLAY_TAG(State_MovementLocked, "State.MovementLocked");
+	UE_DEFINE_GAMEPLAY_TAG(State_Interacting, "State.Interacting");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Event_HitReact, "Event.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Event_Attack_Melee, "Event.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Event_Attack_Ranged, "Event.Attack.Ranged");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Event_Trigger_Interact, "Event.Trigger.Interact");
 	
 }

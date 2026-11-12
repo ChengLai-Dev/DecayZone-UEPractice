@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "DZ_PlayerController.generated.h"
 
+class UDZ_AbilitySystemComponent;
 class UDZ_StatusBars;
 struct FGameplayAttributeData;
 class UDZ_UserWidget;
@@ -29,6 +30,7 @@ class DECAYZONE_API ADZ_PlayerController : public APlayerController
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
+
 	void Interact();
 	void UpdateInteractProgress();
 	void WeaponAttack();
@@ -46,6 +48,9 @@ public:
 	
 	UFUNCTION(Server, Reliable)
 	void ServerBeginInteract(AActor* ContainerActor);
+
+	UFUNCTION(Server, Reliable)
+	void ServerCancelInteract();
 	
 	UFUNCTION(Server, Reliable)
 	void ServerMoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
@@ -54,7 +59,8 @@ public:
 	void ClientInteractFinished(AActor* Target, bool bSucceeded);
 	
 	void RefreshUIAll(bool bForceRefresh = true);
-	
+	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
+
 private:
 	
 	void OnAttributeValueChanged(const FOnAttributeChangeData& Data);
@@ -116,6 +122,6 @@ private:
 	
 	TWeakObjectPtr<UDZ_ContainerComponent> InteractContainerComp;
 	
-	TWeakObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TWeakObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
 };
 

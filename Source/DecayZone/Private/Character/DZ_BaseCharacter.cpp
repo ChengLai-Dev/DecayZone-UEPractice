@@ -18,17 +18,17 @@ ADZ_BaseCharacter::ADZ_BaseCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-bool ADZ_BaseCharacter::CanInteract_Implementation()
+bool ADZ_BaseCharacter::CanInteract_Implementation() const
 {
 	return bIsDead;
 }
 
-float ADZ_BaseCharacter::GetInteractDuration_Implementation()
+float ADZ_BaseCharacter::GetInteractDuration_Implementation() const
 {
 	return InteractDuration;
 }
 
-FText ADZ_BaseCharacter::GetInteractPromptText_Implementation()
+FText ADZ_BaseCharacter::GetInteractPromptText_Implementation() const
 {
 	return InteractPromptText;
 }
@@ -54,7 +54,7 @@ bool ADZ_BaseCharacter::IsFriendly(AActor* TargetActor)
 	return UDZ_BlueprintLibrary::IsFriendly(this, TargetActor);
 }
 
-bool ADZ_BaseCharacter::IsAlive()
+bool ADZ_BaseCharacter::IsAlive() const
 {
 	return !bIsDead;
 }

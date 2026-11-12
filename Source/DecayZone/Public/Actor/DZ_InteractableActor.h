@@ -16,10 +16,10 @@ class DECAYZONE_API ADZ_InteractableActor : public AActor, public  IDZ_Interacta
 
 public:
 	ADZ_InteractableActor();
-	virtual FText GetInteractPromptText_Implementation() override;
+	virtual FText GetInteractPromptText_Implementation() const override;
 	
-	virtual bool CanInteract_Implementation() override;
-	virtual float GetInteractDuration_Implementation() override;
+	virtual bool CanInteract_Implementation() const override;
+	virtual float GetInteractDuration_Implementation() const override;
 	
 protected:
 	

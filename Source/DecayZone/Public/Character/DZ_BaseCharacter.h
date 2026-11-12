@@ -19,11 +19,11 @@ class DECAYZONE_API ADZ_BaseCharacter : public ACharacter, public IAbilitySystem
 
 public:
 	ADZ_BaseCharacter();
-	virtual bool CanInteract_Implementation() override;
-	virtual float GetInteractDuration_Implementation() override;
-	virtual FText GetInteractPromptText_Implementation() override;
+	virtual bool CanInteract_Implementation() const override;
+	virtual float GetInteractDuration_Implementation() const override;
+	virtual FText GetInteractPromptText_Implementation() const override;
 	UFUNCTION(BlueprintPure)
-	bool IsAlive();
+	bool IsAlive() const;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;

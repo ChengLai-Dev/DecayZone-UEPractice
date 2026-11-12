@@ -15,9 +15,12 @@ namespace DZGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_MovementLocked);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Interacting);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_HitReact);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Attack_Melee);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Attack_Ranged);
+	
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Trigger_Interact);
 	
 }

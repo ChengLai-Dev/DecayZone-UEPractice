@@ -12,17 +12,17 @@ ADZ_InteractableActor::ADZ_InteractableActor()
 	Mesh->SetCollisionObjectType(ECC_Interactable);
 }
 
-FText ADZ_InteractableActor::GetInteractPromptText_Implementation()
+FText ADZ_InteractableActor::GetInteractPromptText_Implementation() const
 {
 	return InteractPromptText;
 }
 
-bool ADZ_InteractableActor::CanInteract_Implementation()
+bool ADZ_InteractableActor::CanInteract_Implementation() const
 {
 	return true;
 }
 
-float ADZ_InteractableActor::GetInteractDuration_Implementation()
+float ADZ_InteractableActor::GetInteractDuration_Implementation() const
 {
 	return InteractDuration;
 }

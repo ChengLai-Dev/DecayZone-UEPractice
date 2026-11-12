@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
+#include "AbilitySystem/DZ_AbilitySystemComponent.h"
 #include "AbilitySystem/DZ_AttributeSet.h"
 #include "Blueprint/UserWidget.h"
 #include "Character/DZ_PlayerCharacter.h"
@@ -89,7 +90,7 @@ void ADZ_PlayerController::RefreshStatusBars()
 void ADZ_PlayerController::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	AbilitySystemComponent = GetPlayerState<ADZ_PlayerState>()->GetAbilitySystemComponent();
+	AbilitySystemComponent = Cast<UDZ_AbilitySystemComponent>(GetPlayerState<ADZ_PlayerState>()->GetAbilitySystemComponent());
 	if (AbilitySystemComponent.IsValid())
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UDZ_AttributeSet::GetEnergyAttribute()).AddUObject(this, &ThisClass::OnAttributeValueChanged);
@@ -112,17 +113,29 @@ void ADZ_PlayerController::Tick(float DeltaSeconds)
 
 void ADZ_PlayerController::Interact()
 {
-	// ActivateAbilityByTag(DZGameplayTags::Ability_Interact);
 	if (!IsLocalController()) return;
+	if (bIsInteracting)
+	{
+		bIsInteracting = false;
+		ElapsedTime = 0.f;
+		InteractProgressWidget->Close();
+		InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
+		ServerCancelInteract();
+		return;
+	}
 	
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!PlayerCharacter) return;
 	AActor* InteractActor = PlayerCharacter->GetHighlightActor();
 	if (!InteractActor) return;
 	if (InteractActor->Implements<UDZ_Interactable>() && IDZ_Interactable::Execute_CanInteract(InteractActor))
 	{
 		TotalDuration = IDZ_Interactable::Execute_GetInteractDuration(InteractActor);
 		ElapsedTime = 0;
-		InteractProgressWidget->Open();
+		if (TotalDuration > 0.f)
+		{
+			InteractProgressWidget->Open();
+		}
 		bIsInteracting = true;
 		InteractPromptWidget->Hide();
 		ServerBeginInteract(InteractActor);
@@ -132,16 +145,23 @@ void ADZ_PlayerController::Interact()
 void ADZ_PlayerController::UpdateInteractProgress()
 {
 	if (!IsLocalController()) return;
+	if (TotalDuration == 0.f)
+	{
+		InteractProgressWidget->SetProgress(0, 0);
+		return;
+	}
 	InteractProgressWidget->SetProgress(FMath::Clamp(ElapsedTime / TotalDuration, 0, 1), TotalDuration - ElapsedTime);
 }
 
 void ADZ_PlayerController::WeaponAttack()
 {
+	if (bIsInteracting) return;
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Weapon);
 }
 
 void ADZ_PlayerController::Kick()
 {
+	if (bIsInteracting) return;
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Kick);
 }
 
@@ -151,17 +171,10 @@ void ADZ_PlayerController::ServerBeginInteract_Implementation(AActor* ContainerA
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
 	if (!IsValid(PlayerCharacter)) return;
 	if (!Cast<IDZ_Interactable>(ContainerActor)) return;
-	
-	float Duration = IDZ_Interactable::Execute_GetInteractDuration(ContainerActor);
-	GetWorldTimerManager().ClearTimer(InteractTimerHandle);
-	InteractTarget = ContainerActor;
-	
-	if (Duration <= 0.f)
-	{
-		FinishInteract();
-		return;
-	}
-	GetWorldTimerManager().SetTimer(InteractTimerHandle, this, &ADZ_PlayerController::FinishInteract, Duration, false);
+
+	FGameplayEventData Payload;
+	Payload.Target = ContainerActor;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetPawn(), DZGameplayTags::Event_Trigger_Interact, Payload);
 }
 
 void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target, bool bSucceeded)
@@ -232,6 +245,11 @@ void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
 	}
 }
 
+void ADZ_PlayerController::NotifyInteractFinished(AActor* Target, bool bSucceeded)
+{
+	ClientInteractFinished(Target, bSucceeded);
+}
+
 
 void ADZ_PlayerController::HandleItemMoveRequested(UWidget* From, UWidget* To)
 {
@@ -252,23 +270,6 @@ void ADZ_PlayerController::HandleInventoryItemsChanged()
 void ADZ_PlayerController::HandleContainerItemsChanged()
 {
 	RefreshUIAll(false);
-}
-
-void ADZ_PlayerController::FinishInteract()
-{
-	AActor* Target = InteractTarget.Get();
-	InteractTarget = nullptr;
-	
-	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
-	if (!IsValid(Target) || !PlayerCharacter || !PlayerCharacter->IsInteractableInRange(Target))
-	{
-		ClientInteractFinished(Target, false);
-	}
-	else
-	{
-		ClientInteractFinished(Target, true);
-	}
-	
 }
 
 void ADZ_PlayerController::ActivateAbilityByTag(const FGameplayTag& AbilityTag)
@@ -318,6 +319,18 @@ void ADZ_PlayerController::AcknowledgePossession(APawn* InPawn)
 	}
 }
 
+void ADZ_PlayerController::ServerCancelInteract_Implementation()
+{
+	UDZ_AbilitySystemComponent* ASC = Cast<UDZ_AbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn()));
+	if (!ASC) return;
+
+
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecByTag(DZGameplayTags::Ability_Interact);
+	if (!Spec) return;
+
+	ASC->CancelAbilityHandle(Spec->Handle);
+}
+
 void ADZ_PlayerController::ServerTakeItem_Implementation(AActor* ContainerActor, int32 SlotIndex, int32 Count)
 {
 	if (!IsValid(ContainerActor)) return;
@@ -348,7 +361,14 @@ void ADZ_PlayerController::HandleTakeItemRequested(UWidget* Row)
 
 bool ADZ_PlayerController::IsMovementLocked() const
 {
-	return AbilitySystemComponent.IsValid() && AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_MovementLocked);
+	if (bIsInteracting) return true;
+	if (!AbilitySystemComponent.IsValid()) return false;
+	if (AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_MovementLocked) || 
+		AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_Interacting))
+	{
+		return true;
+	}
+	return false;
 }
 
 void ADZ_PlayerController::Move(const FInputActionValue& Value)

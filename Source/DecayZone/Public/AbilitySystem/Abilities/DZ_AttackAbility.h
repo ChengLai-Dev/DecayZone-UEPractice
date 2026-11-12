@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "DZ_GameplayAbility.generated.h"
+#include "DZ_AttackAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DECAYZONE_API UDZ_GameplayAbility : public UGameplayAbility
+class DECAYZONE_API UDZ_AttackAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
