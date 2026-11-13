@@ -35,11 +35,5 @@ public:
 	bool IsAutoInteract() const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void OnInteractStarted(AActor* Interactor);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void OnInteractCompleted(AActor* Interactor);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void OnInteractCancelled(AActor* Interactor);
+	void OnInteractCompleted(AActor* Interactor, bool bSucceeded);
 };

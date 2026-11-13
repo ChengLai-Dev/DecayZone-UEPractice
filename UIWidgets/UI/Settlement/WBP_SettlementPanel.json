@@ -144,6 +144,13 @@
 											"className": "BorderSlot",
 											"properties":
 											{
+												"Padding":
+												{
+													"left": 48,
+													"top": 40,
+													"right": 48,
+													"bottom": 32
+												}
 											}
 										},
 										"children": [
@@ -161,7 +168,6 @@
 													"className": "VerticalBoxSlot",
 													"properties":
 													{
-														"HorizontalAlignment": "HAlign_Fill"
 													}
 												},
 												"children": [
@@ -483,7 +489,7 @@
 																"class": "/Script/UMG.TextBlock",
 																"className": "TextBlock",
 																"name": "Text_SectionTitle",
-																"isVariable": false,
+																"isVariable": true,
 																"properties":
 																{
 																	"Text": "带出物品",
@@ -549,7 +555,7 @@
 														"class": "/Script/UMG.ScrollBox",
 														"className": "ScrollBox",
 														"name": "ScrollBox_Items",
-														"isVariable": false,
+														"isVariable": true,
 														"properties":
 														{
 														},
@@ -568,18 +574,16 @@
 														},
 														"children": [
 															{
-																"class": "/Script/UMG.UniformGridPanel",
-																"className": "UniformGridPanel",
-																"name": "Grid_Items",
+																"class": "/Script/UMG.WrapBox",
+																"className": "WrapBox",
+																"name": "WrapBox_Items",
 																"isVariable": true,
 																"properties":
 																{
-																	"SlotPadding":
+																	"InnerSlotPadding":
 																	{
-																		"left": 0,
-																		"top": 0,
-																		"right": 10,
-																		"bottom": 10
+																		"x": 10,
+																		"y": 10
 																	}
 																},
 																"slot":
@@ -588,8 +592,6 @@
 																	"className": "ScrollBoxSlot",
 																	"properties":
 																	{
-																		"HorizontalAlignment": "HAlign_Left",
-																		"VerticalAlignment": "VAlign_Top"
 																	}
 																},
 																"children": [
@@ -603,12 +605,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 0,
-																				"Column": 0
 																			}
 																		}
 																	},
@@ -622,12 +622,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 0,
-																				"Column": 1
 																			}
 																		}
 																	},
@@ -641,12 +639,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 0,
-																				"Column": 2
 																			}
 																		}
 																	},
@@ -660,12 +656,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 0,
-																				"Column": 3
 																			}
 																		}
 																	},
@@ -679,12 +673,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 0,
-																				"Column": 4
 																			}
 																		}
 																	},
@@ -698,12 +690,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 1,
-																				"Column": 0
 																			}
 																		}
 																	},
@@ -717,12 +707,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 1,
-																				"Column": 1
 																			}
 																		}
 																	},
@@ -736,12 +724,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 1,
-																				"Column": 2
 																			}
 																		}
 																	},
@@ -755,12 +741,10 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 1,
-																				"Column": 3
 																			}
 																		}
 																	},
@@ -774,12 +758,282 @@
 																		},
 																		"slot":
 																		{
-																			"class": "/Script/UMG.UniformGridSlot",
-																			"className": "UniformGridSlot",
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
 																			"properties":
 																			{
-																				"Row": 1,
-																				"Column": 4
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_11",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_12",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_13",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_14",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_15",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_16",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_17",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_18",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_19",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_20",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_21",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_22",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_23",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_24",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_25",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
+																			}
+																		}
+																	},
+																	{
+																		"class": "/Game/UI/Settlement/WBP_SettlementItemSlot.WBP_SettlementItemSlot_C",
+																		"className": "WBP_SettlementItemSlot_C",
+																		"name": "ItemSlot_26",
+																		"isVariable": false,
+																		"properties":
+																		{
+																		},
+																		"slot":
+																		{
+																			"class": "/Script/UMG.WrapBoxSlot",
+																			"className": "WrapBoxSlot",
+																			"properties":
+																			{
 																			}
 																		}
 																	}
@@ -791,7 +1045,7 @@
 														"class": "/Script/UMG.TextBlock",
 														"className": "TextBlock",
 														"name": "Text_EmptyHint",
-														"isVariable": false,
+														"isVariable": true,
 														"properties":
 														{
 															"Text": "本次没有带出任何物品",
@@ -1026,5 +1280,5 @@
 			}
 		]
 	},
-	"contentHash": ""
+	"contentHash": "a3dbb71b29d1cdf0c91e28828e9649cf"
 }

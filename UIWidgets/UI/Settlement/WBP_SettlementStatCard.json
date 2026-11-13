@@ -73,6 +73,13 @@
 							"className": "BorderSlot",
 							"properties":
 							{
+								"Padding":
+								{
+									"left": 1,
+									"top": 1,
+									"right": 1,
+									"bottom": 1
+								}
 							}
 						},
 						"children": [
@@ -90,6 +97,13 @@
 									"className": "BorderSlot",
 									"properties":
 									{
+										"Padding":
+										{
+											"left": 12,
+											"top": 14,
+											"right": 12,
+											"bottom": 14
+										}
 									}
 								},
 								"children": [
@@ -150,5 +164,5 @@
 			}
 		]
 	},
-	"contentHash": ""
+	"contentHash": "71ecac42aa730d664321ae3215e5e1cb"
 }

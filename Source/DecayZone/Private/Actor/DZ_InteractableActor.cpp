@@ -35,8 +35,10 @@ bool ADZ_InteractableActor::IsAutoInteract_Implementation() const
 	return false;
 }
 
-void ADZ_InteractableActor::OnInteractCompleted_Implementation(AActor* InteractInstigator)
+void ADZ_InteractableActor::OnInteractCompleted_Implementation(AActor* InteractInstigator, bool bSucceeded)
 {
+	if (!bSucceeded) return;
+
 	APawn* Pawn = Cast<APawn>(InteractInstigator);
 	if (!Pawn) return;
 
@@ -57,7 +59,7 @@ void ADZ_InteractableActor::NotifyAutoInteractStart(AActor* InteractInstigator)
 	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
-	PlayerController->OnAutoInteractStart(this);
+	PlayerController->BeginInteract(this);
 }
 
 void ADZ_InteractableActor::NotifyAutoInteractCancel(AActor* InteractInstigator)
@@ -68,5 +70,5 @@ void ADZ_InteractableActor::NotifyAutoInteractCancel(AActor* InteractInstigator)
 	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
-	PlayerController->OnAutoInteractCancel(this);
+	PlayerController->CancelInteract();
 }

@@ -21,8 +21,10 @@ void UDZ_InteractAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
 	if (!TriggerEventData || !IsValid(TriggerEventData->Target))
 	{
+		SetEndReason(EDZAbilityEndReason::Failed, TEXT("NoEventData"));
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
@@ -34,6 +36,7 @@ void UDZ_InteractAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	InteractTarget = const_cast<AActor*>(TriggerEventData->Target.Get());
 	if (!InteractTarget->Implements<UDZ_Interactable>() || !IDZ_Interactable::Execute_CanInteract(InteractTarget))
 	{
+		SetEndReason(EDZAbilityEndReason::Failed, TEXT("TargetInvalid"));
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
@@ -46,6 +49,7 @@ void UDZ_InteractAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	WaitDelayTask = UAbilityTask_WaitDelay::WaitDelay(this, Duration);
 	if (!WaitDelayTask)
 	{
+		SetEndReason(EDZAbilityEndReason::Failed, TEXT("TaskFailed"));
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
@@ -53,11 +57,9 @@ void UDZ_InteractAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	WaitDelayTask->ReadyForActivation();
 }
 
-void UDZ_InteractAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility, bool bWasCancelled)
+void UDZ_InteractAbility::OnAbilityEnded(EDZAbilityEndReason Reason)
 {
-	const bool bSucceeded = !bWasCancelled;
+	const bool bSucceeded = (Reason == EDZAbilityEndReason::Completed);
 
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
 	{
@@ -68,41 +70,31 @@ void UDZ_InteractAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 		}
 	}
 
-	if (ActorInfo)
+	if (const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo())
 	{
-		const bool bAutoInteract = IsValid(InteractTarget) && InteractTarget->Implements<UDZ_Interactable>() 
-			&& IDZ_Interactable::Execute_IsAutoInteract(InteractTarget.Get());
 		if (ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(ActorInfo->PlayerController.Get()))
 		{
-			if (bAutoInteract)
-			{
-				PlayerController->NotifyAutoInteractFinished(InteractTarget.Get(), bSucceeded);
-			}
-			else
-			{
-				PlayerController->NotifyInteractFinished(InteractTarget.Get(), bSucceeded);
-			}
+			PlayerController->NotifyInteractFinished(InteractTarget.Get(), bSucceeded);
 		}
 	}
 	if (IsValid(InteractTarget) && InteractTarget->Implements<UDZ_Interactable>())
 	{
-		if (bSucceeded)
-		{
-			IDZ_Interactable::Execute_OnInteractCompleted(InteractTarget.Get(), GetAvatarActorFromActorInfo());
-		}
-		else
-		{
-			IDZ_Interactable::Execute_OnInteractCancelled(InteractTarget.Get(), GetAvatarActorFromActorInfo());
-		}
+		IDZ_Interactable::Execute_OnInteractCompleted(InteractTarget.Get(), GetAvatarActorFromActorInfo(), bSucceeded);
 	}
 	InteractTarget = nullptr;
 	WaitDelayTask = nullptr;
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UDZ_InteractAbility::OnInteractTimerFinished()
 {
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, !IsInteractValid());
+	if (IsInteractValid())
+	{
+		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+		return;
+	}
+	
+	SetEndReason(EDZAbilityEndReason::Failed, TEXT("InteractInvalid"));
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 }
 
 bool UDZ_InteractAbility::IsInteractValid() const

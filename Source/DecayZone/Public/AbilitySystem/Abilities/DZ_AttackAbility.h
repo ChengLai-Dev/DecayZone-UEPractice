@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "AbilitySystem/Abilities/DZ_GameplayAbility.h"
 #include "DZ_AttackAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DECAYZONE_API UDZ_AttackAbility : public UGameplayAbility
+class DECAYZONE_API UDZ_AttackAbility : public UDZ_GameplayAbility
 {
 	GENERATED_BODY()
 	

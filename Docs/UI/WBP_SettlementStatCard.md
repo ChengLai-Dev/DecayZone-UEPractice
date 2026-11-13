@@ -3,7 +3,7 @@
 | 项 | 值 |
 |---|---|
 | 资产 | `/Game/UI/Settlement/WBP_SettlementStatCard` |
-| 父类 | `UUserWidget` |
+| 父类 | `UDZ_SettlementStatCard`（C++ 已实现） |
 | 源文件 | `UIWidgets/UI/Settlement/WBP_SettlementStatCard.json` |
 | 尺寸 | 宽由父容器 Fill 决定，高固定 118 |
 | 使用处 | `WBP_SettlementPanel` 的 `HB_Stats` 内，共用 3 份 |
@@ -42,10 +42,11 @@
 
 ---
 
-## 建议的接口形态
+## 已实现的接口
 
 | 接口 | 参数 | 说明 |
 |---|---|---|
-| 设置单个指标 | `FText Value`、`FText Label` | 一个函数同时设两个节点，避免父面板逐个拼 |
+| `SetStat` | `int32 Value`、`const FText& Label` | 整数指标，内部 `FText::AsNumber` |
+| `SetStat` | `float Value`、`const FText& Label` | 小数指标，内部保留 1 位小数 |
 
-> 数值是否加千分位由程序决定，前端不做格式化，直接显示传入文本。
+> 数值是否加千分位由调用方决定，本类不做格式化，直接显示传入文本。

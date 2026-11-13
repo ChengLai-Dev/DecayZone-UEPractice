@@ -21,7 +21,7 @@ public:
 	virtual bool CanInteract_Implementation() const override;
 	virtual float GetInteractDuration_Implementation() const override;
 	virtual bool IsAutoInteract_Implementation() const override;
-	virtual void OnInteractCompleted_Implementation(AActor* Interactor) override;
+	virtual void OnInteractCompleted_Implementation(AActor* Interactor, bool bSucceeded) override;
 	
 protected:
 	

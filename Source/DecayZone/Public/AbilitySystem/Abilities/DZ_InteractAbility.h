@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbility.h"
+#include "AbilitySystem/Abilities/DZ_GameplayAbility.h"
 #include "DZ_InteractAbility.generated.h"
 
 /**
@@ -12,7 +12,7 @@
 class UAbilityTask_WaitDelay;
 
 UCLASS()
-class DECAYZONE_API UDZ_InteractAbility : public UGameplayAbility
+class DECAYZONE_API UDZ_InteractAbility : public UDZ_GameplayAbility
 {
 	GENERATED_BODY()
 	
@@ -22,7 +22,7 @@ public:
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
+	virtual void OnAbilityEnded(EDZAbilityEndReason Reason) override;
 
 private:
 	UFUNCTION()

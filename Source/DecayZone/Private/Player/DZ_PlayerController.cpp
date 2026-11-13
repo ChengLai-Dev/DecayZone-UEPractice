@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Player/DZ_PlayerController.h"
@@ -64,7 +64,6 @@ void ADZ_PlayerController::BeginPlay()
 	InventoryPanelWidget = CreateWidget<UDZ_InventoryPanel>(this, UIConfig->InventoryWidgetClass);
 	InteractPromptWidget = CreateWidget<UDZ_InteractPrompt>(this, UIConfig->InteractPromptClass);
 	InteractProgressWidget = CreateWidget<UDZ_InteractProgress>(this, UIConfig->InteractProgressClass);
-	AutoInteractProgressWidget = CreateWidget<UDZ_InteractProgress>(this, UIConfig->InteractProgressClass);
 	LootPanelWidget = CreateWidget<UDZ_LootPanel>(this, UIConfig->LootPanelClass);
 	StatusBarsWidget = CreateWidget<UDZ_StatusBars>(this, UIConfig->StatusBarsClass);
 	
@@ -106,131 +105,95 @@ void ADZ_PlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	if (!IsLocalController()) return;
+	if (!InteractTracker.IsActive()) return;
 
-	if (bIsInteracting)
-	{
-		ElapsedTime += DeltaSeconds;
-		UpdateInteractProgress();
-	}
-
-	if (bIsAutoInteracting)
-	{
-		AutoInteractElapsed += DeltaSeconds;
-		UpdateAutoInteractProgress();
-	}
+	InteractTracker.Tick(DeltaSeconds);
+	UpdateInteractProgress();
 }
 
 void ADZ_PlayerController::InteractHighlightActor()
 {
 	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
-	if (!PlayerCharacter) return;
-	AActor* InteractActor = PlayerCharacter->GetHighlightActor();
-	if (!InteractActor) return;
-	Interact(InteractActor);
+	Interact(PlayerCharacter ? PlayerCharacter->GetHighlightActor() : nullptr);
 }
 
-void ADZ_PlayerController::OnAutoInteractStart(AActor* OtherActor)
-{
-	StartAutoInteract(OtherActor);
-}
-
-void ADZ_PlayerController::OnAutoInteractCancel(AActor* OtherActor)
-{
-	StopAutoInteract();
-}
-
-void ADZ_PlayerController::StartAutoInteract(AActor* Target)
+void ADZ_PlayerController::BeginInteract(AActor* Target)
 {
 	if (!IsLocalController()) return;
-	if (bIsAutoInteracting) return;
+	if (InteractTracker.IsActive()) return;
 	
 	if (!IsValid(Target)) return;
 	if (!Target->Implements<UDZ_Interactable>()) return;
 	if (!IDZ_Interactable::Execute_CanInteract(Target)) return;
-
-	AutoInteractTarget = Target;
-	AutoInteractDuration = IDZ_Interactable::Execute_GetInteractDuration(Target);
-	AutoInteractElapsed = 0.f;
-	bIsAutoInteracting = true;
-	if (AutoInteractDuration > 0.f)
+	
+	const bool bAuto = IDZ_Interactable::Execute_IsAutoInteract(Target);
+	const float Duration = IDZ_Interactable::Execute_GetInteractDuration(Target);
+	
+	InteractTracker.Begin(Target, Duration, bAuto);
+	if (!bAuto)
 	{
-		AutoInteractProgressWidget->Open();
+		InteractPromptWidget->Hide();
+	}
+	if (Duration > 0.f)
+	{
+		InteractProgressWidget->Open();
 	}
 	ServerBeginInteract(Target);
 }
 
-void ADZ_PlayerController::StopAutoInteract()
+void ADZ_PlayerController::CancelInteract()
 {
-	if (!IsLocalController()) return;
-	if (!bIsAutoInteracting) return;
-
-	bIsAutoInteracting = false;
-	AutoInteractElapsed = 0.f;
-	AutoInteractProgressWidget->Close();
-	AutoInteractTarget = nullptr;
+	if (!InteractTracker.IsActive()) return;
+	
+	EndInteract();
 	ServerCancelInteract();
+}
+
+void ADZ_PlayerController::EndInteract()
+{
+	if (!InteractTracker.IsActive()) return;
+	
+	const bool bAuto = InteractTracker.IsAuto();
+	InteractTracker.Reset();
+	InteractProgressWidget->Close();
+	
+	if (!bAuto)
+	{
+		InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void ADZ_PlayerController::Interact(AActor* InteractActor)
 {
 	if (!IsLocalController()) return;
-	if (bIsInteracting)
+	
+	if (InteractTracker.IsActive())
 	{
-		bIsInteracting = false;
-		ElapsedTime = 0.f;
-		InteractProgressWidget->Close();
-		InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
-		ServerCancelInteract();
+		if (InteractTracker.IsAuto()) return;
+		CancelInteract();
 		return;
 	}
 	
-	if (!InteractActor) return;
-	if (InteractActor->Implements<UDZ_Interactable>() && IDZ_Interactable::Execute_CanInteract(InteractActor))
-	{
-		TotalDuration = IDZ_Interactable::Execute_GetInteractDuration(InteractActor);
-		ElapsedTime = 0;
-		if (TotalDuration > 0.f)
-		{
-			InteractProgressWidget->Open();
-		}
-		bIsInteracting = true;
-		InteractPromptWidget->Hide();
-		ServerBeginInteract(InteractActor);
-	}
+	if (!IsValid(InteractActor)) return;
+	BeginInteract(InteractActor);
 }
 
 void ADZ_PlayerController::UpdateInteractProgress()
 {
-	if (!IsLocalController()) return;
-	if (TotalDuration == 0.f)
-	{
-		InteractProgressWidget->SetProgress(0, 0);
-		return;
-	}
-	InteractProgressWidget->SetProgress(FMath::Clamp(ElapsedTime / TotalDuration, 0, 1), TotalDuration - ElapsedTime);
-}
+	if (!InteractTracker.IsActive()) return;
 
-void ADZ_PlayerController::UpdateAutoInteractProgress()
-{
-	if (!IsLocalController()) return;
-	if (AutoInteractDuration <= 0.f)
-	{
-		AutoInteractProgressWidget->SetProgress(0.f, 0.f);
-		return;
-	}
-	const float Progress = FMath::Clamp(AutoInteractElapsed / AutoInteractDuration, 0.f, 1.f);
-	AutoInteractProgressWidget->SetProgress(Progress, AutoInteractDuration - AutoInteractElapsed);
+	InteractProgressWidget->SetProgress(InteractTracker.GetProgress(), InteractTracker.GetRemaining());
 }
 
 void ADZ_PlayerController::WeaponAttack()
 {
-	if (bIsInteracting) return;
+	if (InteractTracker.IsActive() && !InteractTracker.IsAuto()) return;
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Weapon);
 }
 
 void ADZ_PlayerController::Kick()
 {
-	if (bIsInteracting) return;
+	if (InteractTracker.IsActive() && !InteractTracker.IsAuto()) return;
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Kick);
 }
 
@@ -248,9 +211,7 @@ void ADZ_PlayerController::ServerBeginInteract_Implementation(AActor* ContainerA
 
 void ADZ_PlayerController::ClientInteractFinished_Implementation(AActor* Target, bool bSucceeded)
 {
-	InteractProgressWidget->Close();
-	InteractPromptWidget->SetVisibility(ESlateVisibility::Visible);
-	bIsInteracting = false;
+	EndInteract();
 }
 
 void ADZ_PlayerController::ClientOpenLootPanel_Implementation(UDZ_ContainerComponent* Container)
@@ -268,17 +229,6 @@ void ADZ_PlayerController::ClientOpenLootPanel_Implementation(UDZ_ContainerCompo
 	RefreshUIAll(false);
 }
 
-void ADZ_PlayerController::ClientAutoInteractFinished_Implementation(AActor* Target, bool bSucceeded)
-{
-	bIsAutoInteracting = false;
-	AutoInteractElapsed = 0.f;
-	if (AutoInteractProgressWidget) AutoInteractProgressWidget->Close();
-	AutoInteractTarget = nullptr;
-
-	if (!bSucceeded) return;
-	
-}
-
 void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent* InventoryComp,
 	UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To)
 {
@@ -289,7 +239,7 @@ void ADZ_PlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent*
 }
 
 
-void ADZ_PlayerController::ClientOpenSettlementPanel_Implementation()
+void ADZ_PlayerController::ClientOpenSettlementPanel_Implementation(const FDZ_SettlementInfo& SettlementInfo)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Black, FString("ClientOpenSettlementPanel_Implementation"));
 }
@@ -337,11 +287,6 @@ void ADZ_PlayerController::RefreshUIAll(bool bForceRefresh)
 void ADZ_PlayerController::NotifyInteractFinished(AActor* Target, bool bSucceeded)
 {
 	ClientInteractFinished(Target, bSucceeded);
-}
-
-void ADZ_PlayerController::NotifyAutoInteractFinished(AActor* Target, bool bSucceeded)
-{
-	ClientAutoInteractFinished(Target, bSucceeded);
 }
 
 
@@ -455,7 +400,7 @@ void ADZ_PlayerController::HandleTakeItemRequested(UWidget* Row)
 
 bool ADZ_PlayerController::IsMovementLocked() const
 {
-	if (bIsInteracting) return true;
+	if (InteractTracker.IsActive() && !InteractTracker.IsAuto()) return true;
 	if (!AbilitySystemComponent.IsValid()) return false;
 	if (AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_MovementLocked) || 
 		AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_Interacting))

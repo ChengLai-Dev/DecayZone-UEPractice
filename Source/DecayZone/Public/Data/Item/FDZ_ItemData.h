@@ -42,6 +42,9 @@ struct FDZ_ItemData: public FTableRowBase
 	float Weight = 0.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 Value;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> Icon;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

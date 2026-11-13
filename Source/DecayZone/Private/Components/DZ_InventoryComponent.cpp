@@ -217,6 +217,20 @@ float UDZ_InventoryComponent::GetTotalWeight() const
 	return TotalWeight;
 }
 
+float UDZ_InventoryComponent::GetTotalValue() const
+{
+	float TotalValue = 0;
+	for (int32 Index = 0; Index < Items.Num(); Index++)
+	{
+		if (Items[Index].IsEmpty()) continue;
+		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Items[Index].ItemId);
+		if (!Data) continue;
+		
+		TotalValue += Data->Value * Items[Index].Count;
+	}
+	return TotalValue;
+}
+
 float UDZ_InventoryComponent::GetMaxWeight() const
 {
 	return MaxWeight;

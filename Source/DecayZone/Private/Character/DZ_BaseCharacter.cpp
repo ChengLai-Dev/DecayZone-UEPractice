@@ -40,8 +40,10 @@ bool ADZ_BaseCharacter::IsAutoInteract_Implementation() const
 	return false;
 }
 
-void ADZ_BaseCharacter::OnInteractCompleted_Implementation(AActor* Interactor)
+void ADZ_BaseCharacter::OnInteractCompleted_Implementation(AActor* Interactor, bool bSucceeded)
 {
+	if (!bSucceeded) return;
+
 	APawn* Pawn = Cast<APawn>(Interactor);
 	if (!Pawn) return;
 

@@ -3,7 +3,7 @@
 | 项 | 值 |
 |---|---|
 | 资产 | `/Game/UI/Settlement/WBP_SettlementPanel` |
-| 父类 | `UUserWidget`（未接 C++，建议 `UDZ_SettlementPanel`） |
+| 父类 | `UDZ_SettlementPanel`（C++ 已实现） |
 | 源文件 | `UIWidgets/UI/Settlement/WBP_SettlementPanel.json` |
 | 尺寸 | 1408×858，屏幕居中 |
 | 由谁打开 | 撤离流程（服务端判定成功/失败后，客户端 RPC 打开） |
@@ -20,9 +20,9 @@
 | `StatCard_EnemyKills` | `WBP_SettlementStatCard` | 传 `EnemyKills`，标签 `击杀丧尸` |
 | `StatCard_PlayerKills` | `WBP_SettlementStatCard` | 传 `PlayerKills`，标签 `击杀玩家` |
 | `Text_LootCount` | `TextBlock` | 写 `共 N 件`，N = `Items` 总数量（不是格子数） |
-| `Grid_Items` | `UniformGridPanel` | **动态生成** `WBP_SettlementItemSlot`，每行 5 列；先 ClearChildren 再按 `Items` 逐格填充 |
+| `WrapBox_Items` | `WrapBox` | **动态生成** `WBP_SettlementItemSlot`；先 ClearChildren 再按 `Items` 逐个 `AddChild`，自动换行，不需要算行列 |
 | `ScrollBox_Items` | `ScrollBox` | 物品超过 10 格时自动滚动，无需额外设置 |
-| `Text_EmptyHint` | `TextBlock` | 开局 `Collapsed`；`Items` 为空时改 `Visible`，同时把 `Grid_Items` 设为 `Collapsed` |
+| `Text_EmptyHint` | `TextBlock` | 开局 `Collapsed`；`Items` 为空时改 `Visible`，同时把 `WrapBox_Items` 设为 `Collapsed` |
 | `Btn_Confirm` | `Button` | **点击 → 关闭结算面板**（切回 `GameOnly` + 隐藏鼠标；是否传送/退出由服务端决定） |
 
 > 节点名一律写对象名（`GetName()` / JSON 的 `name` 字段）。
@@ -63,9 +63,9 @@
 |---|---|---|
 | 撤离成功 | `Text_Title` | `撤离成功`，颜色 `0.584/0.397/0.138`（金） |
 | 撤离失败 | `Text_Title` | `撤离失败`，颜色 `0.522/0.122/0.122`（暗红） |
-| 有物品 | `Grid_Items` / `Text_LootCount` | 网格可见并填充，件数为总数量 |
-| 无物品 | `Grid_Items` / `Text_EmptyHint` | 网格 `Collapsed`，提示 `Visible` |
-| 物品超过 10 件 | `ScrollBox_Items` | 出现竖向滚动条 |
+| 有物品 | `WrapBox_Items` / `Text_LootCount` | 网格可见并填充，件数为总数量 |
+| 无物品 | `WrapBox_Items` / `Text_EmptyHint` | 网格 `Collapsed`，提示 `Visible` |
+| 物品超过两行 | `ScrollBox_Items` | 出现竖向滚动条 |
 
 ---
 

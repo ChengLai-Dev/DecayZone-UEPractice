@@ -34,6 +34,7 @@ public:
 	bool AddItemAutoPos(int32 ItemID, int32 Count);
 	bool IsSlotValid(int32 SlotIndex);
 	float GetTotalWeight() const;
+	float GetTotalValue() const;
 	float GetMaxWeight() const;
 	float GetTotalArmor() const;
 	bool CanAddWeight(float Delta) const;

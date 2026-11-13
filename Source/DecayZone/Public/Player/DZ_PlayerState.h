@@ -23,6 +23,9 @@ public:
 	
 	UDZ_AttributeSet* GetAttributeSet() const;
 	
+	void IncreasePlayerKills();
+	void IncreaseEnemyKills();
+	
 private:
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -30,4 +33,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UDZ_AttributeSet> AttributeSet;
 	
+	UPROPERTY()
+	int32 EnemyKills = 0;
+	
+	UPROPERTY()
+	int32 PlayerKills = 0;
 };

@@ -23,3 +23,13 @@ UDZ_AttributeSet* ADZ_PlayerState::GetAttributeSet() const
 {
 	return AttributeSet;
 }
+
+void ADZ_PlayerState::IncreasePlayerKills()
+{
+	PlayerKills++;
+}
+
+void ADZ_PlayerState::IncreaseEnemyKills()
+{
+	EnemyKills++;
+}

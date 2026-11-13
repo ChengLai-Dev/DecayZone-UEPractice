@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
 #include "GameFramework/PlayerController.h"
+#include "UI/FDZ_InteractTracker.h"
 #include "DZ_PlayerController.generated.h"
 
+struct FDZ_SettlementInfo;
 class UDZ_AbilitySystemComponent;
 class UDZ_StatusBars;
 struct FGameplayAttributeData;
@@ -30,17 +32,12 @@ class DECAYZONE_API ADZ_PlayerController : public APlayerController
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
-	void InteractHighlightActor();
 	
-	void OnAutoInteractStart(AActor* OtherActor);
-	
-	void OnAutoInteractCancel(AActor* OtherActor);
-
-	void StartAutoInteract(AActor* Target);
-	void StopAutoInteract();
+	void BeginInteract(AActor* Target);
+	void CancelInteract();
+	void EndInteract();
 
 	void UpdateInteractProgress();
-	void UpdateAutoInteractProgress();
 	void WeaponAttack();
 	void Kick();
 	virtual void SetupInputComponent() override;
@@ -67,21 +64,18 @@ public:
 	void ClientInteractFinished(AActor* Target, bool bSucceeded);
 
 	UFUNCTION(Client, Reliable)
-	void ClientAutoInteractFinished(AActor* Target, bool bSucceeded);
-
-	UFUNCTION(Client, Reliable)
 	void ClientOpenLootPanel(UDZ_ContainerComponent* Container);
 	
 	UFUNCTION(Client, Reliable, BlueprintCallable)
-	void ClientOpenSettlementPanel();
+	void ClientOpenSettlementPanel(const FDZ_SettlementInfo& SettlementInfo);
 	
 	void RefreshUIAll(bool bForceRefresh = true);
 	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
-	void NotifyAutoInteractFinished(AActor* Target, bool bSucceeded);
 
 private:
 	
 	void Interact(AActor* InteractActor);
+	void InteractHighlightActor();
 	
 	void OnAttributeValueChanged(const FOnAttributeChangeData& Data);
 	
@@ -103,7 +97,6 @@ private:
 	UFUNCTION()
 	void HandleContainerItemsChanged();
 	
-	void FinishInteract();
 	void ActivateAbilityByTag(const FGameplayTag& AbilityTag);
 	
 	bool IsMovementLocked() const;
@@ -127,29 +120,13 @@ private:
 	TObjectPtr<UDZ_InteractProgress> InteractProgressWidget;
 	
 	UPROPERTY()
-	TObjectPtr<UDZ_InteractProgress> AutoInteractProgressWidget;
-	
-	UPROPERTY()
 	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_StatusBars> StatusBarsWidget;
 	
-	float TotalDuration = 0.f;
-	float ElapsedTime = 0.f;
+	FDZ_InteractTracker InteractTracker;
 	
-	bool bIsInteracting = false;
-
-
-	// 自动交互读条：独立于按键交互，不锁移动
-	float AutoInteractDuration = 0.f;
-	float AutoInteractElapsed = 0.f;
-
-	bool bIsAutoInteracting = false;
-
-	TWeakObjectPtr<AActor> AutoInteractTarget;
-	
-	FTimerHandle InteractTimerHandle;
 	TWeakObjectPtr<AActor> InteractTarget;
 	
 	TWeakObjectPtr<UDZ_ContainerComponent> InteractContainerComp;

@@ -3,10 +3,10 @@
 | 项 | 值 |
 |---|---|
 | 资产 | `/Game/UI/Settlement/WBP_SettlementItemSlot` |
-| 父类 | `UUserWidget` |
+| 父类 | `UDZ_SettlementItemSlot`（C++ 已实现） |
 | 源文件 | `UIWidgets/UI/Settlement/WBP_SettlementItemSlot.json` |
 | 尺寸 | 88×88 固定 |
-| 使用处 | `WBP_SettlementPanel` 的 `Grid_Items` 内，运行时动态生成 |
+| 使用处 | `WBP_SettlementPanel` 的 `WrapBox_Items` 内，运行时动态生成 |
 | 性质 | **只读**。不可拖拽、不可点击、不可拿取 |
 
 ---
@@ -46,7 +46,15 @@
 
 ---
 
+## 已实现的接口
+
+| 接口 | 参数 | 说明 |
+|---|---|---|
+| `SetItem` | `int32 ItemId`、`int32 Count` | 内部用 `ItemHelper::GetItemData` 查图标；`Count <= 1` 隐藏角标 |
+
+---
+
 ## 注意事项
 
-- 格子尺寸固定 88×88，父级 `UniformGridPanel` 的 `SlotPadding` 已设 `right/bottom = 10`，不要重复加 margin。
+- 格子尺寸固定 88×88，父级 `WrapBox` 的 `InnerSlotPadding` 已设 `(10, 10)`（X=水平、Y=垂直），不要重复加 margin。
 - 悬停显示详情（`WBP_ItemDetail`）**本期不做**。如果后续要加，走 `UDZ_UserWidget` 的 `OnWidgetLeftClicked` / hover 事件，别在格子里自己写命中检测。

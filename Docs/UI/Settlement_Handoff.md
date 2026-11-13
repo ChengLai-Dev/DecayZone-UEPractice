@@ -35,7 +35,7 @@ WBP_SettlementPanel
 │  │  ├─ Text_SectionTitle   「带出物品」
 │  │  └─ Text_LootCount      共 N 件
 │  ├─ ScrollBox_Items
-│  │  └─ Grid_Items          UniformGridPanel，每行 5 列
+│  │  └─ WrapBox_Items        WrapBox，自动换行
 │  │     └─ WBP_SettlementItemSlot ×N（运行时生成）
 │  └─ Text_EmptyHint         无物品提示（默认 Collapsed）
 └─ HB_Footer
@@ -80,14 +80,25 @@ WBP_SettlementPanel
 
 ## 4. 程序需实现的接口清单
 
-### 3.1 UI 类
+### 3.1 UI 类（✅ 已实现）
 
 | 类 | 接口 | 说明 |
 |---|---|---|
 | `UDZ_SettlementPanel` | `SetSettlementInfo(const FDZ_SettlementInfo&)` | 一次性填充标题、用时、三张卡、物品网格、空态 |
-| `UDZ_SettlementStatCard` | `SetStat(FText Value, FText Label)` | 同时设值 + 标签 |
-| `UDZ_SettlementItemSlot` | `SetItem(UTexture2D* Icon, int32 Count)` | 有图标才 `Visible`；`Count <= 1` 隐藏角标 |
-| `UDZ_SettlementPanel` | `OnConfirmClicked` 委托 | 「确认」按钮点击后向外抛，由 Controller 决定后续 |
+| `UDZ_SettlementStatCard` | `SetStat(int32 Value, const FText& Label)` / `SetStat(float Value, const FText& Label)` | 传原始数值，格式化在控件内部 |
+| `UDZ_SettlementItemSlot` | `SetItem(int32 ItemId, int32 Count)` | 内部查表取图标；`Count <= 1` 隐藏角标 |
+| `UDZ_SettlementPanel` | `OnConfirmRequested`（`FOnEvent`） | 「确认」按钮点击后广播，由 Controller 决定关闭或后续流程 |
+
+源码位置：
+
+| 文件 | 路径 |
+|---|---|
+| 数据结构 | `Source/DecayZone/Public/Data/UI/FDZ_SettlementInfo.h` |
+| 主面板 | `Public/UI/Widgets/DZ_SettlementPanel.h`、`Private/UI/Widgets/DZ_SettlementPanel.cpp` |
+| 数值卡 | `Public/UI/Widgets/DZ_SettlementStatCard.h`、`Private/.../DZ_SettlementStatCard.cpp` |
+| 战利品格 | `Public/UI/Widgets/DZ_SettlementItemSlot.h`、`Private/.../DZ_SettlementItemSlot.cpp` |
+
+三个 WBP 的父类已挂到对应 C++ 类，`ItemSlotClass` 默认值已指向 `WBP_SettlementItemSlot`，`DZ_UIConfig.SettlementPanelClass` 已填。
 
 ### 3.2 数据与统计
 
@@ -98,10 +109,8 @@ WBP_SettlementPanel
 | 击杀归属 | `AttributeSet::PostGameplayEffectExecute` 或 `Death()` 里取原凶，按目标类型分流 |
 | 局内用时 | PlayerState 或 GameState 记开始时间，结算时相减 |
 | `ADZ_PlayerController` | `ClientOpenSettlementPanel` 改签名，带结算数据 |
-| `UDZ_UIConfig` | 新增 `SettlementPanelClass`（`TSubclassOf<UDZ_SettlementPanel>`），并填 `DA_UIConfig` |
-| `UDZ_UIConfig` | 新增 `SettlementItemSlotClass`（`TSubclassOf<UDZ_SettlementItemSlot>`），用于动态生成战利品格 |
-
-> 战利品格的类引用必须从 `UIConfig` 拿，不要硬编码 `/Game/UI/Settlement/WBP_SettlementItemSlot`，否则改资产路径就得改代码。
+| `UDZ_UIConfig` | ✅ `SettlementPanelClass` 已加并已填 `DA_UIConfig` |
+> 战利品格的类引用挂在 `WBP_SettlementPanel` 的 `ItemSlotClass`（`EditDefaultsOnly`），改资产路径只需改蓝图的 Class Defaults，不用动代码。
 
 ### 3.3 打开 / 关闭
 
@@ -117,12 +126,15 @@ WBP_SettlementPanel
 
 | 项 | 状态 | 归属 |
 |---|---|---|
-| 三个 WBP 资产生成 | ☐ 需在编辑器触发 JSON 重建 | 你 |
+| 三个 WBP 资产生成 | ☑ 已生成 | — |
+| 三个 WBP 挂 C++ 父类 + 编译 | ☑ 已完成 | — |
+| `UDZ_SettlementPanel` / `StatCard` / `ItemSlot` | ☑ 已实现 | — |
+| `FDZ_SettlementInfo` 结构体 | ☑ 已定义 | — |
 | `FDZ_ItemData::Value` + 数据表填值 | ☐ 未开始 | 你 |
 | 击杀统计（PlayerState + 致死归属） | ☐ 未开始 | 你 |
 | 局内用时记录 | ☐ 未开始 | 你 |
 | `ClientOpenSettlementPanel` 改签名并组装数据 | ☐ 未开始 | 你 |
-| `UDZ_UIConfig` 加 `SettlementPanelClass` | ☐ 未开始 | 你 |
+| `UDZ_UIConfig` 加 `SettlementPanelClass` | ☑ 已加并已填 | — |
 | 撤离成功后角色去哪（留在原地 / 传送 / 退出） | ☐ 未定 | 待你决定 |
 | 死亡是否也弹结算面板 | ☐ 未定 | 待你决定 |
 | 撤离区一次性（防重复撤离） | ☐ 未开始 | 你 |
@@ -134,4 +146,4 @@ WBP_SettlementPanel
 - **物品格没有悬停详情**：本期不做，格子不继承 `UDZ_ItemSlotBase`，避免误触发拖拽。
 - **总价值口径未定**：目前 UI 只负责显示一个数，是否把装备槽里穿着的护甲/武器算进去由程序决定。
 - **失败态的视觉降级**：UI 已留出空间（`Text_SectionTitle` 改文案 + 格子降透明度），但没有做专门的"丢失"样式，需要的话再补一层红色描边。
-- **10 格是 Designer 占位**：运行时必须 `ClearChildren` 重建，否则会出现占位格与真实数据混在一起。
+- **26 个格子是 Designer 占位**：运行时 `RefreshItems` 会 `ClearChildren` 后按真实物品重建，不会混在一起。
