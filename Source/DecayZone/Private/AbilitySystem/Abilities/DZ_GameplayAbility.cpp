@@ -5,7 +5,7 @@
 
 #include "DecayZone/DecayZone.h"
 
-void UDZ_GameplayAbility::SetEndReason(EDZAbilityEndReason Reason, FName Detail)
+void UDZ_GameplayAbility::SetEndReason(EDZAbilityEndReason Reason, const FString& Detail)
 {
 	EndReason = Reason;
 	EndReasonDetail = Detail;
@@ -16,16 +16,16 @@ void UDZ_GameplayAbility::PreActivate(const FGameplayAbilitySpecHandle Handle,
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	EndReason = EDZAbilityEndReason::Completed;
-	EndReasonDetail = NAME_None;
+	EndReasonDetail.Empty();
 
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 }
 
 EDZAbilityEndReason UDZ_GameplayAbility::GetEndReason(bool bWasCancelled) const
 {
-	if (!bWasCancelled) return EDZAbilityEndReason::Completed;
-
-	return EndReason;
+	if (EndReason == EDZAbilityEndReason::Failed) return EDZAbilityEndReason::Failed;
+	
+	return bWasCancelled ? EDZAbilityEndReason::Cancelled : EDZAbilityEndReason::Completed;
 }
 
 void UDZ_GameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -35,15 +35,15 @@ void UDZ_GameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 	if (IsEndAbilityValid(Handle, ActorInfo))
 	{
 		
-		const EDZAbilityEndReason EndReason = GetEndReason(bWasCancelled);
+		const EDZAbilityEndReason ResolvedReason = GetEndReason(bWasCancelled);
 
 		UE_LOG(LogDZ, Log, TEXT("[Ability] %s End. Reason=%s Detail=%s Cancelled=%d"),
 			*GetNameSafe(this),
-			*StaticEnum<EDZAbilityEndReason>()->GetNameStringByValue(static_cast<int64>(EndReason)),
-			*EndReasonDetail.ToString(),
+			*StaticEnum<EDZAbilityEndReason>()->GetNameStringByValue(static_cast<int64>(ResolvedReason)),
+			*EndReasonDetail,
 			bWasCancelled ? 1 : 0);
 
-		OnAbilityEnded(EndReason);
+		OnAbilityEnded(ResolvedReason);
 	}
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);

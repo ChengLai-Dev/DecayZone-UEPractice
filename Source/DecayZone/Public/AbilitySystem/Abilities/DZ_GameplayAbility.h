@@ -15,13 +15,13 @@ class DECAYZONE_API UDZ_GameplayAbility : public UGameplayAbility
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "DecayZone|Ability")
-	void SetEndReason(EDZAbilityEndReason Reason, FName Detail = NAME_None);
+	void SetEndReason(EDZAbilityEndReason Reason, const FString& Detail = TEXT(""));
 
 	UFUNCTION(BlueprintPure, Category = "DecayZone|Ability")
 	EDZAbilityEndReason GetEndReason() const { return EndReason; }
 
 	UFUNCTION(BlueprintPure, Category = "DecayZone|Ability")
-	FName GetEndReasonDetail() const { return EndReasonDetail; }
+	FString GetEndReasonDetail() const { return EndReasonDetail; }
 
 protected:
 	virtual void PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -39,5 +39,5 @@ private:
 	
 	EDZAbilityEndReason EndReason = EDZAbilityEndReason::Completed;
 	
-	FName EndReasonDetail = NAME_None;
+	FString EndReasonDetail;
 };
