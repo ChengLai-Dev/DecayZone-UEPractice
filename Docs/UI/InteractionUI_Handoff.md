@@ -53,55 +53,66 @@ WBP_InteractProgress
 
 ## 3. 数据流
 
-### 3.1 焦点 → 提示（已有骨架）
+### 3.1 焦点 → 提示
 
 ```
 ADZ_PlayerCharacter::Tick
 └─ HighlightInteractable()
    ├─ FindTargetInteractableActor() 选出朝向最正的重叠物
    └─ 焦点变化时：
-      ├─ OnFocusInteractableActorChanged.Broadcast(Target)   ← 已实现
-      └─ SetActorHighlight(新, true) / (旧, false)            ← 已实现
+      ├─ OnFocusInteractableActorChanged.Broadcast(Target)
+      └─ SetActorHighlight(新, true) / (旧, false)
 
-ADZ_PlayerController::HandleInteractableActorChanged(AActor*)
-   ├─ OnPossess 里已 AddDynamic 绑定                          ← 已实现
-   └─ 函数体为空                                              ← 未实现
+ADZ_PlayerController::HandleInteractableActorChanged(AActor*)   ← AcknowledgePossession 里 AddDynamic
+└─ UDZ_InteractController::OnFocusInteractableChanged(AActor*)
+   ├─ 空 Actor → Prompt Close
+   ├─ 非 Interactable → 忽略
+   └─ Prompt Open + 写键位与文案（键位从 InputConfig 的 IMC 里读）
 ```
 
-### 3.2 按键 → 读条（未实现）
+### 3.2 按键 → 读条
 
 ```
 InteractAction.Started
-└─ 焦点 actor 存在且 CanInteract()
-   ├─ Prompt 隐藏
-   ├─ Progress 显示，按 GetInteractDuration() 计时
-   ├─ 每帧写 Img_RingFill 的 Progress + Text_Time
-   └─ 完成 / 取消 → OnInteractCompleted / OnInteractCancelled → Progress 隐藏
+└─ ADZ_PlayerController::InteractHighlightActor
+   └─ UDZ_InteractController::Interact(焦点 Actor)
+      ├─ 已在交互中：自动交互直接忽略，手动交互则 Cancel
+      └─ BeginInteract：CanInteract 检查 → Tracker.Begin → Prompt 隐藏 / Progress 打开 → ServerBeginInteract
+
+Tick（UDZ_InteractController）
+└─ Tracker.Tick + Progress.SetProgress
+
+结束
+├─ 服务端 GA 完成 → ClientInteractFinished → Controller::EndInteract
+└─ 再次按键 → CancelInteract → EndInteract + ServerCancelInteract
 ```
 
 ---
 
 ## 4. 程序侧现状
 
-| 文件 | 已有什么 | 缺什么 |
-|---|---|---|
-| `UDZ_InteractPrompt` | `BindWidget` 的 `Text_Key` / `Text_Action` | 设文案、显示、隐藏的对外方法 |
-| `UDZ_InteractProgress` | `BindWidget` 的 `Img_RingFill` / `Text_Time`、`StartCountDownSeconds` / `CancelCountDown` | 进度方向（现在传的是剩余比例）、完成帧收尾、动态材质判空 |
-| `UDZ_UIConfig` | `InteractPromptClass` 字段 | `InteractProgressClass`、`LootPanelClass` 还没加 |
-| `ADZ_PlayerController` | `InteractPrompt` 成员、`BeginPlay` 里 `CreateWidget`、`OnPossess` 绑定 | 展示逻辑、`AddToViewport`、`OnUnPossess` 解绑 |
-| `ADZ_PlayerCharacter` | 焦点变化广播、`GetHighlightActor()` | 焦点判定方向与门槛（见 5.3） |
-| `IDZ_Interactable` | 6 个接口函数（含 `GetInteractPromptText`） | — |
-| `ADZ_InteractableActor` | 已实现接口，有 `InteractDuration` / `InteractPromptText` | `OnInteractStarted/Completed/Cancelled` 仍是空默认实现，留给蓝图子类 |
+| 文件 | 已有什么 |
+|---|---|
+| `UDZ_InteractPrompt` | `BindWidget` 的 `Text_Key` / `Text_Action`；`Open` / `Close` / `SetVisibility` 继承自 `UDZ_UserWidget` |
+| `UDZ_InteractProgress` | `BindWidget` 的 `Img_RingFill` / `Text_Time`、`SetProgress(Progress, Remaining)`、动态材质缓存 |
+| `UDZ_UIConfig` | `InteractPromptClass` / `InteractProgressClass` / `LootPanelClass` |
+| `UDZ_InteractController` | 持有 `FDZ_InteractTracker` 与两个 Widget；`Interact` / `BeginInteract` / `CancelInteract` / `EndInteract` / `UpdateProgress` / `OnFocusInteractableChanged` / `IsBlockingAttack` |
+| `ADZ_PlayerController` | `BeginInteract` / `CancelInteract` / `EndInteract` / `NotifyInteractFinished` 保留为对外转发；Server RPC（`ServerBeginInteract` / `ServerCancelInteract` / `ClientInteractFinished`）仍在 PC |
+| `ADZ_PlayerCharacter` | 焦点变化广播、`GetHighlightActor()` |
+| `IDZ_Interactable` | 6 个接口函数（含 `GetInteractPromptText`） |
+| `ADZ_InteractableActor` | 已实现接口；`NotifyAutoInteractStart` / `NotifyAutoInteractCancel` 直接调 PC 的 `BeginInteract` / `CancelInteract` |
+
+> RPC 只能挂在 Actor 上，所以 `ServerBeginInteract` / `ServerCancelInteract` / `ClientInteractFinished` 永远留在 `ADZ_PlayerController`，控制器只通过持有的 PC 指针触发。
+>
+> `IsBlockingAttack()`（交互进行中且非自动交互）同时用于攻击拦截与 `IsMovementLocked`，这两个判定在控制器搬走后没有退化。
 
 ---
 
 ## 5. 当前断点（按优先级）
 
-1. **提示显示逻辑还差收尾**：`HandleInteractableActorChanged` 里已有 `AddToViewport` / 写文案，但每次焦点变化都重复 `AddToViewport`（引擎会警告），应改成常驻 + 切 Visibility。
-2. **交互入口还没接**：`InteractAction` 未绑定，"按 E 开始 / 再按取消 / 时长为 0 直接完成"三条分支都还没写。
-3. **焦点判定会选中背后的物体**：`FindTargetInteractableActor` 用的是角色朝向（受 `bOrientRotationToMovement` 影响，其实是移动方向），且没有点积门槛。应改成相机/控制朝向 + 门槛。
-4. **`WBP_InteractPrompt` / `WBP_InteractProgress` 的父类**：需要重挂到 `UDZ_InteractPrompt` / `UDZ_InteractProgress`，否则 `CreateWidget<T>` 运行时会拿到 null。
-5. **读条逻辑未接**：`UDZ_InteractProgress` 有计时和回调，但进度方向用的是剩余比例（环会倒退），且完成帧没有提前 return。
+1. **重复 `AddToViewport`**：每次焦点变化都会 `Open()` 一次，引擎会告警。应改成常驻 + 切 Visibility（本轮只是把这段搬到控制器，行为未改）。
+2. **焦点判定会选中背后的物体**：`FindTargetInteractableActor` 用的是角色朝向（受 `bOrientRotationToMovement` 影响，其实是移动方向），且没有点积门槛。应改成相机/控制朝向 + 门槛。
+3. **打开面板期间提示未隐藏**：面板关闭后焦点没变不会自动重推，需要主动重推一次。
 
 ---
 

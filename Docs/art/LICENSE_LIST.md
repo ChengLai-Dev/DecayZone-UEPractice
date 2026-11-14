@@ -23,6 +23,17 @@
 | FLUX 3 Klein（本地 ComfyUI） | int8 蒸馏版 | Komm​unity License | 污渍细节层 |
 | Unreal Engine | 5.8 | 自有引擎授权 | 导入与材质生成 |
 
+## 批次 2026-11-14
+
+### 技能图标 T_UI_Icon_Skill_Shield / T_UI_Icon_Skill_Sprint（M5 技能栏）
+
+| 组成 | 来源 | 授权 | 结论 |
+|---|---|---|---|
+| 图标主体 | 本地 MOSS-Image 生成（seed 770101 / 770103，ComfyUI），后处理抠底归一到 512² | **Apache-2.0** | ✅ 可商用、可改、可微调，无营收门槛 |
+| `M_CooldownRing` / `MI_CooldownRing` | 本项目 artist 用 UE 材质与 HLSL 自建 | 自有产出 | ✅ 可商用 |
+
+**未使用网络素材**：图标由本地模型生成后抠底，冷却环材质自建，因此本批没有任何第三方图库依赖，不需要署名。上一轮备选的 game-icons.net（CC BY 3.0，需署名）**未采用**。
+
 ## 明确排除的东西
 
 | 排除对象 | 原因 |

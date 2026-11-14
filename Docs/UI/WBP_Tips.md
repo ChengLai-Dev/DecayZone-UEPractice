@@ -72,7 +72,7 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 
 | 项 | 位置 |
 |---|---|
-| `UDZ_Tips` 类，两个动画回调绑定 | `Source/.../Public/UI/Widgets/DZ_Tips.h` + `.cpp` |
+| `UDZ_Tips` 类，两个动画回调绑定 | `Source/.../Public/UI/Widgets/HUD/DZ_Tips.h` + `.cpp` |
 | `UDZ_UIConfig::TipsClass` 字段 | `Source/.../Public/Data/UI/DZ_UIConfig.h` |
 | 创建入口 `UIHelper::ShowTips(WorldContext, Text, Duration)` | `Source/.../Private/Library/UIHelper.cpp` |
 

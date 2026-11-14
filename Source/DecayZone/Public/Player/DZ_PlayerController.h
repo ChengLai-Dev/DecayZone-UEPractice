@@ -5,22 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
 #include "GameFramework/PlayerController.h"
-#include "UI/FDZ_InteractTracker.h"
 #include "DZ_PlayerController.generated.h"
 
 struct FDZ_SettlementInfo;
+struct FDZ_CharacterStatsInfo;
 class UDZ_AbilitySystemComponent;
-class UDZ_StatusBars;
+class UDZ_ContainerComponent;
+class UDZ_InventoryComponent;
+enum class EDZExtractResult : uint8;
 struct FGameplayAttributeData;
-class UDZ_UserWidget;
-class UDZ_LootPanel;
 struct FGameplayTag;
-class UDZ_InteractProgress;
-class UDZ_InteractPrompt;
 class UDZ_UIConfig;
 struct FInputActionValue;
 class UDZ_InputConfig;
-class UDZ_InventoryPanel;
+class UUIManager;
 /**
  * 
  */
@@ -37,13 +35,18 @@ public:
 	void CancelInteract();
 	void EndInteract();
 
-	void UpdateInteractProgress();
 	void WeaponAttack();
 	void Kick();
+	
+	const UDZ_InputConfig* GetInputConfig() const { return InputConfig; }
+	
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void PostInitializeComponents() override;
 
-
+	UUIManager* GetUIManager() const;
+	
 	virtual void OnRep_PlayerState() override;
 	
 	virtual void AcknowledgePossession(APawn* InPawn) override;
@@ -66,11 +69,24 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientOpenLootPanel(UDZ_ContainerComponent* Container);
 	
-	UFUNCTION(Client, Reliable, BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "DecayZone|Extraction")
+	void NotifyGameEnd(bool bExtracted);
+	
+	UFUNCTION(Client, Reliable)
 	void ClientOpenSettlementPanel(const FDZ_SettlementInfo& SettlementInfo);
 	
 	void RefreshUIAll(bool bForceRefresh = true);
 	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
+	
+	UFUNCTION(BlueprintCallable, Category = "DecayZone|Ability")
+	void SetSlotSkill(int32 SlotIndex, int32 SkillId);
+	
+	UFUNCTION(BlueprintPure, Category = "DecayZone|Ability")
+	int32 GetSlotSkill(int32 SlotIndex) const;
+	
+	UDZ_InventoryComponent* GetInventoryComponent() const;
+	bool BuildCharacterStats(FDZ_CharacterStatsInfo& OutStats) const;
+	TWeakObjectPtr<UDZ_ContainerComponent> GetInteractContainer() const;
 
 private:
 	
@@ -84,12 +100,6 @@ private:
 
 	UFUNCTION()
 	void HandleInteractableActorChanged(AActor* Actor);
-	
-	UFUNCTION()
-	void HandleItemMoveRequested(UWidget* From, UWidget* To);
-	
-	UFUNCTION()
-	void HandleTakeItemRequested(UWidget* Row);
 	
 	UFUNCTION()
 	void HandleInventoryItemsChanged();
@@ -106,28 +116,15 @@ private:
 	void Jump(const FInputActionValue& Value);
 	void CloseTopWidget();
 	void OpenOrCloseInventoryPanel();
+	
+	FDZ_SettlementInfo BuildSettlementInfo() const;
+	void Settle(EDZExtractResult Result);
 
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UDZ_InputConfig> InputConfig;
 	
 	UPROPERTY()
-	TObjectPtr<UDZ_InventoryPanel> InventoryPanelWidget;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_InteractPrompt> InteractPromptWidget;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_InteractProgress> InteractProgressWidget;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_StatusBars> StatusBarsWidget;
-	
-	FDZ_InteractTracker InteractTracker;
-	
-	TWeakObjectPtr<AActor> InteractTarget;
+	TObjectPtr<UUIManager> UIManager;
 	
 	TWeakObjectPtr<UDZ_ContainerComponent> InteractContainerComp;
 	

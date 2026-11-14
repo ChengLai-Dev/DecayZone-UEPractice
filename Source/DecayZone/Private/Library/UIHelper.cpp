@@ -1,10 +1,10 @@
-﻿#include "Library/UIHelper.h"
+#include "Library/UIHelper.h"
 
 #include "Blueprint/UserWidget.h"
 #include "Components/PanelWidget.h"
 #include "Data/UI/DZ_UIConfig.h"
 #include "Game/DZ_GameInstance.h"
-#include "UI/Widgets/DZ_Tips.h"
+#include "UI/Widgets/HUD/DZ_Tips.h"
 
 UWidget* UIHelper::GetChildByName(const UWidget* Widget, const FName& Name)
 {

@@ -8,6 +8,7 @@
 
 class UDZ_ContainerSpawnItemConfig;
 struct FDZ_ItemData;
+struct FDZ_SkillData;
 class UDZ_StartupAbilities;
 class UDZ_UIConfig;
 
@@ -33,10 +34,15 @@ public:
 	TObjectPtr<UDZ_UIConfig> UIConfig;
 	
 	const FDZ_ItemData* GetItemData(int32 ItemId);
+	const FDZ_SkillData* GetSkillData(int32 SkillId) const;
 	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Items", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataTable> ItemDataTable;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Abilities", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UDataTable> SkillDataTable;
+	
 	TMap<int32, const FDZ_ItemData*> ItemMap;
+	TMap<int32, const FDZ_SkillData*> SkillMap;
 };

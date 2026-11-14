@@ -8,6 +8,8 @@ namespace DZGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Interact);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Attack_Kick);
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Attack_Weapon);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Skill_Shield);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Player_Skill_Sprint);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Enemy_Attack);
 	

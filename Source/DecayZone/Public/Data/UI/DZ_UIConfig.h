@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/UI/FDZ_AbilitySlotLayout.h"
 #include "Engine/DataAsset.h"
 #include "UI/DZ_UserWidget.h"
 #include "DZ_UIConfig.generated.h"
 
+class UDZ_AbilityBar;
 class UDZ_Tips;
 class UDZ_InteractProgress;
 class UDZ_InteractPrompt;
@@ -42,6 +44,12 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_StatusBars> StatusBarsClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_AbilityBar> AbilityBarClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TArray<FDZ_AbilitySlotLayout> AbilitySlots;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_Tips> TipsClass;

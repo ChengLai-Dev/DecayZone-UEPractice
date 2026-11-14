@@ -4,7 +4,10 @@
 #include "AbilitySystem/DZ_AttributeSet.h"
 
 #include "GameplayEffectExtension.h"
+#include "Character/DZ_EnemyCharacter.h"
+#include "Character/DZ_PlayerCharacter.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/DZ_PlayerState.h"
 
 void UDZ_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -48,14 +51,30 @@ void UDZ_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 	Super::PostGameplayEffectExecute(Data);
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
+		const float OldHealth = GetHealth();
 		const float Damage = GetIncomingDamage();
 		const float DamageReduction = 1 - FMath::Clamp(GetArmor(), 0, 80) / 100;
 		const float HealthValue = FMath::Clamp(GetHealth() - Damage * DamageReduction, 0, GetMaxHealth());
 		SetIncomingDamage(0);
 		SetHealth(HealthValue);
-		if (HealthValue <= 0.0f)
+		if (OldHealth > 0 && HealthValue <= 0.0f)
 		{
 			OnDeath.Broadcast();
+			const FGameplayEffectContextHandle Context = Data.EffectSpec.GetContext();
+			AActor* AttackOwner = Context.GetInstigator();
+			AActor* ReceiveActor  = Data.Target.GetAvatarActor();
+
+			if (ADZ_PlayerState* KillerState = Cast<ADZ_PlayerState>(AttackOwner))
+			{
+				if (Cast<ADZ_EnemyCharacter>(ReceiveActor))
+				{
+					KillerState->IncreaseEnemyKills();
+				}
+				else if (Cast<ADZ_PlayerCharacter>(ReceiveActor))
+				{
+					KillerState->IncreasePlayerKills();
+				}
+			}
 		}
 	}
 }

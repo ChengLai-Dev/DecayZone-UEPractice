@@ -94,9 +94,9 @@ WBP_SettlementPanel
 | 文件 | 路径 |
 |---|---|
 | 数据结构 | `Source/DecayZone/Public/Data/UI/FDZ_SettlementInfo.h` |
-| 主面板 | `Public/UI/Widgets/DZ_SettlementPanel.h`、`Private/UI/Widgets/DZ_SettlementPanel.cpp` |
-| 数值卡 | `Public/UI/Widgets/DZ_SettlementStatCard.h`、`Private/.../DZ_SettlementStatCard.cpp` |
-| 战利品格 | `Public/UI/Widgets/DZ_SettlementItemSlot.h`、`Private/.../DZ_SettlementItemSlot.cpp` |
+| 主面板 | `Public/UI/Widgets/Settlement/DZ_SettlementPanel.h`、`Private/UI/Widgets/Settlement/DZ_SettlementPanel.cpp` |
+| 数值卡 | `Public/UI/Widgets/Settlement/DZ_SettlementStatCard.h`、`Private/UI/Widgets/Settlement/DZ_SettlementStatCard.cpp` |
+| 战利品格 | `Public/UI/Widgets/Settlement/DZ_SettlementItemSlot.h`、`Private/UI/Widgets/Settlement/DZ_SettlementItemSlot.cpp` |
 
 三个 WBP 的父类已挂到对应 C++ 类，`ItemSlotClass` 默认值已指向 `WBP_SettlementItemSlot`，`DZ_UIConfig.SettlementPanelClass` 已填。
 
@@ -133,7 +133,7 @@ WBP_SettlementPanel
 | `FDZ_ItemData::Value` + 数据表填值 | ☐ 未开始 | 你 |
 | 击杀统计（PlayerState + 致死归属） | ☐ 未开始 | 你 |
 | 局内用时记录 | ☐ 未开始 | 你 |
-| `ClientOpenSettlementPanel` 改签名并组装数据 | ☐ 未开始 | 你 |
+| `ClientOpenSettlementPanel` 改签名并组装数据 | ☑ 已完成（面板显示在 `UDZ_SettlementController::Show`，PC 负责隐藏技能栏） | — |
 | `UDZ_UIConfig` 加 `SettlementPanelClass` | ☑ 已加并已填 | — |
 | 撤离成功后角色去哪（留在原地 / 传送 / 退出） | ☐ 未定 | 待你决定 |
 | 死亡是否也弹结算面板 | ☐ 未定 | 待你决定 |

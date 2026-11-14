@@ -3,12 +3,12 @@
 
 #include "UI/DZ_UserWidget.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Player/DZ_PlayerController.h"
 #include "UI/UIManager.h"
 
 void UDZ_UserWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	UIManager = ULocalPlayer::GetSubsystem<UUIManager>(GetOwningLocalPlayer());
 	OnInitializeComplete.Broadcast();
 }
 
@@ -101,14 +101,26 @@ void UDZ_UserWidget::SetDragEnabled(bool bEnable)
 	bEnableDragging = bEnable;
 }
 
+UUIManager* UDZ_UserWidget::GetUIManager() const
+{
+	const ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(GetOwningPlayer());
+	return PlayerController ? PlayerController->GetUIManager() : nullptr;
+}
+
 void UDZ_UserWidget::Open()
 {
-	UIManager->OpenWidget(this, bResident);
+	if (UUIManager* Manager = GetUIManager())
+	{
+		Manager->OpenWidget(this, bResident);
+	}
 }
 
 void UDZ_UserWidget::Close()
 {
-	UIManager->CloseWidget(this);
+	if (UUIManager* Manager = GetUIManager())
+	{
+		Manager->CloseWidget(this);
+	}
 }
 
 void UDZ_UserWidget::Show()

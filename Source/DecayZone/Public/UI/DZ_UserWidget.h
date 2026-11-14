@@ -27,6 +27,8 @@ public:
 	void Show();
 	void Hide();
 
+	UUIManager* GetUIManager() const;
+
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnInitializeComplete;
 	
@@ -58,7 +60,6 @@ protected:
 	bool bResident = false;
 
 private:
-	TWeakObjectPtr<UUIManager> UIManager;
 	bool bIsDragging = false;
 	bool bEnableDragging = false;
 };

@@ -17,6 +17,7 @@
 #include "GameplayTags/DZGameplayTags.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/DZ_BlueprintLibrary.h"
+#include "Player/DZ_PlayerController.h"
 #include "Player/DZ_PlayerState.h"
 
 void ADZ_PlayerCharacter::Tick(float DeltaSeconds)
@@ -70,9 +71,15 @@ void ADZ_PlayerCharacter::Death()
 {
 	if (!HasAuthority()) return;
 	Super::Death();
+	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(GetController());
+	if (PlayerController)
+	{
+		PlayerController->NotifyGameEnd(false);
+	}
+	
 	ContainerComponent->SetContents(InventoryComponent->GetAllItems());
-
 	InventoryComponent->ClearAll();
+	
 }
 
 void ADZ_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

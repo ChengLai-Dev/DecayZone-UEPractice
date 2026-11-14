@@ -1,0 +1,22 @@
+00:30:12 ======================================================================
+00:30:12 新建目录 /Game/Assets/SkillIcons
+00:30:12 导入 T_UI_Icon_Skill_Shield -> ['/Game/Assets/SkillIcons/T_UI_Icon_Skill_Shield.T_UI_Icon_Skill_Shield']
+00:30:12 导入 T_UI_Icon_Skill_Sprint -> ['/Game/Assets/SkillIcons/T_UI_Icon_Skill_Sprint.T_UI_Icon_Skill_Sprint']
+00:30:12 !!! 参考图标不存在，跳过贴图设置复制：/Game/Assets/ItemIcons/T_UI_Icon_Potion
+00:30:13 材质已生成 /Game/UI/Materials/M_CooldownRing（表达式 3 个）
+00:30:13   - MaterialExpressionScalarParameter
+00:30:13   - MaterialExpressionTextureCoordinate
+00:30:13   - MaterialExpressionCustom
+00:30:13 完成
+00:32:33 ======================================================================
+00:32:33 新建目录 /Game/Assets/SkillIcons/Runtime
+00:32:33 导入 T_UI_Icon_Skill_Shield -> ['/Game/Assets/SkillIcons/Runtime/T_UI_Icon_Skill_Shield.T_UI_Icon_Skill_Shield']
+00:32:33 导入 T_UI_Icon_Skill_Sprint -> ['/Game/Assets/SkillIcons/Runtime/T_UI_Icon_Skill_Sprint.T_UI_Icon_Skill_Sprint']
+00:32:34 删除旧位置 /Game/Assets/SkillIcons/T_UI_Icon_Skill_Shield
+00:32:34 删除旧位置 /Game/Assets/SkillIcons/T_UI_Icon_Skill_Sprint
+00:32:34 贴图设置 T_UI_Icon_Skill_Shield: compression_settings=<TextureCompressionSettings.TC_EDITOR_ICON: 7>, srgb=True, mip_gen_settings=<TextureMipGenSettings.TMGS_NO_MIPMAPS: 13>, lod_group=<TextureGroup.TEXTUREGROUP_UI: 16>, never_stream=True, filter=<TextureFilter.TF_DEFAULT: 3>, address_x=<TextureAddress.TA_CLAMP: 1>, address_y=<TextureAddress.TA_CLAMP: 1>
+00:32:34 贴图设置 T_UI_Icon_Skill_Sprint: compression_settings=<TextureCompressionSettings.TC_EDITOR_ICON: 7>, srgb=True, mip_gen_settings=<TextureMipGenSettings.TMGS_NO_MIPMAPS: 13>, lod_group=<TextureGroup.TEXTUREGROUP_UI: 16>, never_stream=True, filter=<TextureFilter.TF_DEFAULT: 3>, address_x=<TextureAddress.TA_CLAMP: 1>, address_y=<TextureAddress.TA_CLAMP: 1>
+00:32:34 材质已存在，删除重建：/Game/UI/Materials/M_CooldownRing
+00:32:34 材质已生成 /Game/UI/Materials/M_CooldownRing（表达式 3 个）
+00:32:34 材质实例已生成 /Game/UI/Materials/MI_CooldownRing
+00:32:34 完成

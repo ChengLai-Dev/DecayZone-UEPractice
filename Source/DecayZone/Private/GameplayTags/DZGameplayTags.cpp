@@ -6,6 +6,8 @@ namespace DZGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Interact, "Ability.Interact");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Player_Attack_Kick, "Ability.Player.Attack.Kick");
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Player_Attack_Weapon, "Ability.Player.Attack.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Player_Skill_Shield, "Ability.Player.Skill.Shield");
+	UE_DEFINE_GAMEPLAY_TAG(Ability_Player_Skill_Sprint, "Ability.Player.Skill.Sprint");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Enemy_Attack, "Ability.Enemy.Attack");
 	
