@@ -6,6 +6,7 @@
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "DZ_LootController.generated.h"
 
+class ADZ_RaidPlayerController;
 class UDZ_LootPanel;
 
 UCLASS()
@@ -14,7 +15,7 @@ class DECAYZONE_API UDZ_LootController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController) override;
+	virtual void Initialize(APlayerController* InPlayerController) override;
 	virtual void Shutdown() override;
 
 	void Open();
@@ -29,4 +30,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDZ_LootPanel> LootPanelWidget;
+	
+	UPROPERTY()
+	TObjectPtr<ADZ_RaidPlayerController> RaidPlayerController;
 };

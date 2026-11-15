@@ -15,7 +15,7 @@ class DECAYZONE_API UDZ_StatusBarsController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController) override;
+	virtual void Initialize(APlayerController* InPlayerController) override;
 	virtual void Shutdown() override;
 
 	void Refresh();

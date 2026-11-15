@@ -53,16 +53,37 @@ void UDZ_GameInstance::Init()
 		StashItems.Add(FDZ_ItemStack());
 	}
 	
-	StashBagItems.Reset();
+	LoadoutBagItems.Reset();
 	for (int32 Index = 0; Index < StashBagCapacity; Index++)
 	{
-		StashBagItems.Add(FDZ_ItemStack());
+		LoadoutBagItems.Add(FDZ_ItemStack());
 	}
 	
-	StashEquipments.Reset();
+	LoadoutEquipments.Reset();
 	for (int32 Index = 0; Index < static_cast<int32>(EEquipSlot::None); Index++)
 	{
-		StashEquipments.Add(DZItem::EmptyId);
+		LoadoutEquipments.Add(DZItem::EmptyId);
+	}
+	
+	PendingLoadout.Equipments.Reset();
+	for (int32 Index = 0; Index < static_cast<int32>(EEquipSlot::None); Index++)
+	{
+		PendingLoadout.Equipments.Add(DZItem::EmptyId);
+	}
+	
+	PendingLoadout.BagItems.Reset();
+	for (int32 Index = 0; Index < StashBagCapacity; Index++)
+	{
+		PendingLoadout.BagItems.Add(FDZ_ItemStack());
+	}
+	
+	for (const FDZ_ItemStack& DebugItem : DebugStashItems)
+	{
+		if (DebugItem.IsEmpty()) continue;
+		if (!TryAddItemToStash(DebugItem))
+		{
+			UE_LOG(LogDZ, Warning, TEXT("Debug stash item %d x%d dropped, stash is full"), DebugItem.ItemId, DebugItem.Count);
+		}
 	}
 }
 
@@ -143,7 +164,7 @@ int32 UDZ_GameInstance::GetStashUsedSlots() const
 int32 UDZ_GameInstance::GetStashBagUsedSlots() const
 {
 	int32 UsedSlots = 0;
-	for (const FDZ_ItemStack& Item : StashBagItems)
+	for (const FDZ_ItemStack& Item : LoadoutBagItems)
 	{
 		if (Item.IsEmpty()) continue;
 		UsedSlots++;
@@ -219,20 +240,20 @@ bool UDZ_GameInstance::MoveStashItem(const FDZ_ItemSlotHandle& From, const FDZ_I
 const TArray<FDZ_ItemStack>* UDZ_GameInstance::GetStashStackArray(EItemContainer Container) const
 {
 	if (Container == EItemContainer::Stash) return &StashItems;
-	if (Container == EItemContainer::LoadoutBag) return &StashBagItems;
+	if (Container == EItemContainer::LoadoutBag) return &LoadoutBagItems;
 	return nullptr;
 }
 
 TArray<FDZ_ItemStack>* UDZ_GameInstance::GetStashStackArray(EItemContainer Container)
 {
 	if (Container == EItemContainer::Stash) return &StashItems;
-	if (Container == EItemContainer::LoadoutBag) return &StashBagItems;
+	if (Container == EItemContainer::LoadoutBag) return &LoadoutBagItems;
 	return nullptr;
 }
 
 bool UDZ_GameInstance::IsStashSlotValid(const FDZ_ItemSlotHandle& Handle) const
 {
-	if (Handle.Container == EItemContainer::LoadoutEquipment) return StashEquipments.IsValidIndex(Handle.SlotIndex);
+	if (Handle.Container == EItemContainer::LoadoutEquipment) return LoadoutEquipments.IsValidIndex(Handle.SlotIndex);
 	
 	const TArray<FDZ_ItemStack>* Items = GetStashStackArray(Handle.Container);
 	return Items && Items->IsValidIndex(Handle.SlotIndex);
@@ -242,9 +263,9 @@ FDZ_ItemStack UDZ_GameInstance::GetStashSlotItem(const FDZ_ItemSlotHandle& Handl
 {
 	if (Handle.Container == EItemContainer::LoadoutEquipment)
 	{
-		if (!StashEquipments.IsValidIndex(Handle.SlotIndex)) return FDZ_ItemStack();
-		if (StashEquipments[Handle.SlotIndex] == DZItem::EmptyId) return FDZ_ItemStack();
-		return FDZ_ItemStack(StashEquipments[Handle.SlotIndex], 1);
+		if (!LoadoutEquipments.IsValidIndex(Handle.SlotIndex)) return FDZ_ItemStack();
+		if (LoadoutEquipments[Handle.SlotIndex] == DZItem::EmptyId) return FDZ_ItemStack();
+		return FDZ_ItemStack(LoadoutEquipments[Handle.SlotIndex], 1);
 	}
 	
 	const TArray<FDZ_ItemStack>* Items = GetStashStackArray(Handle.Container);
@@ -256,8 +277,8 @@ void UDZ_GameInstance::SetStashSlotItem(const FDZ_ItemSlotHandle& Handle, const 
 {
 	if (Handle.Container == EItemContainer::LoadoutEquipment)
 	{
-		if (!StashEquipments.IsValidIndex(Handle.SlotIndex)) return;
-		StashEquipments[Handle.SlotIndex] = Item.ItemId;
+		if (!LoadoutEquipments.IsValidIndex(Handle.SlotIndex)) return;
+		LoadoutEquipments[Handle.SlotIndex] = Item.ItemId;
 		return;
 	}
 	
@@ -278,4 +299,111 @@ bool UDZ_GameInstance::CanAcceptStashItem(const FDZ_ItemSlotHandle& Handle, int3
 	
 	const FDZ_ItemData* Data = GetItemData(ItemId);
 	return Data && static_cast<int32>(Data->EquipSlot) == Handle.SlotIndex;
+}
+
+bool UDZ_GameInstance::TakeDepartureLoadout()
+{
+	PendingLoadout.Equipments = LoadoutEquipments;
+	PendingLoadout.BagItems = LoadoutBagItems;
+	
+	for (int32& Equipment : LoadoutEquipments)
+	{
+		Equipment = DZItem::EmptyId;
+	}
+	
+	for (FDZ_ItemStack& Item : LoadoutBagItems)
+	{
+		Item = FDZ_ItemStack();
+	}
+	
+	OnStashChanged.Broadcast();
+	return true;
+}
+
+void UDZ_GameInstance::ClearPendingLoadout()
+{
+	for (int32& Equipment : PendingLoadout.Equipments)
+	{
+		Equipment = DZItem::EmptyId;
+	}
+	
+	for (FDZ_ItemStack& Item : PendingLoadout.BagItems)
+	{
+		Item = FDZ_ItemStack();
+	}
+}
+
+void UDZ_GameInstance::DepositRaidResult(const TArray<FDZ_ItemStack>& Items, const TArray<int32>& Equipments)
+{
+	int32 DroppedCount = 0;
+	
+	for (const FDZ_ItemStack& Item : Items)
+	{
+		if (Item.IsEmpty()) continue;
+		if (!TryAddItemToStash(Item))
+		{
+			DroppedCount += Item.Count;
+		}
+	}
+	
+	for (const int32 ItemId : Equipments)
+	{
+		if (ItemId == DZItem::EmptyId) continue;
+		if (!TryAddEquipmentToStash(ItemId))
+		{
+			DroppedCount++;
+		}
+	}
+	
+	if (DroppedCount > 0)
+	{
+		UE_LOG(LogDZ, Warning, TEXT("Stash is full, %d item(s) from run result were dropped"), DroppedCount);
+	}
+	
+	OnStashChanged.Broadcast();
+}
+
+bool UDZ_GameInstance::TryAddItemToStash(const FDZ_ItemStack& Item)
+{
+	if (Item.IsEmpty()) return false;
+	
+	const int32 MaxStack = ItemHelper::GetMaxStack(this, Item.ItemId);
+	int32 Remaining = Item.Count;
+	
+	for (FDZ_ItemStack& Slot : StashItems)
+	{
+		if (Remaining <= 0) break;
+		if (Slot.IsEmpty() || Slot.ItemId != Item.ItemId) continue;
+		if (Slot.Count >= MaxStack) continue;
+		
+		const int32 Added = FMath::Min(MaxStack - Slot.Count, Remaining);
+		Slot.Count += Added;
+		Remaining -= Added;
+	}
+	
+	for (FDZ_ItemStack& Slot : StashItems)
+	{
+		if (Remaining <= 0) break;
+		if (!Slot.IsEmpty()) continue;
+		
+		const int32 Added = FMath::Min(MaxStack, Remaining);
+		Slot.ItemId = Item.ItemId;
+		Slot.Count = Added;
+		Remaining -= Added;
+	}
+	
+	return Remaining <= 0;
+}
+
+bool UDZ_GameInstance::TryAddEquipmentToStash(int32 ItemId)
+{
+	for (int32& Equipment : LoadoutEquipments)
+	{
+		if (Equipment != DZItem::EmptyId) continue;
+		
+		Equipment = ItemId;
+		return true;
+	}
+	
+	return TryAddItemToStash(FDZ_ItemStack(ItemId, 1));
 }

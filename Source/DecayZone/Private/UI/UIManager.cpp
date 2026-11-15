@@ -5,18 +5,11 @@
 
 
 #include "Library/UIHelper.h"
-#include "UI/Controllers/DZ_AbilityBarController.h"
-#include "UI/Controllers/DZ_InteractController.h"
-#include "UI/Controllers/DZ_InventoryController.h"
-#include "UI/Controllers/DZ_LootController.h"
-#include "UI/Controllers/DZ_SettlementController.h"
-#include "UI/Controllers/DZ_StashController.h"
-#include "UI/Controllers/DZ_StatusBarsController.h"
+#include "GameFramework/PlayerController.h"
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "UI/DZ_UserWidget.h"
-#include "Player/DZ_PlayerController.h"
 
-void UUIManager::Initialize(ADZ_PlayerController* InPlayerController)
+void UUIManager::Initialize(APlayerController* InPlayerController)
 {
 	if (!IsValid(InPlayerController)) return;
 	if (PlayerController.Get() == InPlayerController && Controllers.Num() > 0) return;
@@ -57,36 +50,6 @@ void UUIManager::TickControllers(float DeltaSeconds)
 
 void UUIManager::CreateControllers()
 {
-	ADZ_PlayerController* PC = PlayerController.Get();
-	if (!IsValid(PC)) return;
-	
-	AbilityBarController = NewObject<UDZ_AbilityBarController>(this);
-	AbilityBarController->Initialize(PC);
-	Controllers.Add(AbilityBarController);
-	
-	StatusBarsController = NewObject<UDZ_StatusBarsController>(this);
-	StatusBarsController->Initialize(PC);
-	Controllers.Add(StatusBarsController);
-	
-	InteractController = NewObject<UDZ_InteractController>(this);
-	InteractController->Initialize(PC);
-	Controllers.Add(InteractController);
-	
-	InventoryController = NewObject<UDZ_InventoryController>(this);
-	InventoryController->Initialize(PC);
-	Controllers.Add(InventoryController);
-	
-	LootController = NewObject<UDZ_LootController>(this);
-	LootController->Initialize(PC);
-	Controllers.Add(LootController);
-	
-	SettlementController = NewObject<UDZ_SettlementController>(this);
-	SettlementController->Initialize(PC);
-	Controllers.Add(SettlementController);
-	
-	StashController = NewObject<UDZ_StashController>(this);
-	StashController->Initialize(PC);
-	Controllers.Add(StashController);
 }
 
 void UUIManager::DestroyControllers()
@@ -99,13 +62,6 @@ void UUIManager::DestroyControllers()
 		}
 	}
 	Controllers.Reset();
-	AbilityBarController = nullptr;
-	StatusBarsController = nullptr;
-	InteractController = nullptr;
-	InventoryController = nullptr;
-	LootController = nullptr;
-	SettlementController = nullptr;
-	StashController = nullptr;
 }
 
 void UUIManager::OpenWidget(UDZ_UserWidget* Widget, bool bResident)

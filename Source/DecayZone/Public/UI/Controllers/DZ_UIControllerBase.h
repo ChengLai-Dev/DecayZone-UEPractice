@@ -6,7 +6,7 @@
 #include "UObject/Object.h"
 #include "DZ_UIControllerBase.generated.h"
 
-class ADZ_PlayerController;
+class APlayerController;
 class UDZ_GameInstance;
 class UDZ_UIConfig;
 
@@ -16,13 +16,13 @@ class DECAYZONE_API UDZ_UIControllerBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController);
+	virtual void Initialize(APlayerController* InPlayerController);
 	virtual void Shutdown();
 	virtual void Tick(float DeltaSeconds);
 
 protected:
 	UPROPERTY()
-	TObjectPtr<ADZ_PlayerController> PlayerController;
+	TObjectPtr<APlayerController> PlayerController;
 
 	UPROPERTY()
 	TObjectPtr<UDZ_GameInstance> GameInstance;

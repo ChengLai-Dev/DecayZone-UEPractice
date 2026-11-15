@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AbilitySystem/Abilities/DZ_InteractAbility.h"
@@ -9,7 +9,7 @@
 #include "Character/DZ_PlayerCharacter.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/UIHelper.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 
 UDZ_InteractAbility::UDZ_InteractAbility()
 {
@@ -77,7 +77,7 @@ void UDZ_InteractAbility::OnAbilityEnded(EDZAbilityEndReason Reason)
 
 	if (const FGameplayAbilityActorInfo* ActorInfo = GetCurrentActorInfo())
 	{
-		if (ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(ActorInfo->PlayerController.Get()))
+		if (ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(ActorInfo->PlayerController.Get()))
 		{
 			PlayerController->NotifyInteractFinished(InteractTarget.Get(), bSucceeded);
 		}

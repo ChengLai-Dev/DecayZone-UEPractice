@@ -8,17 +8,20 @@
 #include "Data/UI/DZ_UIConfig.h"
 #include "InputMappingContext.h"
 #include "Interface/DZ_Interactable.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 #include "UI/Widgets/Interaction/DZ_InteractProgress.h"
 #include "UI/Widgets/Interaction/DZ_InteractPrompt.h"
 
-void UDZ_InteractController::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_InteractController::Initialize(APlayerController* InPlayerController)
 {
 	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;
+	
+	RaidPlayerController = Cast<ADZ_RaidPlayerController>(PlayerController);
+	if (!IsValid(RaidPlayerController)) return;
 
-	PromptWidget = CreateWidget<UDZ_InteractPrompt>(PlayerController, UIConfig->InteractPromptClass);
-	ProgressWidget = CreateWidget<UDZ_InteractProgress>(PlayerController, UIConfig->InteractProgressClass);
+	PromptWidget = CreateWidget<UDZ_InteractPrompt>(RaidPlayerController, UIConfig->InteractPromptClass);
+	ProgressWidget = CreateWidget<UDZ_InteractProgress>(RaidPlayerController, UIConfig->InteractProgressClass);
 }
 
 void UDZ_InteractController::Shutdown()
@@ -47,7 +50,7 @@ void UDZ_InteractController::Tick(float DeltaSeconds)
 
 void UDZ_InteractController::Interact(AActor* InteractActor)
 {
-	if (!PlayerController || !PlayerController->IsLocalController()) return;
+	if (!IsValid(RaidPlayerController) || !RaidPlayerController->IsLocalController()) return;
 
 	if (Tracker.IsActive())
 	{
@@ -63,7 +66,7 @@ void UDZ_InteractController::Interact(AActor* InteractActor)
 
 void UDZ_InteractController::BeginInteract(AActor* Target)
 {
-	if (!PlayerController || !PlayerController->IsLocalController()) return;
+	if (!IsValid(RaidPlayerController) || !RaidPlayerController->IsLocalController()) return;
 	if (Tracker.IsActive()) return;
 
 	if (!IsValid(Target)) return;
@@ -84,7 +87,7 @@ void UDZ_InteractController::BeginInteract(AActor* Target)
 		ProgressWidget->Open();
 	}
 
-	PlayerController->ServerBeginInteract(Target);
+	RaidPlayerController->ServerBeginInteract(Target);
 }
 
 void UDZ_InteractController::CancelInteract()
@@ -92,9 +95,9 @@ void UDZ_InteractController::CancelInteract()
 	if (!Tracker.IsActive()) return;
 
 	EndInteract();
-	if (PlayerController)
+	if (IsValid(RaidPlayerController))
 	{
-		PlayerController->ServerCancelInteract();
+		RaidPlayerController->ServerCancelInteract();
 	}
 }
 
@@ -125,7 +128,7 @@ void UDZ_InteractController::UpdateProgress()
 
 void UDZ_InteractController::OnFocusInteractableChanged(AActor* Actor)
 {
-	if (!PlayerController || !PlayerController->IsLocalController()) return;
+	if (!IsValid(RaidPlayerController) || !RaidPlayerController->IsLocalController()) return;
 	if (!IsValid(PromptWidget)) return;
 
 	if (!IsValid(Actor))
@@ -143,7 +146,7 @@ void UDZ_InteractController::OnFocusInteractableChanged(AActor* Actor)
 
 void UDZ_InteractController::UpdatePromptKeyText()
 {
-	const UDZ_InputConfig* InputConfig = PlayerController ? PlayerController->GetInputConfig() : nullptr;
+	const UDZ_InputConfig* InputConfig = RaidPlayerController ? RaidPlayerController->GetInputConfig() : nullptr;
 	if (!InputConfig || !IsValid(InputConfig->DefaultInputMappingContext)) return;
 
 	for (const FEnhancedActionKeyMapping& Mapping : InputConfig->DefaultInputMappingContext->GetMappings())

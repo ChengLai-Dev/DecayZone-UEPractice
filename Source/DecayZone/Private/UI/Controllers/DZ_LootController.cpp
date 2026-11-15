@@ -7,16 +7,19 @@
 #include "Components/DZ_ContainerComponent.h"
 #include "Components/DZ_InventoryComponent.h"
 #include "Data/UI/DZ_UIConfig.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 #include "UI/Widgets/Item/DZ_ItemSlotBase.h"
 #include "UI/Widgets/Loot/DZ_LootPanel.h"
 
-void UDZ_LootController::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_LootController::Initialize(APlayerController* InPlayerController)
 {
 	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;
+	
+	RaidPlayerController = Cast<ADZ_RaidPlayerController>(PlayerController);
+	if (!IsValid(RaidPlayerController)) return;
 
-	LootPanelWidget = CreateWidget<UDZ_LootPanel>(PlayerController, UIConfig->LootPanelClass);
+	LootPanelWidget = CreateWidget<UDZ_LootPanel>(RaidPlayerController, UIConfig->LootPanelClass);
 	if (!IsValid(LootPanelWidget)) return;
 
 	LootPanelWidget->OnItemMoveRequested.AddDynamic(this, &UDZ_LootController::HandleItemMoveRequested);
@@ -32,6 +35,7 @@ void UDZ_LootController::Shutdown()
 		LootPanelWidget->RemoveFromParent();
 	}
 	LootPanelWidget = nullptr;
+	RaidPlayerController = nullptr;
 	Super::Shutdown();
 }
 
@@ -48,18 +52,18 @@ void UDZ_LootController::Refresh(bool bForceRefresh)
 	if (!IsValid(LootPanelWidget)) return;
 	if (!bForceRefresh && !LootPanelWidget->IsInViewport()) return;
 
-	UDZ_InventoryComponent* InventoryComp = PlayerController->GetInventoryComponent();
+	UDZ_InventoryComponent* InventoryComp = RaidPlayerController->GetInventoryComponent();
 	if (!InventoryComp) return;
 
 	FDZ_CharacterStatsInfo StatsInfo;
-	PlayerController->BuildCharacterStats(StatsInfo);
+	RaidPlayerController->BuildCharacterStats(StatsInfo);
 
 	LootPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 	LootPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
 	LootPanelWidget->SetCharacterStatsInfo(StatsInfo);
 	LootPanelWidget->SetWeightInfo(InventoryComp->GetTotalWeight(), InventoryComp->GetMaxWeight());
 
-	if (UDZ_ContainerComponent* Container = PlayerController->GetInteractContainer().Get())
+	if (UDZ_ContainerComponent* Container = RaidPlayerController->GetInteractContainer().Get())
 	{
 		LootPanelWidget->SetLootListInfo(Container->GetItems());
 	}
@@ -69,23 +73,23 @@ void UDZ_LootController::HandleItemMoveRequested(UWidget* From, UWidget* To)
 {
 	UDZ_ItemSlotBase* FromWidget = Cast<UDZ_ItemSlotBase>(From);
 	UDZ_ItemSlotBase* ToWidget = Cast<UDZ_ItemSlotBase>(To);
-	if (!FromWidget || !ToWidget || !PlayerController) return;
+	if (!FromWidget || !ToWidget || !IsValid(RaidPlayerController)) return;
 
-	UDZ_InventoryComponent* InventoryComp = PlayerController->GetInventoryComponent();
+	UDZ_InventoryComponent* InventoryComp = RaidPlayerController->GetInventoryComponent();
 	if (!InventoryComp) return;
 
-	PlayerController->ServerMoveItem(InventoryComp, PlayerController->GetInteractContainer().Get(),
+	RaidPlayerController->ServerMoveItem(InventoryComp, RaidPlayerController->GetInteractContainer().Get(),
 		FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
 }
 
 void UDZ_LootController::HandleTakeItemRequested(UWidget* Row)
 {
 	UDZ_ItemSlotBase* RowWidget = Cast<UDZ_ItemSlotBase>(Row);
-	if (!RowWidget || !PlayerController) return;
+	if (!RowWidget || !IsValid(RaidPlayerController)) return;
 
-	UDZ_ContainerComponent* Container = PlayerController->GetInteractContainer().Get();
+	UDZ_ContainerComponent* Container = RaidPlayerController->GetInteractContainer().Get();
 	if (!Container) return;
 
 	const FDZ_ItemSlotHandle Handle = RowWidget->GetSlotHandle();
-	PlayerController->ServerTakeItem(Container->GetOwner(), Handle.SlotIndex, 1);
+	RaidPlayerController->ServerTakeItem(Container->GetOwner(), Handle.SlotIndex, 1);
 }

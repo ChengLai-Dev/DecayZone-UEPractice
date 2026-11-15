@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "DecayZone/Public/Character/DZ_BaseCharacter.h"
@@ -15,7 +15,7 @@
 #include "Library/DZ_BlueprintLibrary.h"
 #include "Library/ItemHelper.h"
 #include "Net/UnrealNetwork.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 
 ADZ_BaseCharacter::ADZ_BaseCharacter()
 {
@@ -49,7 +49,7 @@ void ADZ_BaseCharacter::OnInteractCompleted_Implementation(AActor* Interactor, b
 	APawn* Pawn = Cast<APawn>(Interactor);
 	if (!Pawn) return;
 
-	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
+	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
 	if (UDZ_ContainerComponent* Container = FindComponentByClass<UDZ_ContainerComponent>())

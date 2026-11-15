@@ -3,9 +3,8 @@
 
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "Game/DZ_GameInstance.h"
-#include "Player/DZ_PlayerController.h"
 
-void UDZ_UIControllerBase::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_UIControllerBase::Initialize(APlayerController* InPlayerController)
 {
 	PlayerController = InPlayerController;
 	if (!PlayerController) return;

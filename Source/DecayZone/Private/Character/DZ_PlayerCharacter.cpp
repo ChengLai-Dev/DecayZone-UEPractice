@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Character/DZ_PlayerCharacter.h"
@@ -14,10 +14,13 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameplayEffect.h"
 #include "Components/DZ_ContainerComponent.h"
+#include "Data/Item/DZ_ItemDefines.h"
+#include "Data/Item/FDZ_ItemStack.h"
+#include "Game/DZ_GameInstance.h"
 #include "GameplayTags/DZGameplayTags.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/DZ_BlueprintLibrary.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 #include "Player/DZ_PlayerState.h"
 
 void ADZ_PlayerCharacter::Tick(float DeltaSeconds)
@@ -71,7 +74,7 @@ void ADZ_PlayerCharacter::Death()
 {
 	if (!HasAuthority()) return;
 	Super::Death();
-	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(GetController());
+	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(GetController());
 	if (PlayerController)
 	{
 		PlayerController->NotifyGameEnd(false);
@@ -101,8 +104,40 @@ void ADZ_PlayerCharacter::OnAbilitySystemInitialized()
 {
 	if (!HasAuthority()) return;
 	
+	ApplyPendingLoadout();
+	
 	OnAttributesInitialized.Broadcast();
 	RecalculateArmor();
+}
+
+void ADZ_PlayerCharacter::ApplyPendingLoadout()
+{
+	if (!InventoryComponent) return;
+	
+	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
+	if (!IsValid(GameInstance)) return;
+	
+	const FDZ_Loadout& PendingLoadout = GameInstance->GetPendingLoadout();
+	
+	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.Equipments.Num(); SlotIndex++)
+	{
+		const int32 ItemId = PendingLoadout.Equipments[SlotIndex];
+		if (ItemId == DZItem::EmptyId) continue;
+		InventoryComponent->SetEquipments(SlotIndex, ItemId);
+	}
+	
+	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.BagItems.Num(); SlotIndex++)
+	{
+		const FDZ_ItemStack& Item = PendingLoadout.BagItems[SlotIndex];
+		if (Item.IsEmpty()) continue;
+		if (!InventoryComponent->AddItem(SlotIndex, Item.ItemId, Item.Count))
+		{
+			UE_LOG(LogDZ, Warning, TEXT("Failed to restore bag item %d x%d at slot %d"), Item.ItemId, Item.Count, SlotIndex);
+		}
+	}
+	
+	InventoryComponent->OnItemsChanged.Broadcast();
+	GameInstance->ClearPendingLoadout();
 }
 
 void ADZ_PlayerCharacter::RecalculateArmor()

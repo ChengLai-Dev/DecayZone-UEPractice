@@ -4,6 +4,8 @@
 #include "Components/PanelWidget.h"
 #include "Data/UI/DZ_UIConfig.h"
 #include "Game/DZ_GameInstance.h"
+#include "GameFramework/PlayerController.h"
+#include "UI/Widgets/HUD/DZ_Tips.h"
 
 UWidget* UIHelper::GetChildByName(const UWidget* Widget, const FName& Name)
 {
@@ -47,4 +49,18 @@ int32 UIHelper::GetZOrder(const UUserWidget* Widget)
 	int32* ZOrder = GameInstance->UIConfig->ZOrderMap.Find(Widget->GetClass());
 	if (!ZOrder) return 0;
 	return *ZOrder;
+}
+
+void UIHelper::ShowTips(APlayerController* OwningPlayer, const FText& TipText, float Duration)
+{
+	if (!IsValid(OwningPlayer)) return;
+	
+	UDZ_GameInstance* GameInstance = Cast<UDZ_GameInstance>(OwningPlayer->GetGameInstance());
+	if (!IsValid(GameInstance) || !IsValid(GameInstance->UIConfig)) return;
+	
+	UDZ_Tips* TipsWidget = CreateWidget<UDZ_Tips>(OwningPlayer, GameInstance->UIConfig->TipsClass);
+	if (!IsValid(TipsWidget)) return;
+	
+	TipsWidget->AddToViewport(999);
+	TipsWidget->ShowTips(TipText, Duration);
 }

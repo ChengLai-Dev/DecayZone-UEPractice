@@ -7,6 +7,7 @@
 #include "UI/FDZ_InteractTracker.h"
 #include "DZ_InteractController.generated.h"
 
+class ADZ_RaidPlayerController;
 class UDZ_InteractPrompt;
 class UDZ_InteractProgress;
 
@@ -16,7 +17,7 @@ class DECAYZONE_API UDZ_InteractController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController) override;
+	virtual void Initialize(APlayerController* InPlayerController) override;
 	virtual void Shutdown() override;
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -38,6 +39,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDZ_InteractProgress> ProgressWidget;
+
+	UPROPERTY()
+	TObjectPtr<ADZ_RaidPlayerController> RaidPlayerController;
 
 	FDZ_InteractTracker Tracker;
 };

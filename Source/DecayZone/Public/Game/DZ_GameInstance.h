@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "DZ_DelegateTypes.h"
 #include "Data/Item/FDZ_ItemStack.h"
+#include "Data/Item/FDZ_Loadout.h"
 #include "Engine/GameInstance.h"
 #include "DZ_GameInstance.generated.h"
 
@@ -49,8 +50,8 @@ public:
 	void InitSlotSkills();
 	
 	const TArray<FDZ_ItemStack>& GetStashItems() const { return StashItems; }
-	const TArray<FDZ_ItemStack>& GetStashBagItems() const { return StashBagItems; }
-	const TArray<int32>& GetStashEquipments() const { return StashEquipments; }
+	const TArray<FDZ_ItemStack>& GetLoadoutBagItems() const { return LoadoutBagItems; }
+	const TArray<int32>& GetLoadoutEquipments() const { return LoadoutEquipments; }
 	
 	int32 GetStashCapacity() const { return StashCapacity; }
 	int32 GetStashBagCapacity() const { return StashBagCapacity; }
@@ -62,6 +63,16 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category = "DecayZone|Stash")
 	FOnEvent OnStashChanged;
+	
+	bool TakeDepartureLoadout();
+	
+	void DepositRaidResult(const TArray<FDZ_ItemStack>& Items, const TArray<int32>& Equipments);
+	
+	const FDZ_Loadout& GetPendingLoadout() const { return PendingLoadout; }
+	void ClearPendingLoadout();
+	
+	FName GetRaidMapName() const { return RaidMapName; }
+	FName GetLobbyMapName() const { return LobbyMapName; }
 	
 private:
 	UPROPERTY(BlueprintReadOnly, Category = "DecayZone|Skills", meta = (AllowPrivateAccess = "true"))
@@ -77,10 +88,22 @@ private:
 	TArray<FDZ_ItemStack> StashItems;
 	
 	UPROPERTY()
-	TArray<int32> StashEquipments;
+	TArray<int32> LoadoutEquipments;
 	
 	UPROPERTY()
-	TArray<FDZ_ItemStack> StashBagItems;
+	TArray<FDZ_ItemStack> LoadoutBagItems;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Levels")
+	FName RaidMapName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Levels")
+	FName LobbyMapName;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Stash")
+	TArray<FDZ_ItemStack> DebugStashItems;
+	
+	UPROPERTY()
+	FDZ_Loadout PendingLoadout;
 	
 	const TArray<FDZ_ItemStack>* GetStashStackArray(EItemContainer Container) const;
 	TArray<FDZ_ItemStack>* GetStashStackArray(EItemContainer Container);
@@ -89,6 +112,9 @@ private:
 	void SetStashSlotItem(const FDZ_ItemSlotHandle& Handle, const FDZ_ItemStack& Item);
 	void ClearStashSlot(const FDZ_ItemSlotHandle& Handle);
 	bool CanAcceptStashItem(const FDZ_ItemSlotHandle& Handle, int32 ItemId, int32 Count);
+	
+	bool TryAddItemToStash(const FDZ_ItemStack& Item);
+	bool TryAddEquipmentToStash(int32 ItemId);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Items", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataTable> ItemDataTable;

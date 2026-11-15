@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Actor/DZ_InteractableActor.h"
@@ -6,7 +6,7 @@
 #include "Components/DZ_ContainerComponent.h"
 #include "DecayZone/DecayZone.h"
 #include "GameFramework/Pawn.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 
 ADZ_InteractableActor::ADZ_InteractableActor()
 {
@@ -42,7 +42,7 @@ void ADZ_InteractableActor::OnInteractCompleted_Implementation(AActor* InteractI
 	APawn* Pawn = Cast<APawn>(InteractInstigator);
 	if (!Pawn) return;
 
-	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
+	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
 	if (UDZ_ContainerComponent* Container = FindComponentByClass<UDZ_ContainerComponent>())
@@ -56,7 +56,7 @@ void ADZ_InteractableActor::NotifyAutoInteractStart(AActor* InteractInstigator)
 	APawn* Pawn = Cast<APawn>(InteractInstigator);
 	if (!Pawn) return;
 
-	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
+	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
 	PlayerController->BeginInteract(this);
@@ -67,7 +67,7 @@ void ADZ_InteractableActor::NotifyAutoInteractCancel(AActor* InteractInstigator)
 	APawn* Pawn = Cast<APawn>(InteractInstigator);
 	if (!Pawn) return;
 
-	ADZ_PlayerController* PlayerController = Cast<ADZ_PlayerController>(Pawn->GetController());
+	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(Pawn->GetController());
 	if (!PlayerController) return;
 	
 	PlayerController->CancelInteract();

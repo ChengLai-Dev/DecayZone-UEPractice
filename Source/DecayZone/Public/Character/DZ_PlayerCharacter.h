@@ -64,6 +64,8 @@ private:
 	
 	void RecalculateArmor();
 	
+	void ApplyPendingLoadout();
+	
 	UFUNCTION()
 	void HandleEquipmentsChanged();
 

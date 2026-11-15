@@ -7,6 +7,7 @@
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "DZ_StashController.generated.h"
 
+class ADZ_LobbyPlayerController;
 class UDZ_StashPanel;
 
 UCLASS()
@@ -15,7 +16,7 @@ class DECAYZONE_API UDZ_StashController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController) override;
+	virtual void Initialize(APlayerController* InPlayerController) override;
 	virtual void Shutdown() override;
 
 	void Open();
@@ -38,4 +39,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDZ_StashPanel> StashPanelWidget;
+	
+	UPROPERTY()
+	TObjectPtr<ADZ_LobbyPlayerController> LobbyPlayerController;
 };

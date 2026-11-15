@@ -7,11 +7,11 @@
 #include "AbilitySystem/DZ_AttributeSet.h"
 #include "Blueprint/UserWidget.h"
 #include "Data/UI/DZ_UIConfig.h"
-#include "Player/DZ_PlayerController.h"
+#include "GameFramework/PlayerController.h"
 #include "Player/DZ_PlayerState.h"
 #include "UI/Widgets/HUD/DZ_StatusBars.h"
 
-void UDZ_StatusBarsController::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_StatusBarsController::Initialize(APlayerController* InPlayerController)
 {
 	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;

@@ -13,7 +13,7 @@
 #include "Data/UI/FDZ_AbilitySlotLayout.h"
 #include "DecayZone/DecayZone.h"
 #include "Game/DZ_GameInstance.h"
-#include "Player/DZ_PlayerController.h"
+#include "GameFramework/PlayerController.h"
 #include "Player/DZ_PlayerState.h"
 #include "UI/Widgets/HUD/DZ_AbilityBar.h"
 
@@ -22,7 +22,7 @@ namespace
 	constexpr float AbilityBarRefreshInterval = 0.1f;
 }
 
-void UDZ_AbilityBarController::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_AbilityBarController::Initialize(APlayerController* InPlayerController)
 {
 	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;

@@ -30,4 +30,7 @@ struct FDZ_SettlementInfo
 
 	UPROPERTY(BlueprintReadOnly)
 	TArray<FDZ_ItemStack> Items;
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<int32> Equipments;
 };

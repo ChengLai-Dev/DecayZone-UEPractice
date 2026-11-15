@@ -212,11 +212,71 @@ C++ 侧已落地：
 | `EItemContainer` 三个新值 | ✅ 已加 |
 | 面板 / 控制器 / 数据层 | ✅ 已写 |
 | 存档 / 读档 | ⬜ 未写 |
-| 出发 / 回大厅流程 | ⬜ 未写（控制器只发出 `OnDepartRequested`） |
-| 结算确认接点 | ⬜ 未接 |
+| 出发 / 回大厅流程 | ✅ C++ 已接（见第 10 节），⬜ 蓝图与关卡待配 |
+| 结算确认接点 | ✅ 已接 |
 | `UIConfig` 填 `StashWidgetClass` | ⬜ 待你在编辑器里指定 |
-| `Lobby.umap` 与场景 | ⬜ 你负责 |
-| HUD 在大厅的隐藏 | ⬜ 未定 |
+| `Lobby.umap` 与场景 | ⬜ 待建 |
+| HUD 在大厅的隐藏 | ✅ 用 UIManager 拆类解决，不需要运行时判断 |
+
+---
+
+## 10. 出发 / 回大厅链路（C++ 已落地）
+
+```
+Lobby.umap（BP_LobbyGameMode）
+  └ PC = BP_LobbyPlayerController（父类 ADZ_LobbyPlayerController）
+       └ UDZ_LobbyUIManager：只装配 StashController，并打开仓库面板
+       └ 点出发 → PC::StartRaid()
+            → UDZ_GameInstance::TakeDepartureLoadout()  从仓库扣到 PendingLoadout
+            → OpenLevel(RaidMapName)
+Startup（BP_GameMode）
+  └ PC = BP_DZ_PlayerController（父类 ADZ_RaidPlayerController）
+       └ UDZ_RaidUIManager：HUD / 交互 / 背包 / 搜刮 / 结算
+  └ 角色 OnAbilitySystemInitialized → ApplyPendingLoadout() 写入装备与背包
+  └ 撤离 / 死亡 → 结算面板 → 确认
+       → 撤离：UDZ_GameInstance::DepositRaidResult(物品, 装备) 合并回仓库
+       → 死亡：不回写
+       → OpenLevel(LobbyMapName)
+```
+
+### 关键约束
+
+| 约束 | 原因 |
+|---|---|
+| `BP_LobbyGameMode` 的 `PlayerControllerClass` 必须填 `BP_LobbyPlayerController` | 它是局外 PC，负责创建 `UDZ_LobbyUIManager` |
+| `PlayerStateClass` 必须是 `ADZ_PlayerState` | `ADZ_PlayerController::OnRep_PlayerState` 里没有判空 |
+| 大厅关卡里放一台打了 `LobbyCamera` 标签的 `CameraActor` | GameMode 在 `PostLogin` 里按 tag 找它设视角 |
+| `BP_DZ_GameInstance` 里填 `RaidMapName` / `LobbyMapName` | 填 `Startup` / `Lobby`，别在 C++ 硬编码 |
+| `ADZ_LobbyGameMode::DefaultPawnClass = nullptr` | 大厅不生成角色，避免 Possession 把 GAS 全套跑起来 |
+
+### 局外 / 局内 UI 分流
+
+没有任何"是不是局外"的运行时判断，分流靠两层类：
+
+| 层 | 局外 | 局内 |
+|---|---|---|
+| GameMode | `ADZ_LobbyGameMode` | `BP_GameMode` |
+| PlayerController | `ADZ_LobbyPlayerController` | `ADZ_RaidPlayerController` |
+| UI 管理器 | `UDZ_LobbyUIManager`（只持 `StashController`） | `UDZ_RaidUIManager`（持 6 个局内 controller） |
+
+三个 PC 的关系：
+
+```
+ADZ_PlayerController（基类，只管 UI 生命周期）
+  ├ UUIManager* UIManager
+  ├ BeginPlay / EndPlay / Tick / GetUIManager
+  └ virtual UUIManager* CreateUIManager()
+       ├ ADZ_RaidPlayerController   → UDZ_RaidUIManager
+       └ ADZ_LobbyPlayerController  → UDZ_LobbyUIManager，BeginPlay 里打开仓库
+```
+
+`UUIManager` 是纯容器：只提供 `Controllers` 数组、`CreateController<T>()`、开关控件与输入模式，不声明任何具体 controller 成员。控件通过 `ADZ_PlayerController::GetUIManager()` 拿到管理器。
+
+> 局外 PC 是独立的 C++ 类，不继承局内 PC，所以它没有 Enhanced Input 绑定，也不需要 `InputConfig` —— 大厅界面的鼠标交互由 UMG 自己处理。
+
+> **蓝图侧**：`BP_DZ_PlayerController` 的父类必须指向 `ADZ_RaidPlayerController`（不是基类），否则局内 PC 会变成空基类，表现为"进游戏什么都不响应"。
+
+
 
 ---
 

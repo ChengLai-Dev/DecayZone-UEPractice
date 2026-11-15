@@ -6,6 +6,7 @@
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "DZ_InventoryController.generated.h"
 
+class ADZ_RaidPlayerController;
 class UDZ_InventoryPanel;
 
 UCLASS()
@@ -14,7 +15,7 @@ class DECAYZONE_API UDZ_InventoryController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(ADZ_PlayerController* InPlayerController) override;
+	virtual void Initialize(APlayerController* InPlayerController) override;
 	virtual void Shutdown() override;
 	
 	bool Toggle();
@@ -26,4 +27,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDZ_InventoryPanel> InventoryPanelWidget;
+	
+	UPROPERTY()
+	TObjectPtr<ADZ_RaidPlayerController> RaidPlayerController;
 };

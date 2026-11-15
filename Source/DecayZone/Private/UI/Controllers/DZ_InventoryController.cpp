@@ -7,16 +7,19 @@
 #include "Components/DZ_ContainerComponent.h"
 #include "Components/DZ_InventoryComponent.h"
 #include "Data/UI/DZ_UIConfig.h"
-#include "Player/DZ_PlayerController.h"
+#include "Player/DZ_RaidPlayerController.h"
 #include "UI/Widgets/Inventory/DZ_InventoryPanel.h"
 #include "UI/Widgets/Item/DZ_ItemSlotBase.h"
 
-void UDZ_InventoryController::Initialize(ADZ_PlayerController* InPlayerController)
+void UDZ_InventoryController::Initialize(APlayerController* InPlayerController)
 {
 	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;
+	
+	RaidPlayerController = Cast<ADZ_RaidPlayerController>(PlayerController);
+	if (!IsValid(RaidPlayerController)) return;
 
-	InventoryPanelWidget = CreateWidget<UDZ_InventoryPanel>(PlayerController, UIConfig->InventoryWidgetClass);
+	InventoryPanelWidget = CreateWidget<UDZ_InventoryPanel>(RaidPlayerController, UIConfig->InventoryWidgetClass);
 	if (!IsValid(InventoryPanelWidget)) return;
 
 	InventoryPanelWidget->OnItemMoveRequested.AddDynamic(this, &UDZ_InventoryController::HandleItemMoveRequested);
@@ -36,7 +39,7 @@ void UDZ_InventoryController::Shutdown()
 bool UDZ_InventoryController::Toggle()
 {
 	if (!IsValid(InventoryPanelWidget)) return false;
-	if (!PlayerController) return false;
+	if (!IsValid(RaidPlayerController)) return false;
 
 	if (InventoryPanelWidget->IsInViewport())
 	{
@@ -53,11 +56,11 @@ void UDZ_InventoryController::Refresh(bool bForceRefresh)
 	if (!IsValid(InventoryPanelWidget)) return;
 	if (!bForceRefresh && !InventoryPanelWidget->IsInViewport()) return;
 
-	UDZ_InventoryComponent* InventoryComp = PlayerController->GetInventoryComponent();
+	UDZ_InventoryComponent* InventoryComp = RaidPlayerController->GetInventoryComponent();
 	if (!InventoryComp) return;
 
 	FDZ_CharacterStatsInfo StatsInfo;
-	PlayerController->BuildCharacterStats(StatsInfo);
+	RaidPlayerController->BuildCharacterStats(StatsInfo);
 
 	InventoryPanelWidget->SetBackpackPanel(InventoryComp->GetItems());
 	InventoryPanelWidget->SetEquipmentPanel(InventoryComp->GetEquipments());
@@ -69,11 +72,11 @@ void UDZ_InventoryController::HandleItemMoveRequested(UWidget* From, UWidget* To
 {
 	UDZ_ItemSlotBase* FromWidget = Cast<UDZ_ItemSlotBase>(From);
 	UDZ_ItemSlotBase* ToWidget = Cast<UDZ_ItemSlotBase>(To);
-	if (!FromWidget || !ToWidget || !PlayerController) return;
+	if (!FromWidget || !ToWidget || !IsValid(RaidPlayerController)) return;
 
-	UDZ_InventoryComponent* InventoryComp = PlayerController->GetInventoryComponent();
+	UDZ_InventoryComponent* InventoryComp = RaidPlayerController->GetInventoryComponent();
 	if (!InventoryComp) return;
 
-	PlayerController->ServerMoveItem(InventoryComp, PlayerController->GetInteractContainer().Get(),
+	RaidPlayerController->ServerMoveItem(InventoryComp, RaidPlayerController->GetInteractContainer().Get(),
 		FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
 }
