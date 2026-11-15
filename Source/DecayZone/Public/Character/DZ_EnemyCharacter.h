@@ -21,23 +21,18 @@ class DECAYZONE_API ADZ_EnemyCharacter : public ADZ_BaseCharacter
 
 public:
 	ADZ_EnemyCharacter();
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	bool HasPatrolRoute();
 	
 	UFUNCTION(BlueprintCallable)
 	FVector GetNextPatrolLocation();
 	
 protected:
+	virtual void OnAbilitySystemInitialized() override;
 	virtual void BeginPlay() override;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_AttributeSet> AttributeSet;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
-	TSubclassOf<UGameplayEffect> InitializeGEClass;
 	
 	virtual void ClientHandleDeath() override;
 	
@@ -51,8 +46,6 @@ private:
 	TObjectPtr<UDZ_ContainerComponent> ContainerComponent;
 	
 	FDelegateHandle MovementLockTagHandle;
-	
-	float BaseMaxWalkSpeed = 0.f;
 	
 	FRotator BaseRotationRate = FRotator::ZeroRotator;
 };

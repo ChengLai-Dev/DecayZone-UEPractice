@@ -156,7 +156,7 @@ void UDZ_InteractController::UpdatePromptKeyText()
 	}
 }
 
-bool UDZ_InteractController::IsBlockingAttack() const
+bool UDZ_InteractController::IsBlockingAction() const
 {
 	return Tracker.IsActive() && !Tracker.IsAuto();
 }

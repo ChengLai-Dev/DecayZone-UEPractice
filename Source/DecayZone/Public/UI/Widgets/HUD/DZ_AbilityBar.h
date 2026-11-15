@@ -9,9 +9,6 @@
 class UDZ_AbilitySlot;
 class UTexture2D;
 
-/**
- * 技能栏：按槽位索引把显示数据分发给各个槽，不持有技能身份。
- */
 UCLASS()
 class DECAYZONE_API UDZ_AbilityBar : public UDZ_UserWidget
 {

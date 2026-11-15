@@ -36,7 +36,18 @@ public:
 	const FDZ_ItemData* GetItemData(int32 ItemId);
 	const FDZ_SkillData* GetSkillData(int32 SkillId) const;
 	
+	/** 槽位 SkillId，索引即槽位号 */
+	int32 GetSlotSkillId(int32 SlotIndex) const;
+	void SetSlotSkillId(int32 SlotIndex, int32 SkillId);
+	int32 GetSlotSkillCount() const;
+	
+	/** 按 UIConfig 的默认配置填充槽位，只在 Init 时调用一次 */
+	void InitSlotSkills();
+	
 private:
+	UPROPERTY(BlueprintReadOnly, Category = "DecayZone|Skills", meta = (AllowPrivateAccess = "true"))
+	TArray<int32> SlotSkillIds;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Items", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataTable> ItemDataTable;
 	

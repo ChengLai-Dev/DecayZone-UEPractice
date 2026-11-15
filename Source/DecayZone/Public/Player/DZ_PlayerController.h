@@ -39,7 +39,7 @@ public:
 	void Kick();
 	
 	const UDZ_InputConfig* GetInputConfig() const { return InputConfig; }
-	
+
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -89,6 +89,9 @@ public:
 	TWeakObjectPtr<UDZ_ContainerComponent> GetInteractContainer() const;
 
 private:
+	void Skill1();
+	void Skill2();
+	void ActivateSkill(int32 SlotIndex);
 	
 	void Interact(AActor* InteractActor);
 	void InteractHighlightActor();

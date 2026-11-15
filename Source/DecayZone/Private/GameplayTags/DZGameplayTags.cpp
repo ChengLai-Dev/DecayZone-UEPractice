@@ -11,9 +11,16 @@ namespace DZGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Enemy_Attack, "Ability.Enemy.Attack");
 	
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Ability_Shield, "GameplayCue.Ability.Shield");
+	
+	
+	
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Armor, "SetByCaller.Armor");
 	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Damage, "SetByCaller.Damage");
+	UE_DEFINE_GAMEPLAY_TAG(SetByCaller_Shield, "SetByCaller.Shield");
 	
+	UE_DEFINE_GAMEPLAY_TAG(Cooldown_Skill_Shield, "Cooldown.Skill.Shield");
+	UE_DEFINE_GAMEPLAY_TAG(Cooldown_Skill_Sprint, "Cooldown.Skill.Sprint");
 	
 	UE_DEFINE_GAMEPLAY_TAG(State_MovementLocked, "State.MovementLocked");
 	UE_DEFINE_GAMEPLAY_TAG(State_Interacting, "State.Interacting");

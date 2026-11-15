@@ -24,7 +24,6 @@ void UDZ_GameplayAbility::PreActivate(const FGameplayAbilitySpecHandle Handle,
 EDZAbilityEndReason UDZ_GameplayAbility::GetEndReason(bool bWasCancelled) const
 {
 	if (EndReason == EDZAbilityEndReason::Failed) return EDZAbilityEndReason::Failed;
-	
 	return bWasCancelled ? EDZAbilityEndReason::Cancelled : EDZAbilityEndReason::Completed;
 }
 

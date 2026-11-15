@@ -14,6 +14,7 @@ class DECAYZONE_API UDZ_GameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
+	/* 添加一个失败语义，以区分是异常问题导致正常流程失败，还是业务正常取消技能 */
 	UFUNCTION(BlueprintCallable, Category = "DecayZone|Ability")
 	void SetEndReason(EDZAbilityEndReason Reason, const FString& Detail = TEXT(""));
 

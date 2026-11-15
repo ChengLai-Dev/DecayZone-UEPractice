@@ -10,15 +10,12 @@
 #include "InputMappingContext.h"
 #include "AbilitySystem/DZ_AbilitySystemComponent.h"
 #include "AbilitySystem/DZ_AttributeSet.h"
-#include "Blueprint/UserWidget.h"
 #include "Character/DZ_PlayerCharacter.h"
 #include "Components/DZ_ContainerComponent.h"
 #include "Components/DZ_InventoryComponent.h"
 #include "Data/Ability/DZ_SkillDefines.h"
+#include "Data/Ability/FDZ_SkillData.h"
 #include "Data/Input/DZ_InputConfig.h"
-#include "Data/Item/FDZ_ItemData.h"
-#include "Data/Item/FDZ_ItemStack.h"
-#include "Data/UI/DZ_UIConfig.h"
 #include "Data/UI/FDZ_SettlementInfo.h"
 #include "DecayZone/DecayZone.h"
 #include "Game/DZ_GameInstance.h"
@@ -59,6 +56,8 @@ void ADZ_PlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(InputConfig->CloseTopWidgetAction, ETriggerEvent::Started, this, &ADZ_PlayerController::CloseTopWidget);
 	EnhancedInputComponent->BindAction(InputConfig->KickAction, ETriggerEvent::Started, this, &ADZ_PlayerController::Kick);
 	EnhancedInputComponent->BindAction(InputConfig->WeaponAttackAction, ETriggerEvent::Started, this, &ADZ_PlayerController::WeaponAttack);
+	EnhancedInputComponent->BindAction(InputConfig->Skill1, ETriggerEvent::Started, this, &ADZ_PlayerController::Skill1);
+	EnhancedInputComponent->BindAction(InputConfig->Skill2, ETriggerEvent::Started, this, &ADZ_PlayerController::Skill2);
 	
 }
 
@@ -107,16 +106,23 @@ void ADZ_PlayerController::RefreshStatusBars()
 
 void ADZ_PlayerController::SetSlotSkill(int32 SlotIndex, int32 SkillId)
 {
-	if (!IsValid(UIManager)) return;
+	UDZ_GameInstance* GameInstance = Cast<UDZ_GameInstance>(GetGameInstance());
+	if (!GameInstance) return;
 	
-	UIManager->AbilityBarController->SetSlotSkill(SlotIndex, SkillId);
+	GameInstance->SetSlotSkillId(SlotIndex, SkillId);
+	
+	if (IsValid(UIManager))
+	{
+		UIManager->AbilityBarController->Refresh();
+	}
 }
 
 int32 ADZ_PlayerController::GetSlotSkill(int32 SlotIndex) const
 {
-	if (!IsValid(UIManager)) return DZSkill::EmptyId;
+	const UDZ_GameInstance* GameInstance = Cast<UDZ_GameInstance>(GetGameInstance());
+	if (!GameInstance) return DZSkill::EmptyId;
 	
-	return UIManager->AbilityBarController->GetSlotSkill(SlotIndex);
+	return GameInstance->GetSlotSkillId(SlotIndex);
 }
 
 void ADZ_PlayerController::OnRep_PlayerState()
@@ -181,14 +187,14 @@ void ADZ_PlayerController::Interact(AActor* InteractActor)
 
 void ADZ_PlayerController::WeaponAttack()
 {
-	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAttack()) return;
+	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAction()) return;
 	
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Weapon);
 }
 
 void ADZ_PlayerController::Kick()
 {
-	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAttack()) return;
+	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAction()) return;
 	
 	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Kick);
 }
@@ -312,6 +318,33 @@ TWeakObjectPtr<UDZ_ContainerComponent> ADZ_PlayerController::GetInteractContaine
 	return InteractContainerComp;
 }
 
+void ADZ_PlayerController::Skill1()
+{
+	ActivateSkill(0);
+}
+
+void ADZ_PlayerController::Skill2()
+{
+	ActivateSkill(1);
+}
+
+void ADZ_PlayerController::ActivateSkill(int32 SlotIndex)
+{
+	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAction()) return;
+	if (!AbilitySystemComponent.IsValid()) return;
+	
+	const int32 SkillId = GetSlotSkill(SlotIndex);
+	if (SkillId == DZSkill::EmptyId) return;
+	
+	const UDZ_GameInstance* GameInstance = Cast<UDZ_GameInstance>(GetGameInstance());
+	if (!GameInstance) return;
+	
+	const FDZ_SkillData* SkillData = GameInstance->GetSkillData(SkillId);
+	if (!SkillData) return;
+	
+	ActivateAbilityByTag(SkillData->AbilityTag);
+}
+
 void ADZ_PlayerController::NotifyInteractFinished(AActor* Target, bool bSucceeded)
 {
 	ClientInteractFinished(Target, bSucceeded);
@@ -329,6 +362,8 @@ void ADZ_PlayerController::HandleContainerItemsChanged()
 
 void ADZ_PlayerController::ActivateAbilityByTag(const FGameplayTag& AbilityTag)
 {
+	if (!AbilitySystemComponent.IsValid()) return;
+	
 	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }
 
@@ -386,7 +421,7 @@ void ADZ_PlayerController::ServerTakeItem_Implementation(AActor* ContainerActor,
 
 bool ADZ_PlayerController::IsMovementLocked() const
 {
-	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAttack()) return true;
+	if (IsValid(UIManager) && UIManager->InteractController->IsBlockingAction()) return true;
 	if (!AbilitySystemComponent.IsValid()) return false;
 	if (AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_MovementLocked) || 
 		AbilitySystemComponent->HasMatchingGameplayTag(DZGameplayTags::State_Interacting))

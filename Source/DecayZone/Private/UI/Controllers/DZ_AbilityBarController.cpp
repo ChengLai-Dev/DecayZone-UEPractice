@@ -30,18 +30,12 @@ void UDZ_AbilityBarController::Initialize(ADZ_PlayerController* InPlayerControll
 	AbilityBarWidget = CreateWidget<UDZ_AbilityBar>(PlayerController, UIConfig->AbilityBarClass);
 	if (!IsValid(AbilityBarWidget)) return;
 	
-	SlotSkillIds.Reset();
-	for (const FDZ_AbilitySlotLayout& SlotLayout : UIConfig->AbilitySlots)
+	if (UIConfig->AbilitySlots.Num() > UDZ_AbilityBar::MaxSlots)
 	{
-		SlotSkillIds.Add(SlotLayout.DefaultSkillId);
+		UE_LOG(LogDZ, Warning, TEXT("AbilitySlots has %d entries, only %d slots are supported"), UIConfig->AbilitySlots.Num(), UDZ_AbilityBar::MaxSlots);
 	}
 	
-	if (SlotSkillIds.Num() > UDZ_AbilityBar::MaxSlots)
-	{
-		UE_LOG(LogDZ, Warning, TEXT("AbilitySlots has %d entries, only %d slots are supported"), SlotSkillIds.Num(), UDZ_AbilityBar::MaxSlots);
-	}
-	
-	RefreshAbilityBar();
+	Refresh();
 	AbilityBarWidget->Open();
 }
 
@@ -52,7 +46,6 @@ void UDZ_AbilityBarController::Shutdown()
 		AbilityBarWidget->RemoveFromParent();
 	}
 	AbilityBarWidget = nullptr;
-	SlotSkillIds.Reset();
 	RefreshAccum = 0.f;
 	Super::Shutdown();
 }
@@ -63,31 +56,29 @@ void UDZ_AbilityBarController::Tick(float DeltaSeconds)
 	if (RefreshAccum < AbilityBarRefreshInterval) return;
 	
 	RefreshAccum = 0.f;
-	RefreshAbilityBar();
+	RefreshSlotsDynamic();
 }
 
 void UDZ_AbilityBarController::SetSlotSkill(int32 SlotIndex, int32 SkillId)
 {
-	if (!SlotSkillIds.IsValidIndex(SlotIndex)) return;
-	if (SlotSkillIds[SlotIndex] == SkillId) return;
+	if (!IsValid(GameInstance)) return;
+	if (SlotIndex < 0 || SlotIndex >= GameInstance->GetSlotSkillCount()) return;
 	
-	if (SkillId != DZSkill::EmptyId)
-	{
-		const int32 ExistingIndex = SlotSkillIds.IndexOfByKey(SkillId);
-		if (ExistingIndex != INDEX_NONE && ExistingIndex != SlotIndex)
-		{
-			SlotSkillIds[ExistingIndex] = SlotSkillIds[SlotIndex];
-			RefreshAbilitySlot(ExistingIndex);
-		}
-	}
-	
-	SlotSkillIds[SlotIndex] = SkillId;
-	RefreshAbilitySlot(SlotIndex);
+	GameInstance->SetSlotSkillId(SlotIndex, SkillId);
+	Refresh();
 }
 
 int32 UDZ_AbilityBarController::GetSlotSkill(int32 SlotIndex) const
 {
-	return SlotSkillIds.IsValidIndex(SlotIndex) ? SlotSkillIds[SlotIndex] : DZSkill::EmptyId;
+	if (!IsValid(GameInstance)) return DZSkill::EmptyId;
+	
+	return GameInstance->GetSlotSkillId(SlotIndex);
+}
+
+void UDZ_AbilityBarController::Refresh()
+{
+	RefreshSlotsStatic();
+	RefreshSlotsDynamic();
 }
 
 void UDZ_AbilityBarController::Hide()
@@ -98,39 +89,58 @@ void UDZ_AbilityBarController::Hide()
 	}
 }
 
-void UDZ_AbilityBarController::RefreshAbilityBar()
+void UDZ_AbilityBarController::RefreshSlotsStatic()
 {
 	if (!IsValid(AbilityBarWidget)) return;
+	if (!IsValid(GameInstance)) return;
 	
-	const int32 SlotCount = FMath::Min(SlotSkillIds.Num(), UDZ_AbilityBar::MaxSlots);
+	const int32 SlotCount = FMath::Min(GameInstance->GetSlotSkillCount(), UDZ_AbilityBar::MaxSlots);
 	for (int32 i = 0; i < SlotCount; ++i)
 	{
-		RefreshAbilitySlot(i);
+		RefreshSlotStatic(i);
 	}
 }
 
-void UDZ_AbilityBarController::RefreshAbilitySlot(int32 SlotIndex)
+void UDZ_AbilityBarController::RefreshSlotsDynamic()
 {
 	if (!IsValid(AbilityBarWidget)) return;
-	if (!SlotSkillIds.IsValidIndex(SlotIndex)) return;
+	if (!IsValid(GameInstance)) return;
+	
+	const int32 SlotCount = FMath::Min(GameInstance->GetSlotSkillCount(), UDZ_AbilityBar::MaxSlots);
+	for (int32 i = 0; i < SlotCount; ++i)
+	{
+		RefreshSlotDynamic(i);
+	}
+}
+
+void UDZ_AbilityBarController::RefreshSlotStatic(int32 SlotIndex)
+{
+	if (!IsValid(AbilityBarWidget)) return;
+	if (!IsValid(GameInstance)) return;
+	if (SlotIndex < 0 || SlotIndex >= GameInstance->GetSlotSkillCount()) return;
 	
 	FText KeyText;
 	if (IsValid(UIConfig) && UIConfig->AbilitySlots.IsValidIndex(SlotIndex))
 	{
 		KeyText = UIConfig->AbilitySlots[SlotIndex].KeyText;
 	}
-	
-	const FDZ_SkillData* SkillData = IsValid(GameInstance) ? GameInstance->GetSkillData(SlotSkillIds[SlotIndex]) : nullptr;
-	if (!SkillData)
-	{
-		AbilityBarWidget->SetKeyText(SlotIndex, KeyText);
-		AbilityBarWidget->SetEmpty(SlotIndex, true);
-		return;
-	}
-	
-	AbilityBarWidget->SetEmpty(SlotIndex, false);
 	AbilityBarWidget->SetKeyText(SlotIndex, KeyText);
+	
+	const FDZ_SkillData* SkillData = GameInstance->GetSkillData(GameInstance->GetSlotSkillId(SlotIndex));
+	AbilityBarWidget->SetEmpty(SlotIndex, !SkillData);
+	if (!SkillData) return;
+	
 	AbilityBarWidget->SetIcon(SlotIndex, SkillData->Icon.Get());
+}
+
+void UDZ_AbilityBarController::RefreshSlotDynamic(int32 SlotIndex)
+{
+	if (!IsValid(AbilityBarWidget)) return;
+	if (!IsValid(GameInstance)) return;
+	if (SlotIndex < 0 || SlotIndex >= GameInstance->GetSlotSkillCount()) return;
+	
+	const FDZ_SkillData* SkillData = GameInstance->GetSkillData(GameInstance->GetSlotSkillId(SlotIndex));
+	if (!SkillData) return;
 	
 	float CooldownPercent = 0.f;
 	float RemainingSeconds = 0.f;

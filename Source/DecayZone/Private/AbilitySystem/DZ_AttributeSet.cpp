@@ -17,6 +17,8 @@ void UDZ_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxEnergy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Shield, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MoveSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UDZ_AttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -31,11 +33,20 @@ void UDZ_AttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribut
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
 	}
+	if (Attribute == GetShieldAttribute())
+	{
+		NewValue = FMath::Max( 0, NewValue);
+	}
+	if (Attribute == GetMoveSpeedAttribute())
+	{
+		NewValue = FMath::Max( 0, NewValue);
+	}
 }
 
 void UDZ_AttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
+	
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxHealth());
@@ -43,6 +54,14 @@ void UDZ_AttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, f
 	if (Attribute == GetEnergyAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0, GetMaxEnergy());
+	}
+	if (Attribute == GetShieldAttribute())
+	{
+		NewValue = FMath::Max( 0, NewValue);
+	}
+	if (Attribute == GetMoveSpeedAttribute())
+	{
+		NewValue = FMath::Max( 0, NewValue);
 	}
 }
 
@@ -52,11 +71,14 @@ void UDZ_AttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbac
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float OldHealth = GetHealth();
-		const float Damage = GetIncomingDamage();
 		const float DamageReduction = 1 - FMath::Clamp(GetArmor(), 0, 80) / 100;
-		const float HealthValue = FMath::Clamp(GetHealth() - Damage * DamageReduction, 0, GetMaxHealth());
+		const float Damage = FMath::Max(0, GetIncomingDamage() * DamageReduction - GetShield());
+		const float ShieldValue = FMath::Max(0, GetShield() - Damage);
+		
+		const float HealthValue = FMath::Clamp(GetHealth() - Damage, 0, GetMaxHealth());
 		SetIncomingDamage(0);
 		SetHealth(HealthValue);
+		SetShield(ShieldValue);
 		if (OldHealth > 0 && HealthValue <= 0.0f)
 		{
 			OnDeath.Broadcast();
@@ -102,4 +124,14 @@ void UDZ_AttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldValue)
 void UDZ_AttributeSet::OnRep_Armor(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Armor, OldValue);
+}
+
+void UDZ_AttributeSet::OnRep_Shield(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Shield, OldValue);
+}
+
+void UDZ_AttributeSet::OnRep_MoveSpeed(FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MoveSpeed, OldValue);
 }

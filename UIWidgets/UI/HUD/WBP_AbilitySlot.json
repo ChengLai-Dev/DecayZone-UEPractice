@@ -18,26 +18,12 @@
 		},
 		"children": [
 			{
-				"class": "/Script/UMG.Border",
-				"className": "Border",
-				"name": "Border_Frame",
+				"class": "/Script/UMG.Overlay",
+				"className": "Overlay",
+				"name": "Overlay_Root",
 				"isVariable": false,
 				"properties":
 				{
-					"Padding":
-					{
-						"left": 2,
-						"top": 2,
-						"right": 2,
-						"bottom": 2
-					},
-					"BrushColor":
-					{
-						"r": 0.027320999652147293,
-						"g": 0.045186001807451248,
-						"b": 0.057805001735687256,
-						"a": 1
-					}
 				},
 				"slot":
 				{
@@ -73,8 +59,41 @@
 						},
 						"slot":
 						{
-							"class": "/Script/UMG.BorderSlot",
-							"className": "BorderSlot",
+							"class": "/Script/UMG.OverlaySlot",
+							"className": "OverlaySlot",
+							"properties":
+							{
+								"HorizontalAlignment": "HAlign_Fill",
+								"VerticalAlignment": "VAlign_Fill"
+							}
+						}
+					},
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Border_Frame",
+						"isVariable": false,
+						"properties":
+						{
+							"Padding":
+							{
+								"left": 2,
+								"top": 2,
+								"right": 2,
+								"bottom": 2
+							},
+							"BrushColor":
+							{
+								"r": 0.027320999652147293,
+								"g": 0.045186001807451248,
+								"b": 0.057805001735687256,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.OverlaySlot",
+							"className": "OverlaySlot",
 							"properties":
 							{
 								"Padding":
@@ -83,7 +102,9 @@
 									"top": 2,
 									"right": 2,
 									"bottom": 2
-								}
+								},
+								"HorizontalAlignment": "HAlign_Fill",
+								"VerticalAlignment": "VAlign_Fill"
 							}
 						},
 						"children": [
@@ -150,6 +171,33 @@
 										},
 										"children": [
 											{
+												"class": "/Script/UMG.Border",
+												"className": "Border",
+												"name": "Border_Disabled",
+												"isVariable": true,
+												"properties":
+												{
+													"BrushColor":
+													{
+														"r": 0,
+														"g": 0,
+														"b": 0,
+														"a": 0.55000001192092896
+													},
+													"Visibility": "Collapsed"
+												},
+												"slot":
+												{
+													"class": "/Script/UMG.OverlaySlot",
+													"className": "OverlaySlot",
+													"properties":
+													{
+														"HorizontalAlignment": "HAlign_Fill",
+														"VerticalAlignment": "VAlign_Fill"
+													}
+												}
+											},
+											{
 												"class": "/Script/UMG.Image",
 												"className": "Image",
 												"name": "Img_Icon",
@@ -177,33 +225,6 @@
 												"properties":
 												{
 													"Brush": "(TintColor=(SpecifiedColor=(R=1.000000,G=1.000000,B=1.000000,A=1.000000)),DrawAs=Image,ImageSize=(X=64.000000,Y=64.000000),Margin=(),ResourceObject=\"/Script/Engine.MaterialInstanceConstant'/Game/UI/Materials/MI_CooldownRing.MI_CooldownRing'\",OutlineSettings=(CornerRadii=(X=0.000000,Y=0.000000,Z=0.000000,W=0.000000),Color=(SpecifiedColor=(R=0.000000,G=0.000000,B=0.000000,A=0.000000)),RoundingType=HalfHeightRadius),UVRegion=(Min=(X=0.000000,Y=0.000000),Max=(X=0.000000,Y=0.000000),bIsValid=False))",
-													"Visibility": "Collapsed"
-												},
-												"slot":
-												{
-													"class": "/Script/UMG.OverlaySlot",
-													"className": "OverlaySlot",
-													"properties":
-													{
-														"HorizontalAlignment": "HAlign_Fill",
-														"VerticalAlignment": "VAlign_Fill"
-													}
-												}
-											},
-											{
-												"class": "/Script/UMG.Border",
-												"className": "Border",
-												"name": "Border_Disabled",
-												"isVariable": true,
-												"properties":
-												{
-													"BrushColor":
-													{
-														"r": 0,
-														"g": 0,
-														"b": 0,
-														"a": 0.55000001192092896
-													},
 													"Visibility": "Collapsed"
 												},
 												"slot":
@@ -246,9 +267,9 @@
 												"isVariable": true,
 												"properties":
 												{
-													"Text": "1",
-													"ColorAndOpacity": "(SpecifiedColor=(R=0.420000,G=0.520000,B=0.560000,A=1.000000))",
-													"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=10.000000,MonospacedWidth=1.000000)"
+													"Text": "",
+													"ColorAndOpacity": "(SpecifiedColor=(R=0.620000,G=0.720000,B=0.760000,A=1.000000))",
+													"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.000000,MonospacedWidth=1.000000)"
 												},
 												"slot":
 												{

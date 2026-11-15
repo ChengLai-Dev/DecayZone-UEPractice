@@ -90,17 +90,19 @@ void ADZ_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	
 	ADZ_PlayerState* DZ_PlayerState = Cast<ADZ_PlayerState>(GetPlayerState());
-	AbilitySystemComponent = Cast<UDZ_AbilitySystemComponent>(DZ_PlayerState->GetAbilitySystemComponent());
-	AbilitySystemComponent->InitAbilityActorInfo(DZ_PlayerState, this);
-	const FGameplayEffectSpecHandle& SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(InitializeGEClass, 1, AbilitySystemComponent->MakeEffectContext());
-	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
-	const FGameplayEffectSpecHandle& EnergyRegenSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(EnergyRegenGEClass, 1, AbilitySystemComponent->MakeEffectContext());
-	AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EnergyRegenSpecHandle.Data);
+	if (!DZ_PlayerState) return;
+	
+	SetupAbilitySystem(DZ_PlayerState->GetAbilitySystemComponent(), DZ_PlayerState);
+}
+
+void ADZ_PlayerCharacter::OnAbilitySystemInitialized()
+{
+	if (!HasAuthority()) return;
+	
 	OnAttributesInitialized.Broadcast();
-	GiveStartupAbilities();
 	RecalculateArmor();
-	BindDeathHandle();
 }
 
 void ADZ_PlayerCharacter::RecalculateArmor()
@@ -129,17 +131,13 @@ void ADZ_PlayerCharacter::HandleEquipmentsChanged()
 	RecalculateArmor();
 }
 
-UAbilitySystemComponent* ADZ_PlayerCharacter::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
 void ADZ_PlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 	ADZ_PlayerState* DZ_PlayerState = Cast<ADZ_PlayerState>(GetPlayerState());
-	AbilitySystemComponent = Cast<UDZ_AbilitySystemComponent>(DZ_PlayerState->GetAbilitySystemComponent());
-	AbilitySystemComponent->InitAbilityActorInfo(DZ_PlayerState, this);
+	if (!DZ_PlayerState) return;
+	
+	SetupAbilitySystem(DZ_PlayerState->GetAbilitySystemComponent(), DZ_PlayerState);
 }
 
 void ADZ_PlayerCharacter::OnInteractableBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

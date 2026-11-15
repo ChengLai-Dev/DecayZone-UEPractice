@@ -45,4 +45,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UInputAction> WeaponAttackAction;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> Skill1;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> Skill2;
 };

@@ -38,7 +38,7 @@ JSON 源：`UIWidgets/UI/HUD/WBP_AbilityBar.json`、`UIWidgets/UI/HUD/WBP_Abilit
 |---|---|---|---|
 | 技能定义 | `FDZ_SkillData`：SkillId、AbilityTag、显示名、图标 | `DT_SkillData` 的 `SkillId` 列 = 技能 ID | 静态数据 |
 | 槽位默认配置 | `FDZ_AbilitySlotLayout`：键位文案、默认技能 ID | `DA_UIConfig.AbilitySlots` | 静态数据 |
-| 运行时映射 | 槽位索引 → 技能 ID | `ADZ_PlayerController::SlotSkillIds` | 运行时可变，本期不持久化 |
+| 运行时映射 | 槽位索引 → 技能 ID | `UDZ_GameInstance::SlotSkillIds` | 运行时可变，跨关卡保留，存档接入前不落盘 |
 
 **技能 ID 是 `FDZ_SkillData` 里的 `int32 SkillId`，不是行名，也不是 AbilityTag。** 行名（`Shield` / `Sprint`）只做可读标签，重命名不影响映射；Tag 以后改了也不影响身份。键位属于槽位，技能换槽后键位不变。
 
@@ -73,10 +73,11 @@ WBP_AbilitySlot                             /Game/UI/HUD/
 
 ```
 DA_UIConfig.AbilitySlots
-  → 开局复制为 UDZ_AbilityBarController 的 SlotSkillIds（槽位 → SkillId）
+  → GameInstance::Init 时由 InitSlotSkills 填充 UDZ_GameInstance::SlotSkillIds（槽位 → SkillId）
+  → 只在 Init 执行一次；UIConfig 或 AbilitySlots 为空时打 Warning，技能栏保持空
 
-UDZ_AbilityBarController（UIManager 持有，0.1s 节流）
-  → SlotSkillIds[i] → DT_SkillData 按 SkillId 查行 → AbilityTag
+UDZ_AbilityBarController（UIManager 持有，0.1s 节流，只读 GameInstance）
+  → GameInstance->GetSlotSkillId(i) → DT_SkillData 按 SkillId 查行 → AbilityTag
   → ASC->FindAbilitySpecByTag(AbilityTag)
        ├─ 冷却：Spec->Ability->GetCooldownTimeRemainingAndDuration(...)
        ├─ 可用：Spec->Ability->CheckCost(...)
@@ -85,8 +86,8 @@ UDZ_AbilityBarController（UIManager 持有，0.1s 节流）
   → UDZ_AbilitySlot 对应 setter
 
 SetSlotSkill(槽位, SkillId)
-  → 改写 SlotSkillIds（目标技能已在别的槽则自动交换）
-  → 重推两个槽
+  → GameInstance->SetSlotSkillId 改写数组（目标技能已在别的槽则自动交换）
+  → 全量刷新技能栏
 ```
 
 > UE 5.8 的 ASC 已没有 `GetCooldownRemainingForTag`。冷却必须从技能自己的 AbilitySpec 取，旧文档里的写法已作废。
@@ -108,7 +109,7 @@ SetSlotSkill(槽位, SkillId)
 | `FDZ_SkillData` | `FTableRowBase` | 技能定义行（含 `SkillId`） |
 | `FDZ_AbilitySlotLayout` | `USTRUCT` | 槽位默认配置 |
 | `UDZ_UIControllerBase` | `UObject` | 功能控制器基类：解析并缓存 `GameInstance` / `UIConfig`，供子类直接使用 |
-| `UDZ_AbilityBarController` | `UDZ_UIControllerBase` | 槽位映射、0.1s 刷新、换槽入口 |
+| `UDZ_AbilityBarController` | `UDZ_UIControllerBase` | 读 `GameInstance` 的槽位映射、0.1s 刷新、换槽入口 |
 | `UDZ_StatusBarsController` | `UDZ_UIControllerBase` | 生命 / 能量状态条的创建与刷新 |
 | `UDZ_InteractController` | `UDZ_UIControllerBase` | 交互进度状态、Prompt 与读条、攻击与移动锁查询 |
 | `UDZ_InventoryController` | `UDZ_UIControllerBase` | 背包面板：开关、刷新、面板内拖拽事件 |
@@ -162,13 +163,13 @@ Public/UI/
 
 | 类 / 方法 | 说明 |
 |---|---|
-| `UDZ_AbilityBarController` | 持有槽位映射、创建技能栏、0.1s 刷新、`SetSlotSkill` / `GetSlotSkill` / `Hide` |
+| `UDZ_AbilityBarController` | 创建技能栏、0.1s 刷新、`SetSlotSkill` / `GetSlotSkill` / `Refresh` / `Hide`；槽位数据本身由 `UDZ_GameInstance` 持有 |
 | `UDZ_StatusBarsController` | 创建并常驻状态条，`Refresh()` 从 PlayerState 的 ASC 读数推送 |
-| `UDZ_InteractController` | 持有 `FDZ_InteractTracker`、Prompt 与读条 Widget；`IsBlockingAttack()` 供攻击与移动锁判定 |
+| `UDZ_InteractController` | 持有 `FDZ_InteractTracker`、Prompt 与读条 Widget；`IsBlockingAction()` 供攻击与移动锁判定 |
 | `UUIManager::InitializeControllers` | 由 `ADZ_PlayerController::BeginPlay` 调用，依次创建三个控制器 |
 | `UUIManager::TickControllers` | 由 `ADZ_PlayerController::Tick` 调用 |
-| `ADZ_PlayerController::SetSlotSkill(int32, int32)` | 转发给控制器，`BlueprintCallable` |
-| `ADZ_PlayerController::GetSlotSkill(int32) const` | 转发给控制器，`BlueprintPure` |
+| `ADZ_PlayerController::SetSlotSkill(int32, int32)` | 写 `GameInstance` 并通知技能栏刷新，`BlueprintCallable` |
+| `ADZ_PlayerController::GetSlotSkill(int32) const` | 读 `GameInstance`，`BlueprintPure` |
 
 ### 5.5 配置
 
@@ -208,7 +209,7 @@ Public/UI/
 2. **键位角标两个槽默认都显示 `1`**。它们共用同一个 `WBP_AbilitySlot`，JSON 默认值只有一份，`2` 由 `Info.KeyText` 写入。
 3. **技能栏宽度写死 140**。扩到四槽要同时改 `Size_AbilityBar` 的 `WidthOverride` 和 `AbilitySlots` 长度；`UDZ_AbilityBar` 目前只绑两个槽，超过会告警并忽略。
 4. **冷却方向**。材质从 12 点方向顺时针遮罩；要逆时针把 `atan2` 的第一个参数取反，不用动 UI。
-5. **换槽没有 UI、不持久化**。本期只提供 `SetSlotSkill` / `GetSlotSkill` 接口；配置界面与 M8 存档再接。
+5. **换槽没有 UI**。本期只提供 `SetSlotSkill` / `GetSlotSkill` 接口；配置界面与 M8 存档再接。槽位数组已移入 `UDZ_GameInstance`，跨关卡保留，但尚未写入 SaveGame。
 6. **已配置技能但 GA 未授予时整体变暗**。`FindAbilitySpecByTag` 找不到技能时按不可用处理（`Border_Disabled` 可见），这是预期反馈。**空槽不走这条路径**，`bEmpty` 会隐藏图标和所有遮罩，不会变暗。
 7. **生效描边依赖 GA 实现方式**。只有 Spec 保持激活的持续型技能会让 `Border_Active` 亮；瞬发 + 时长 GE 不会。
 8. **编辑器启动时的导入顺序问题**（非本次引入）：`WBP_SettlementPanel` / `WBP_SettlementStatCard` / `WBP_SettlementItemSlot` 曾因父类为空导致编译失败，已重新挂回 `DZ_SettlementPanel` / `DZ_SettlementStatCard` / `DZ_SettlementItemSlot` 并编译通过。若启动后再次出现同类报错，按同样方式重挂父类即可。

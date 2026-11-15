@@ -21,11 +21,6 @@ ADZ_EnemyCharacter::ADZ_EnemyCharacter()
 	AbilitySystemComponent->SetIsReplicated(true);
 }
 
-UAbilitySystemComponent* ADZ_EnemyCharacter::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
 bool ADZ_EnemyCharacter::HasPatrolRoute()
 {
 	return IsValid(PatrolRoute);
@@ -39,19 +34,30 @@ FVector ADZ_EnemyCharacter::GetNextPatrolLocation()
 void ADZ_EnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	if (HasAuthority())
+	
+	SetupAbilitySystem(GetAbilitySystemComponent(), this);
+}
+
+void ADZ_EnemyCharacter::OnAbilitySystemInitialized()
+{
+	if (!HasAuthority()) return;
+	if (!AbilitySystemComponent) return;
+	
+	BaseRotationRate = GetCharacterMovement()->RotationRate;
+	
+	MovementLockTagHandle = AbilitySystemComponent->RegisterGameplayTagEvent(DZGameplayTags::State_MovementLocked, EGameplayTagEventType::NewOrRemoved)
+		.AddUObject(this, &ThisClass::HandleMovementLockedTagChanged);
+}
+
+void ADZ_EnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (AbilitySystemComponent && MovementLockTagHandle.IsValid())
 	{
-		BaseMaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
-		BaseRotationRate = GetCharacterMovement()->RotationRate;
-		MovementLockTagHandle = AbilitySystemComponent->RegisterGameplayTagEvent(DZGameplayTags::State_MovementLocked, EGameplayTagEventType::NewOrRemoved)
-			.AddUObject(this, &ThisClass::HandleMovementLockedTagChanged);
-		
-		const FGameplayEffectSpecHandle& SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeGEClass, 1, GetAbilitySystemComponent()->MakeEffectContext());
-		GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
-		GiveStartupAbilities();
-		BindDeathHandle();
+		AbilitySystemComponent->UnregisterGameplayTagEvent(MovementLockTagHandle, DZGameplayTags::State_MovementLocked, EGameplayTagEventType::NewOrRemoved);
+		MovementLockTagHandle.Reset();
 	}
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void ADZ_EnemyCharacter::HandleMovementLockedTagChanged(const FGameplayTag Tag, int32 NewCount)
@@ -67,7 +73,15 @@ void ADZ_EnemyCharacter::HandleMovementLockedTagChanged(const FGameplayTag Tag, 
 	}
 	else
 	{
-		MovementComponent->MaxWalkSpeed = BaseMaxWalkSpeed;
+		float MoveSpeed = 0;
+		if (AbilitySystemComponent)
+		{
+			MoveSpeed = AbilitySystemComponent->GetNumericAttribute(UDZ_AttributeSet::GetMoveSpeedAttribute());
+		}
+		if (MoveSpeed > 0.f)
+		{
+			MovementComponent->MaxWalkSpeed = MoveSpeed;
+		}
 		MovementComponent->RotationRate = BaseRotationRate;
 	}
 }

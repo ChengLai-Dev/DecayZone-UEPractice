@@ -72,3 +72,28 @@
 | 附属材质（同一物件的第二个及以后材质槽） | `M_<物件>_<序号>_<用途>` | `M_ExtractionPlatform_01_Rim` |
 | 贴图 | `T_<物件>_<序号>_<BC\|N\|ORM>` | `T_ExtractionPlatform_01_BC` |
 | 图集通道 | BC=RGB 基础色；N=法线；ORM：R=AO，G=Roughness，B=Metallic | — |
+
+## 批次 2026-11-15（M5 护盾壳特效）
+
+### T_Shield_HexGrid / T_Shield_Noise — 护盾贴图
+
+| 项 | 值 |
+|---|---|
+| 运行期路径 | `/Game/Assets/FX/Shield/T_Shield_HexGrid`、`.../T_Shield_Noise` |
+| 源文件路径 | `Content/Assets/_Source/FX/Shield/`（PNG + `GenerateShieldTextures.py`） |
+| 尺寸 | 1024 × 1024 |
+| 贴图设置 | `TC_Masks` / 无 sRGB / `TEXTUREGROUP_World` / 默认 mip |
+| 用途 | 网格图是等距柱状铺满一次（非平铺）；噪声用于破盾溶解与亮边 |
+| 生成手段 | Python + PIL/numpy 程序化生成，可重跑脚本改密度与线宽 |
+| 授权结论 | 自有产出，无外部素材 |
+
+### M_ShieldShell / MI_ShieldShell / SM_ShieldSphere — 护盾外壳
+
+| 项 | 值 |
+|---|---|
+| 运行期路径 | `/Game/Assets/FX/Shield/M_ShieldShell`、`MI_ShieldShell`、`SM_ShieldSphere` |
+| 材质设置 | Translucent + Unlit + TwoSided，68 节点，含 DepthFade 12cm |
+| 参数 | `Color` / `Alpha` / `Flash` / `Dissolve`，另有 `HexGrid` / `NoiseMask` 贴图参数 |
+| 网格 | 复制自 `Engine/BasicShapes/Sphere`，已删碰撞，本地半径 50cm，默认材质指向 MI |
+| 建议挂法 | 角色 Mesh 骨盆，Scale `(1.15, 1.15, 1.9)`，不投影、无碰撞、默认隐藏 |
+| 交接文档 | `Docs/art/FX_ShieldShell.md` |

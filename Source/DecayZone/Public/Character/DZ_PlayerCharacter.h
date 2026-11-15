@@ -31,8 +31,6 @@ public:
 
 	virtual void PossessedBy(AController* NewController) override;
 	
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
 	virtual void OnRep_PlayerState() override;
 
 	UFUNCTION()
@@ -57,6 +55,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void OnAbilitySystemInitialized() override;
+	
 private:
 	virtual void Death() override;
 	void HighlightInteractable();
@@ -71,9 +71,6 @@ private:
 	TSet<AActor*> OverlappingInteractables;
 	
 	UPROPERTY()
-	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
-	
-	UPROPERTY()
 	TObjectPtr<UDZ_InventoryComponent> InventoryComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
@@ -86,12 +83,6 @@ private:
 	TObjectPtr<UBoxComponent> InteractionBox;
 	
 	TWeakObjectPtr<AActor> CurrentInteractableActor;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
-	TSubclassOf<UGameplayEffect> InitializeGEClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
-	TSubclassOf<UGameplayEffect> EnergyRegenGEClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone")
 	TSubclassOf<UGameplayEffect> EquipmentArmorGEClass;

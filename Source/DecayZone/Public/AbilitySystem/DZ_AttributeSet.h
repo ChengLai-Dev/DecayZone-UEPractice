@@ -24,6 +24,8 @@ public:
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MaxEnergy);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Armor);
 	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, IncomingDamage);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, Shield);
+	ATTRIBUTE_ACCESSORS_BASIC(ThisClass, MoveSpeed);
 	
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override;
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
@@ -49,6 +51,12 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_Armor)
 	FGameplayAttributeData Armor;
 	
+	UPROPERTY(ReplicatedUsing = OnRep_Shield)
+	FGameplayAttributeData Shield;
+	
+	UPROPERTY(ReplicatedUsing = OnRep_MoveSpeed)
+	FGameplayAttributeData MoveSpeed;
+	
 	UPROPERTY()
 	FGameplayAttributeData IncomingDamage;
 	
@@ -66,4 +74,10 @@ private:
 	
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
+	void OnRep_Shield(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
+	void OnRep_MoveSpeed(FGameplayAttributeData& OldValue);
 };

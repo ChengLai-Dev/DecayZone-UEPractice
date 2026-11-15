@@ -6,7 +6,6 @@
 #include "Data/Item/FDZ_ItemStack.h"
 #include "Data/Item/DZ_ItemDefines.h"
 #include "Data/Item/FDZ_ItemData.h"
-#include "Game/DZ_GameInstance.h"
 #include "Net/UnrealNetwork.h"
 #include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "Library/ItemHelper.h"

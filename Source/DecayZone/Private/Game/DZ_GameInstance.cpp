@@ -7,6 +7,8 @@
 #include "Data/Item/DZ_ItemDefines.h"
 #include "Data/Ability/DZ_SkillDefines.h"
 #include "Data/Ability/FDZ_SkillData.h"
+#include "Data/UI/DZ_UIConfig.h"
+#include "Data/UI/FDZ_AbilitySlotLayout.h"
 #include "DecayZone/DecayZone.h"
 
 void UDZ_GameInstance::Init()
@@ -40,6 +42,56 @@ void UDZ_GameInstance::Init()
 	{
 		UE_LOG(LogDZ, Warning, TEXT("Invalid skill data table"));
 	}
+	
+	InitSlotSkills();
+}
+
+void UDZ_GameInstance::InitSlotSkills()
+{
+	if (!IsValid(UIConfig))
+	{
+		UE_LOG(LogDZ, Warning, TEXT("GameInstance has no UIConfig, ability slots will be empty"));
+		return;
+	}
+	
+	if (UIConfig->AbilitySlots.Num() == 0)
+	{
+		UE_LOG(LogDZ, Warning, TEXT("UIConfig has no AbilitySlots, ability slots will be empty"));
+		return;
+	}
+	
+	SlotSkillIds.Reset();
+	for (const FDZ_AbilitySlotLayout& SlotLayout : UIConfig->AbilitySlots)
+	{
+		SlotSkillIds.Add(SlotLayout.DefaultSkillId);
+	}
+}
+
+int32 UDZ_GameInstance::GetSlotSkillId(int32 SlotIndex) const
+{
+	return SlotSkillIds.IsValidIndex(SlotIndex) ? SlotSkillIds[SlotIndex] : DZSkill::EmptyId;
+}
+
+int32 UDZ_GameInstance::GetSlotSkillCount() const
+{
+	return SlotSkillIds.Num();
+}
+
+void UDZ_GameInstance::SetSlotSkillId(int32 SlotIndex, int32 SkillId)
+{
+	if (!SlotSkillIds.IsValidIndex(SlotIndex)) return;
+	if (SlotSkillIds[SlotIndex] == SkillId) return;
+	
+	if (SkillId != DZSkill::EmptyId)
+	{
+		const int32 OldIndex = SlotSkillIds.Find(SkillId);
+		if (OldIndex != INDEX_NONE)
+		{
+			SlotSkillIds[OldIndex] = SlotSkillIds[SlotIndex];
+		}
+	}
+	
+	SlotSkillIds[SlotIndex] = SkillId;
 }
 
 const FDZ_ItemData* UDZ_GameInstance::GetItemData(int32 ItemId)

@@ -5,7 +5,6 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Data/UI/DZ_UIConfig.h"
-#include "Data/UI/FDZ_SettlementInfo.h"
 #include "Player/DZ_PlayerController.h"
 #include "UI/Widgets/Settlement/DZ_SettlementPanel.h"
 

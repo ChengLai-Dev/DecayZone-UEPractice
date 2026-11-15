@@ -6,11 +6,14 @@
 #include "AbilitySystemInterface.h"
 #include "DZ_DelegateTypes.h"
 #include "GameFramework/Character.h"
+#include "GameplayEffectTypes.h"
 #include "Interface/DZ_Interactable.h"
 #include "DZ_BaseCharacter.generated.h"
 
 class FOnEvent;
+class UDZ_AbilitySystemComponent;
 class UDZ_StartupAbilities;
+class UGameplayEffect;
 
 UCLASS()
 class DECAYZONE_API ADZ_BaseCharacter : public ACharacter, public IAbilitySystemInterface, public IDZ_Interactable
@@ -44,6 +47,26 @@ protected:
 	void GiveStartupAbilities();
 	
 	virtual void ClientHandleDeath();
+	
+	void SetupAbilitySystem(UAbilitySystemComponent* InASC, AActor* InOwnerActor);
+	
+	// 服务端：按顺序应用 InitialGameplayEffects，在授予能力之前调用
+	void ApplyInitialGameplayEffects();
+	
+	// 双端钩子：初始化完成后调用，服务端专属逻辑由子类自行判断 HasAuthority
+	virtual void OnAbilitySystemInitialized() {}
+
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|AbilitySystem")
+	TArray<TSubclassOf<UGameplayEffect>> InitialGEClasses;
+
+	virtual void OnMoveSpeedChanged(const FOnAttributeChangeData& Data);
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UPROPERTY()
+	TObjectPtr<UDZ_AbilitySystemComponent> AbilitySystemComponent;
+
+	bool bAbilitySystemInitialized = false;
 
 	UPROPERTY(ReplicatedUsing = OnRep_IsDead)
 	bool bIsDead = false;
@@ -58,6 +81,11 @@ private:
 
 	UFUNCTION()
 	void OnRep_IsDead();
+
+	void BindAbilitySystemDelegates();
+	void UnbindAbilitySystemDelegates();
+
+	FDelegateHandle MoveSpeedDelegateHandle;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UDZ_StartupAbilities> StartupAbilities;

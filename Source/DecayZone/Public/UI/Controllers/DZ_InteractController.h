@@ -27,7 +27,7 @@ public:
 	void UpdateProgress();
 	void OnFocusInteractableChanged(AActor* Actor);
 
-	bool IsBlockingAttack() const;
+	bool IsBlockingAction() const;
 	bool IsActive() const { return Tracker.IsActive(); }
 
 private:

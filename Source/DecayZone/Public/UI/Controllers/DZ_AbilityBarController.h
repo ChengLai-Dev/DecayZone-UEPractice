@@ -21,16 +21,18 @@ public:
 
 	void SetSlotSkill(int32 SlotIndex, int32 SkillId);
 	int32 GetSlotSkill(int32 SlotIndex) const;
+	void Refresh();
 	void Hide();
 
 private:
-	void RefreshAbilityBar();
-	void RefreshAbilitySlot(int32 SlotIndex);
+	void RefreshSlotsStatic();
+	void RefreshSlotsDynamic();
+	void RefreshSlotStatic(int32 SlotIndex);
+	void RefreshSlotDynamic(int32 SlotIndex);
 	UDZ_AbilitySystemComponent* GetAbilitySystemComponent() const;
 
 	UPROPERTY()
 	TObjectPtr<UDZ_AbilityBar> AbilityBarWidget;
 
-	TArray<int32> SlotSkillIds;
 	float RefreshAccum = 0.f;
 };

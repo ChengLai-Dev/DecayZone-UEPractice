@@ -8,6 +8,7 @@
 #include "Character/DZ_BaseCharacter.h"
 #include "Character/DZ_PlayerCharacter.h"
 #include "Interface/DZ_Interactable.h"
+#include "Library/UIHelper.h"
 #include "Player/DZ_PlayerController.h"
 
 UDZ_InteractAbility::UDZ_InteractAbility()
@@ -59,6 +60,10 @@ void UDZ_InteractAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 void UDZ_InteractAbility::OnAbilityEnded(EDZAbilityEndReason Reason)
 {
+	if (Reason == EDZAbilityEndReason::Cancelled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Test: Ability Cancelled"));
+	}
 	const bool bSucceeded = (Reason == EDZAbilityEndReason::Completed);
 
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo())
