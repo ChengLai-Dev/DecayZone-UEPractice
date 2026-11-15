@@ -10,6 +10,7 @@
 #include "UI/Controllers/DZ_InventoryController.h"
 #include "UI/Controllers/DZ_LootController.h"
 #include "UI/Controllers/DZ_SettlementController.h"
+#include "UI/Controllers/DZ_StashController.h"
 #include "UI/Controllers/DZ_StatusBarsController.h"
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "UI/DZ_UserWidget.h"
@@ -82,6 +83,10 @@ void UUIManager::CreateControllers()
 	SettlementController = NewObject<UDZ_SettlementController>(this);
 	SettlementController->Initialize(PC);
 	Controllers.Add(SettlementController);
+	
+	StashController = NewObject<UDZ_StashController>(this);
+	StashController->Initialize(PC);
+	Controllers.Add(StashController);
 }
 
 void UUIManager::DestroyControllers()
@@ -100,6 +105,7 @@ void UUIManager::DestroyControllers()
 	InventoryController = nullptr;
 	LootController = nullptr;
 	SettlementController = nullptr;
+	StashController = nullptr;
 }
 
 void UUIManager::OpenWidget(UDZ_UserWidget* Widget, bool bResident)

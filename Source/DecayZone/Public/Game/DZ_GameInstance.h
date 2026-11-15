@@ -3,10 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DZ_DelegateTypes.h"
+#include "Data/Item/FDZ_ItemStack.h"
 #include "Engine/GameInstance.h"
 #include "DZ_GameInstance.generated.h"
 
 class UDZ_ContainerSpawnItemConfig;
+enum class EItemContainer : uint8;
+struct FDZ_ItemSlotHandle;
 struct FDZ_ItemData;
 struct FDZ_SkillData;
 class UDZ_StartupAbilities;
@@ -44,9 +48,47 @@ public:
 	/** 按 UIConfig 的默认配置填充槽位，只在 Init 时调用一次 */
 	void InitSlotSkills();
 	
+	const TArray<FDZ_ItemStack>& GetStashItems() const { return StashItems; }
+	const TArray<FDZ_ItemStack>& GetStashBagItems() const { return StashBagItems; }
+	const TArray<int32>& GetStashEquipments() const { return StashEquipments; }
+	
+	int32 GetStashCapacity() const { return StashCapacity; }
+	int32 GetStashBagCapacity() const { return StashBagCapacity; }
+	int32 GetStashUsedSlots() const;
+	int32 GetStashBagUsedSlots() const;
+	int32 GetStashTotalValue();
+	
+	bool MoveStashItem(const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To, FText& OutFailReason);
+	
+	UPROPERTY(BlueprintAssignable, Category = "DecayZone|Stash")
+	FOnEvent OnStashChanged;
+	
 private:
 	UPROPERTY(BlueprintReadOnly, Category = "DecayZone|Skills", meta = (AllowPrivateAccess = "true"))
 	TArray<int32> SlotSkillIds;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Stash")
+	int32 StashCapacity = 30;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Stash")
+	int32 StashBagCapacity = 6;
+	
+	UPROPERTY()
+	TArray<FDZ_ItemStack> StashItems;
+	
+	UPROPERTY()
+	TArray<int32> StashEquipments;
+	
+	UPROPERTY()
+	TArray<FDZ_ItemStack> StashBagItems;
+	
+	const TArray<FDZ_ItemStack>* GetStashStackArray(EItemContainer Container) const;
+	TArray<FDZ_ItemStack>* GetStashStackArray(EItemContainer Container);
+	bool IsStashSlotValid(const FDZ_ItemSlotHandle& Handle) const;
+	FDZ_ItemStack GetStashSlotItem(const FDZ_ItemSlotHandle& Handle) const;
+	void SetStashSlotItem(const FDZ_ItemSlotHandle& Handle, const FDZ_ItemStack& Item);
+	void ClearStashSlot(const FDZ_ItemSlotHandle& Handle);
+	bool CanAcceptStashItem(const FDZ_ItemSlotHandle& Handle, int32 ItemId, int32 Count);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Items", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataTable> ItemDataTable;

@@ -9,6 +9,9 @@ enum class EItemContainer: uint8
 	Backpack,
 	Equipment,
 	Loot,
+	Stash,
+	LoadoutBag,
+	LoadoutEquipment,
 };
 
 UENUM(BlueprintType)

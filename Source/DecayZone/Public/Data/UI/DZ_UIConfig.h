@@ -15,6 +15,7 @@ class UDZ_InteractPrompt;
 class UDZ_InventoryPanel;
 class UDZ_LootPanel;
 class UDZ_SettlementPanel;
+class UDZ_StashPanel;
 class UDZ_StatusBars;
 /**
  * 
@@ -41,6 +42,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_SettlementPanel> SettlementPanelClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_StashPanel> StashWidgetClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_StatusBars> StatusBarsClass;

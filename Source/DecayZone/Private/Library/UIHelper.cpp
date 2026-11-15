@@ -4,7 +4,6 @@
 #include "Components/PanelWidget.h"
 #include "Data/UI/DZ_UIConfig.h"
 #include "Game/DZ_GameInstance.h"
-#include "UI/Widgets/HUD/DZ_Tips.h"
 
 UWidget* UIHelper::GetChildByName(const UWidget* Widget, const FName& Name)
 {
@@ -48,14 +47,4 @@ int32 UIHelper::GetZOrder(const UUserWidget* Widget)
 	int32* ZOrder = GameInstance->UIConfig->ZOrderMap.Find(Widget->GetClass());
 	if (!ZOrder) return 0;
 	return *ZOrder;
-}
-
-void UIHelper::ShowTips(const UObject* WorldContextObject, const FText& TipText, float Duration)
-{
-	UWorld* World = WorldContextObject->GetWorld();
-	UDZ_GameInstance* GI = Cast<UDZ_GameInstance>(World->GetGameInstance());
-	if (!GI) return;
-	UDZ_Tips* TipsWidget = CreateWidget<UDZ_Tips>(World, GI->UIConfig->TipsClass);
-	TipsWidget->AddToViewport(999);
-	TipsWidget->ShowTips(TipText, Duration);
 }

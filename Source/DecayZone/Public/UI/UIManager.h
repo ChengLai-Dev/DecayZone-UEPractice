@@ -13,6 +13,7 @@ class UDZ_InteractController;
 class UDZ_InventoryController;
 class UDZ_LootController;
 class UDZ_SettlementController;
+class UDZ_StashController;
 class UDZ_UIControllerBase;
 class ADZ_PlayerController;
 
@@ -51,6 +52,9 @@ public:
 	
 	UPROPERTY()
 	TObjectPtr<UDZ_SettlementController> SettlementController;
+	
+	UPROPERTY()
+	TObjectPtr<UDZ_StashController> StashController;
 	
 private:
 	void CreateControllers();

@@ -75,6 +75,12 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientOpenSettlementPanel(const FDZ_SettlementInfo& SettlementInfo);
 	
+	UFUNCTION(BlueprintCallable, Category = "DecayZone|UI")
+	void ShowTips(const FText& TipText, float Duration = 3.f);
+	
+	UFUNCTION(Client, Reliable)
+	void ClientShowTips(const FText& TipText, float Duration);
+	
 	void RefreshUIAll(bool bForceRefresh = true);
 	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
 	

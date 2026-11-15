@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
@@ -16,6 +17,7 @@
 #include "Data/Ability/DZ_SkillDefines.h"
 #include "Data/Ability/FDZ_SkillData.h"
 #include "Data/Input/DZ_InputConfig.h"
+#include "Data/UI/DZ_UIConfig.h"
 #include "Data/UI/FDZ_SettlementInfo.h"
 #include "DecayZone/DecayZone.h"
 #include "Game/DZ_GameInstance.h"
@@ -33,6 +35,7 @@
 #include "UI/Controllers/DZ_SettlementController.h"
 #include "UI/Controllers/DZ_StatusBarsController.h"
 #include "UI/UIManager.h"
+#include "UI/Widgets/HUD/DZ_Tips.h"
 #include "UI/Widgets/Inventory/DZ_EquipmentPanel.h"
 
 
@@ -257,6 +260,23 @@ void ADZ_PlayerController::ClientOpenSettlementPanel_Implementation(const FDZ_Se
 	UIManager->SettlementController->Show(SettlementInfo);
 }
 
+void ADZ_PlayerController::ShowTips(const FText& TipText, float Duration)
+{
+	ClientShowTips(TipText, Duration);
+}
+
+void ADZ_PlayerController::ClientShowTips_Implementation(const FText& TipText, float Duration)
+{
+	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
+	if (!IsValid(GameInstance) || !IsValid(GameInstance->UIConfig)) return;
+	
+	UDZ_Tips* TipsWidget = CreateWidget<UDZ_Tips>(this, GameInstance->UIConfig->TipsClass);
+	if (!IsValid(TipsWidget)) return;
+	
+	TipsWidget->AddToViewport(999);
+	TipsWidget->ShowTips(TipText, Duration);
+}
+
 void ADZ_PlayerController::NotifyGameEnd(bool bExtracted)
 {
 	if (!HasAuthority()) return;
@@ -457,7 +477,7 @@ void ADZ_PlayerController::Jump(const FInputActionValue& Value)
 	if (!GetCharacter()) return;
 	
 	GetCharacter()->Jump();
-	UIHelper::ShowTips(this, FText::FromString("Jumping"), 3);
+	ShowTips(FText::FromString("Jumping"), 3);
 }
 
 void ADZ_PlayerController::CloseTopWidget()
