@@ -69,6 +69,7 @@ public:
 	void DepositRaidResult(const TArray<FDZ_ItemStack>& Items, const TArray<int32>& Equipments);
 	
 	const FDZ_Loadout& GetPendingLoadout() const { return PendingLoadout; }
+	void SetPendingLoadout(const FDZ_Loadout& InLoadout);
 	void ClearPendingLoadout();
 	
 	FName GetRaidMapName() const { return RaidMapName; }

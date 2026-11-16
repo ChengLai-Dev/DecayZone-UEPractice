@@ -69,6 +69,9 @@ public:
 	
 	void ReturnToLobby();
 	
+	UFUNCTION(Server, Reliable)
+	void ServerReturnToLobby();
+	
 	void RefreshUIAll(bool bForceRefresh = true);
 	void NotifyInteractFinished(AActor* Target, bool bSucceeded);
 	

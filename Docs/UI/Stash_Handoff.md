@@ -227,8 +227,10 @@ Lobby.umap（BP_LobbyGameMode）
   └ PC = BP_LobbyPlayerController（父类 ADZ_LobbyPlayerController）
        └ UDZ_LobbyUIManager：只装配 StashController，并打开仓库面板
        └ 点出发 → PC::StartRaid()
-            → UDZ_GameInstance::TakeDepartureLoadout()  从仓库扣到 PendingLoadout
-            → OpenLevel(RaidMapName)
+            ├ 本地 TakeDepartureLoadout()：把本地出发配置扣进 PendingLoadout
+            └ Server RPC: ServerStartRaid(PendingLoadout)
+                 └ 服务器收下 loadout → 写入服务器 GameInstance
+                 └ 服务器 World->ServerTravel(RaidMapName)
 Startup（BP_GameMode）
   └ PC = BP_DZ_PlayerController（父类 ADZ_RaidPlayerController）
        └ UDZ_RaidUIManager：HUD / 交互 / 背包 / 搜刮 / 结算
@@ -236,8 +238,11 @@ Startup（BP_GameMode）
   └ 撤离 / 死亡 → 结算面板 → 确认
        → 撤离：UDZ_GameInstance::DepositRaidResult(物品, 装备) 合并回仓库
        → 死亡：不回写
-       → OpenLevel(LobbyMapName)
+       → PC::ReturnToLobby() → Server RPC → 服务器 ServerTravel(LobbyMapName)
 ```
+
+> **切图必须由服务器发起。** 客户端调 `UGameplayStatics::OpenLevel` 只会让自己断开与服务器的连接、本地加载一张图，变成独立世界 —— 之后没有属性复制，`OnRep_PlayerState` 不触发，PC 拿不到 ASC，表现为技能/Kick 全失效、HUD 不刷新、移动锁失效。所以出发和回程都走 `Server RPC + UWorld::ServerTravel`。
+
 
 ### 关键约束
 

@@ -320,6 +320,11 @@ bool UDZ_GameInstance::TakeDepartureLoadout()
 	return true;
 }
 
+void UDZ_GameInstance::SetPendingLoadout(const FDZ_Loadout& InLoadout)
+{
+	PendingLoadout = InLoadout;
+}
+
 void UDZ_GameInstance::ClearPendingLoadout()
 {
 	for (int32& Equipment : PendingLoadout.Equipments)

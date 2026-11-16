@@ -474,6 +474,11 @@ FDZ_SettlementInfo ADZ_RaidPlayerController::BuildSettlementInfo() const
 
 void ADZ_RaidPlayerController::ReturnToLobby()
 {
+	ServerReturnToLobby();
+}
+
+void ADZ_RaidPlayerController::ServerReturnToLobby_Implementation()
+{
 	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
 	if (!IsValid(GameInstance)) return;
 	
@@ -484,5 +489,5 @@ void ADZ_RaidPlayerController::ReturnToLobby()
 		return;
 	}
 	
-	UGameplayStatics::OpenLevel(this, LobbyMapName);
+	GetWorld()->ServerTravel(LobbyMapName.ToString());
 }

@@ -5,7 +5,6 @@
 
 #include "DecayZone/DecayZone.h"
 #include "Game/DZ_GameInstance.h"
-#include "Kismet/GameplayStatics.h"
 #include "UI/Controllers/DZ_StashController.h"
 #include "UI/DZ_LobbyUIManager.h"
 
@@ -29,6 +28,16 @@ void ADZ_LobbyPlayerController::StartRaid()
 	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
 	if (!IsValid(GameInstance)) return;
 	
+	if (!GameInstance->TakeDepartureLoadout()) return;
+	
+	ServerStartRaid(GameInstance->GetPendingLoadout());
+}
+
+void ADZ_LobbyPlayerController::ServerStartRaid_Implementation(const FDZ_Loadout& Loadout)
+{
+	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
+	if (!IsValid(GameInstance)) return;
+	
 	const FName RaidMapName = GameInstance->GetRaidMapName();
 	if (RaidMapName.IsNone())
 	{
@@ -36,7 +45,7 @@ void ADZ_LobbyPlayerController::StartRaid()
 		return;
 	}
 	
-	if (!GameInstance->TakeDepartureLoadout()) return;
+	GameInstance->SetPendingLoadout(Loadout);
 	
-	UGameplayStatics::OpenLevel(this, RaidMapName);
+	GetWorld()->ServerTravel(RaidMapName.ToString());
 }
