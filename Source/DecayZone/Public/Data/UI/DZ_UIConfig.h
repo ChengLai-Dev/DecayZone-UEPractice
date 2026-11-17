@@ -9,6 +9,7 @@
 #include "DZ_UIConfig.generated.h"
 
 class UDZ_AbilityBar;
+class UDZ_HUDLayout;
 class UDZ_Tips;
 class UDZ_InteractProgress;
 class UDZ_InteractPrompt;
@@ -46,6 +47,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_StashPanel> StashWidgetClass;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
+	TSubclassOf<UDZ_HUDLayout> HUDClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|UI")
 	TSubclassOf<UDZ_StatusBars> StatusBarsClass;
 	

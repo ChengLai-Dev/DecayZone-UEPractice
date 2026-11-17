@@ -22,13 +22,16 @@ namespace
 	constexpr float AbilityBarRefreshInterval = 0.1f;
 }
 
-void UDZ_AbilityBarController::Initialize(APlayerController* InPlayerController)
+void UDZ_AbilityBarController::SetAbilityBarWidget(UDZ_AbilityBar* InWidget)
 {
-	Super::Initialize(InPlayerController);
 	if (!IsValid(UIConfig)) return;
-	
-	AbilityBarWidget = CreateWidget<UDZ_AbilityBar>(PlayerController, UIConfig->AbilityBarClass);
-	if (!IsValid(AbilityBarWidget)) return;
+
+	AbilityBarWidget = InWidget;
+	if (!IsValid(AbilityBarWidget))
+	{
+		UE_LOG(LogDZ, Warning, TEXT("HUD is missing the AbilityBar child widget"));
+		return;
+	}
 	
 	if (UIConfig->AbilitySlots.Num() > UDZ_AbilityBar::MaxSlots)
 	{
@@ -36,15 +39,10 @@ void UDZ_AbilityBarController::Initialize(APlayerController* InPlayerController)
 	}
 	
 	Refresh();
-	AbilityBarWidget->Open();
 }
 
 void UDZ_AbilityBarController::Shutdown()
 {
-	if (IsValid(AbilityBarWidget))
-	{
-		AbilityBarWidget->RemoveFromParent();
-	}
 	AbilityBarWidget = nullptr;
 	RefreshAccum = 0.f;
 	Super::Shutdown();

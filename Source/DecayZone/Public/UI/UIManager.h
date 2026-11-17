@@ -22,6 +22,15 @@ public:
 	
 	APlayerController* GetOwningPlayerController() const { return PlayerController.Get(); }
 	bool IsInitialized() const { return Controllers.Num() > 0; }
+
+	template<typename T>
+	T* CreateController()
+	{
+		T* Controller = NewObject<T>(this);
+		Controller->Initialize(PlayerController.Get());
+		Controllers.Add(Controller);
+		return Controller;
+	}
 	
 	void OpenWidget(UDZ_UserWidget* Widget, bool bResident=false);
 	void CloseWidget(UDZ_UserWidget* Widget);
@@ -31,15 +40,6 @@ public:
 protected:
 	virtual void CreateControllers();
 	virtual void DestroyControllers();
-	
-	template<typename T>
-	T* CreateController()
-	{
-		T* Controller = NewObject<T>(this);
-		Controller->Initialize(PlayerController.Get());
-		Controllers.Add(Controller);
-		return Controller;
-	}
 	
 	UPROPERTY()
 	TArray<TObjectPtr<UDZ_UIControllerBase>> Controllers;

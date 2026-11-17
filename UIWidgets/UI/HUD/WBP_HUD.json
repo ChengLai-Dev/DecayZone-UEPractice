@@ -1,0 +1,160 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/HUD/WBP_HUD",
+	"designSizeMode": "Desired",
+	"parentClass": "/Script/DecayZone.DZ_HUDLayout",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+			"Visibility": "SelfHitTestInvisible"
+		},
+		"children": [
+			{
+				"class": "/Game/UI/HUD/WBP_StatusBars.WBP_StatusBars_C",
+				"className": "WBP_StatusBars_C",
+				"name": "StatusBars",
+				"isVariable": true,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 40,
+								"top": -40,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0,
+									"y": 1
+								},
+								"max":
+								{
+									"x": 0,
+									"y": 1
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 1
+							}
+						},
+						"bAutoSize": true,
+						"ZOrder": 0
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/HUD/WBP_AbilityBar.WBP_AbilityBar_C",
+				"className": "WBP_AbilityBar_C",
+				"name": "AbilityBar",
+				"isVariable": true,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 0,
+								"top": -36,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 1
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 1
+								}
+							},
+							"alignment":
+							{
+								"x": 0.5,
+								"y": 1
+							}
+						},
+						"bAutoSize": true,
+						"ZOrder": 1
+					}
+				}
+			},
+			{
+				"class": "/Game/UI/HUD/WBP_RaidTime.WBP_RaidTime_C",
+				"className": "WBP_RaidTime_C",
+				"name": "RaidTime",
+				"isVariable": true,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -28,
+								"top": 18,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 1,
+									"y": 0
+								},
+								"max":
+								{
+									"x": 1,
+									"y": 0
+								}
+							},
+							"alignment":
+							{
+								"x": 1,
+								"y": 0
+							}
+						},
+						"bAutoSize": true,
+						"ZOrder": 2
+					}
+				}
+			}
+		]
+	}
+}

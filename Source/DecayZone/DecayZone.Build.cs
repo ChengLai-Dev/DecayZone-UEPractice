@@ -22,6 +22,7 @@ public class DecayZone : ModuleRules
 			"Slate",
 			"SlateCore",
 			"AIModule",
+			"ModelViewViewModel",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

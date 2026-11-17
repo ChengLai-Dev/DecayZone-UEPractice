@@ -15,7 +15,7 @@ class DECAYZONE_API UDZ_AbilityBarController : public UDZ_UIControllerBase
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(APlayerController* InPlayerController) override;
+	void SetAbilityBarWidget(UDZ_AbilityBar* InWidget);
 	virtual void Shutdown() override;
 	virtual void Tick(float DeltaSeconds) override;
 

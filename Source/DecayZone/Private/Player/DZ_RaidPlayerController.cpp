@@ -28,12 +28,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "Library/ItemHelper.h"
 #include "Player/DZ_PlayerState.h"
-#include "UI/Controllers/DZ_AbilityBarController.h"
+#include "UI/Controllers/DZ_HUDController.h"
 #include "UI/Controllers/DZ_InteractController.h"
 #include "UI/Controllers/DZ_InventoryController.h"
 #include "UI/Controllers/DZ_LootController.h"
 #include "UI/Controllers/DZ_SettlementController.h"
-#include "UI/Controllers/DZ_StatusBarsController.h"
 #include "UI/DZ_RaidUIManager.h"
 #include "UI/UIManager.h"
 #include "UI/Widgets/HUD/DZ_Tips.h"
@@ -80,7 +79,7 @@ void ADZ_RaidPlayerController::RefreshStatusBars()
 {
 	if (!IsValid(RaidUI)) return;
 	
-	RaidUI->StatusBarsController->Refresh();
+	RaidUI->HUDController->RefreshStatusBars();
 }
 
 void ADZ_RaidPlayerController::SetSlotSkill(int32 SlotIndex, int32 SkillId)
@@ -92,7 +91,7 @@ void ADZ_RaidPlayerController::SetSlotSkill(int32 SlotIndex, int32 SkillId)
 	
 	if (IsValid(RaidUI))
 	{
-		RaidUI->AbilityBarController->Refresh();
+		RaidUI->HUDController->RefreshAbilityBar();
 	}
 }
 
@@ -223,7 +222,7 @@ void ADZ_RaidPlayerController::ClientOpenSettlementPanel_Implementation(const FD
 {
 	if (!IsValid(RaidUI)) return;
 	
-	RaidUI->AbilityBarController->Hide();
+	RaidUI->HUDController->HideAbilityBar();
 	RaidUI->SettlementController->Show(SettlementInfo);
 }
 

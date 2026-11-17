@@ -6,8 +6,7 @@
 #include "UI/UIManager.h"
 #include "DZ_RaidUIManager.generated.h"
 
-class UDZ_AbilityBarController;
-class UDZ_StatusBarsController;
+class UDZ_HUDController;
 class UDZ_InteractController;
 class UDZ_InventoryController;
 class UDZ_LootController;
@@ -20,20 +19,17 @@ class DECAYZONE_API UDZ_RaidUIManager : public UUIManager
 
 public:
 	UPROPERTY()
-	TObjectPtr<UDZ_AbilityBarController> AbilityBarController;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_StatusBarsController> StatusBarsController;
-	
+	TObjectPtr<UDZ_HUDController> HUDController;
+
 	UPROPERTY()
 	TObjectPtr<UDZ_InteractController> InteractController;
-	
+
 	UPROPERTY()
 	TObjectPtr<UDZ_InventoryController> InventoryController;
-	
+
 	UPROPERTY()
 	TObjectPtr<UDZ_LootController> LootController;
-	
+
 	UPROPERTY()
 	TObjectPtr<UDZ_SettlementController> SettlementController;
 

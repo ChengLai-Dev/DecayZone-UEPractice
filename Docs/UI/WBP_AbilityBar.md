@@ -11,17 +11,18 @@
 | 父类 | `UDZ_AbilityBar`（已建，继承 `UDZ_UserWidget`） |
 | 设计尺寸 | `Desired` |
 | 依赖 | `WBP_AbilitySlot`（同目录，两个实例） |
+| 宿主 | `WBP_HUD` 的子控件（`UDZ_HUDLayout::AbilityBar`） |
 
 ## 2. 控件树
 
 ```
-RootCanvas (CanvasPanel, SelfHitTestInvisible)
-└─ Size_AbilityBar (SizeBox 140×64)
-     锚点 (0.5, 1)，轴心 (0.5, 1)，偏移 x=0, y=-36  → 底部居中、离屏幕底 36px
-   └─ HB_Slots (HorizontalBox)
-      ├─ AbilitySlot_1 → WBP_AbilitySlot（右侧留 12px 间距，垂直居中）
-      └─ AbilitySlot_2 → WBP_AbilitySlot
+Size_AbilityBar (SizeBox 140×64, SelfHitTestInvisible, 根节点)
+└─ HB_Slots (HorizontalBox)
+   ├─ AbilitySlot_1 → WBP_AbilitySlot（右侧留 12px 间距，垂直居中）
+   └─ AbilitySlot_2 → WBP_AbilitySlot
 ```
+
+位置与锚点**不在本控件里**：由 `WBP_HUD` 的 `CanvasPanelSlot` 决定（锚点 `(0.5,1)`、轴心 `(0.5,1)`、偏移 `top=-36`，见 `Docs/UI/WBP_HUD.md`）。本控件根节点已经压平成 `SizeBox`，尺寸只由 `WidthOverride` / `HeightOverride` 决定，HUD 根的槽位开 `bAutoSize` 跟随。
 
 宽度 140 = 64 + 12 + 64。加槽时同步改 `Size_AbilityBar` 的 `WidthOverride`，否则右半截会被裁掉。
 
@@ -48,9 +49,9 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 
 ## 5. 显示方式
 
-- **常驻**：`AddToViewport` 一次，与 `WBP_StatusBars` / `WBP_Tips` 同级常驻。
-- **层级**：通过 `UDZ_UIConfig::ZOrderMap` 配置，建议排在状态条附近、交互提示之下（提示要盖住技能栏）。
-- **输入**：`RootCanvas` 为 `SelfHitTestInvisible`，不拦鼠标，不参与输入模式切换。
+- **常驻**：本控件不再自己 `AddToViewport`，作为 `WBP_HUD` 的子控件随 HUD 根一起显示一次。
+- **层级**：由 HUD 根内部的控件树顺序决定，不再走 `UDZ_UIConfig::ZOrderMap`。
+- **输入**：根节点 `SizeBox` 为 `SelfHitTestInvisible`，不拦鼠标，不参与输入模式切换。
 - **显隐**：进局显示；死亡 / 结算面板打开时建议隐藏（由程序决定，见未完成项 4）。
 
 ## 6. 尺寸与位置口径
@@ -60,16 +61,16 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 | 单槽 | 64×64 | `WBP_AbilitySlot` 根 `SizeBox` |
 | 槽间距 | 12px | `AbilitySlot_1` 的 `HorizontalBoxSlot` 右 padding |
 | 整栏尺寸 | 140×64 | `Size_AbilityBar` 的 `WidthOverride` / `HeightOverride` |
-| 水平位置 | 屏幕水平居中 | 锚点 `x=0.5`、轴心 `0.5` |
-| 垂直位置 | 距屏幕底 36px | 锚点 `y=1`、轴心 `y=1`、偏移 `top=-36` |
+| 水平位置 | 屏幕水平居中 | `WBP_HUD` 槽位锚点 `x=0.5`、轴心 `0.5` |
+| 垂直位置 | 距屏幕底 36px | `WBP_HUD` 槽位锚点 `y=1`、轴心 `y=1`、偏移 `top=-36` |
 
-36px 是留白，不是硬需求；`WBP_StatusBars` 在左下角距底 40px，两者视觉基线接近。要微调只改 `Size_AbilityBar` 的 Canvas 偏移即可。
+36px 是留白，不是硬需求；`WBP_StatusBars` 在左下角距底 40px，两者视觉基线接近。要微调只改 `WBP_HUD` 里 `AbilityBar` 的槽位偏移即可，不需要动本控件。
 
 ## 7. 已实现
 
 1. `UDZ_AbilityBar` 持有两个槽的 `BindWidget`，对外是 `SetKeyText` / `SetIcon` / `SetCooldown` / `SetAvailable` / `SetActive` / `SetEmpty`，都多一个槽位索引；越界索引静默忽略。
 2. `UDZ_UIConfig` 增加 `AbilityBarClass`、`AbilitySlots`（键位 + 默认技能 ID）；`UDZ_GameInstance` 增加 `SkillDataTable`。
-3. `ADZ_PlayerController` 在 `BeginPlay` 创建并常驻技能栏，开局从 `AbilitySlots` 复制运行时映射。
+3. `UDZ_AbilityBarController` 不再自己创建控件：`UDZ_HUDController` 创建 HUD 根后，把 `WBP_AbilityBar` 注入进来；外部通过 `RaidUI->HUDController->RefreshAbilityBar()` / `HideAbilityBar()` 调用。
 4. 刷新节流为 0.1 秒一次：`UDZ_AbilityBarController` 按槽位查技能行 → AbilityTag → AbilitySpec → 冷却 / `CheckCost` / `IsActive`，再通过原语 setter 写入槽位。
 5. `SetSlotSkill(槽位, SkillId)` 是换槽入口；`GetSlotSkill(槽位)` 可读当前映射。
 6. 结算面板打开时隐藏技能栏。

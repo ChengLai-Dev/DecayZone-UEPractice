@@ -5,30 +5,18 @@
 
 #include "AbilitySystem/DZ_AbilitySystemComponent.h"
 #include "AbilitySystem/DZ_AttributeSet.h"
-#include "Blueprint/UserWidget.h"
-#include "Data/UI/DZ_UIConfig.h"
 #include "GameFramework/PlayerController.h"
 #include "Player/DZ_PlayerState.h"
 #include "UI/Widgets/HUD/DZ_StatusBars.h"
 
-void UDZ_StatusBarsController::Initialize(APlayerController* InPlayerController)
+void UDZ_StatusBarsController::SetStatusBarsWidget(UDZ_StatusBars* InWidget)
 {
-	Super::Initialize(InPlayerController);
-	if (!IsValid(UIConfig)) return;
-
-	StatusBarsWidget = CreateWidget<UDZ_StatusBars>(PlayerController, UIConfig->StatusBarsClass);
-	if (!IsValid(StatusBarsWidget)) return;
-
+	StatusBarsWidget = InWidget;
 	Refresh();
-	StatusBarsWidget->Open();
 }
 
 void UDZ_StatusBarsController::Shutdown()
 {
-	if (IsValid(StatusBarsWidget))
-	{
-		StatusBarsWidget->RemoveFromParent();
-	}
 	StatusBarsWidget = nullptr;
 	Super::Shutdown();
 }

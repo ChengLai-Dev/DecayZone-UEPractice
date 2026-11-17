@@ -9,6 +9,7 @@
 class APlayerController;
 class UDZ_GameInstance;
 class UDZ_UIConfig;
+class UUIManager;
 
 UCLASS()
 class DECAYZONE_API UDZ_UIControllerBase : public UObject
@@ -21,6 +22,8 @@ public:
 	virtual void Tick(float DeltaSeconds);
 
 protected:
+	UUIManager* GetOwningManager() const;
+
 	UPROPERTY()
 	TObjectPtr<APlayerController> PlayerController;
 

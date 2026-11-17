@@ -14,22 +14,23 @@
 ## 2. 控件树
 
 ```
-RootCanvas (CanvasPanel, SelfHitTestInvisible)
-└─ Size_Status (SizeBox 340×64, 锚点左下 (0,1), 偏移 40,-40)
-   └─ VB_Status (VerticalBox)
-      ├─ HB_Health (HorizontalBox)
-      │  ├─ Text_HealthLabel   "生命"
-      │  ├─ Spacer_Health      Fill
-      │  └─ Text_HealthValue   "100 / 100"
-      ├─ Size_HealthBar (SizeBox h=8, top padding 3)
-      │  └─ Bar_Health (ProgressBar, 暗红)
-      ├─ HB_Energy (top padding 8)
-      │  ├─ Text_EnergyLabel   "能量"
-      │  ├─ Spacer_Energy      Fill
-      │  └─ Text_EnergyValue   "100 / 100"
-      └─ Size_EnergyBar (SizeBox h=6, top padding 3)
-         └─ Bar_Energy (ProgressBar, 青)
+Size_Status (SizeBox 340×64, SelfHitTestInvisible, 根节点)
+└─ VB_Status (VerticalBox)
+   ├─ HB_Health (HorizontalBox)
+   │  ├─ Text_HealthLabel   "生命"
+   │  ├─ Spacer_Health      Fill
+   │  └─ Text_HealthValue   "100 / 100"
+   ├─ Size_HealthBar (SizeBox h=8, top padding 3)
+   │  └─ Bar_Health (ProgressBar, 暗红)
+   ├─ HB_Energy (top padding 8)
+   │  ├─ Text_EnergyLabel   "能量"
+   │  ├─ Spacer_Energy      Fill
+   │  └─ Text_EnergyValue   "100 / 100"
+   └─ Size_EnergyBar (SizeBox h=6, top padding 3)
+      └─ Bar_Energy (ProgressBar, 青)
 ```
+
+位置与锚点不在本控件里：由 `WBP_HUD` 的 `CanvasPanelSlot` 决定（锚点 `(0,1)`、轴心 `(0,1)`、偏移 `40,-40`，见 `Docs/UI/WBP_HUD.md`）。
 
 ## 3. 程序要绑定的节点
 
@@ -59,20 +60,20 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 
 ## 5. 显示方式
 
-- **常驻**：`AddToViewport` 一次，不随背包/搜刮面板开关。
-- **层级**：通过 `UDZ_UIConfig::ZOrderMap` 配置，建议在交互提示之下。
-- **输入**：`SelfHitTestInvisible`，不拦截鼠标，不参与输入模式切换。
+- **常驻**：本控件不再自己 `AddToViewport`，作为 `WBP_HUD` 的子控件随 HUD 根一起显示一次。
+- **层级**：由 HUD 根内部的控件树顺序决定，不再走 `UDZ_UIConfig::ZOrderMap`。
+- **输入**：根节点 `SizeBox` 为 `SelfHitTestInvisible`，不拦截鼠标，不参与输入模式切换。
 
 ## 6. 程序侧现状
 
 | 项 | 状态 |
 |---|---|
 | `UDZ_StatusBars`（4 个 `BindWidget` + `SetHealthInfo` / `SetEnergyInfo`） | ✅ 已实现 |
-| `UDZ_UIConfig::StatusBarsClass` | ✅ 已加 |
-| 创建与常驻 | ✅ `UDZ_StatusBarsController::Initialize`（`bResident = true`，不进面板栈） |
-| 刷新 | ✅ `UDZ_StatusBarsController::Refresh` 从 PlayerState 的 ASC 读数；`ADZ_PlayerController::RefreshStatusBars` 只做转发 |
+| `UDZ_UIConfig::HUDClass` → `WBP_HUD` | ✅ 已加（`StatusBarsClass` 保留但已不再使用） |
+| 创建与常驻 | ✅ `UDZ_HUDController::Initialize` 创建 HUD 根并常驻，随后创建本 controller 并用 `SetStatusBarsWidget` 注入 `WBP_StatusBars`；本 controller 不创建、不查找控件 |
+| 刷新 | ✅ `UDZ_StatusBarsController::Refresh` 从 PlayerState 的 ASC 读数；外部经 `RaidUI->HUDController->RefreshStatusBars()` 触发 |
 | 属性委托 | ✅ 仍由 PC 统一注册，经 `RefreshUIAll` 进入 |
-| 关闭 | ✅ `UUIManager::ShutdownControllers` → `UDZ_StatusBarsController::Shutdown` 移除 Widget |
+| 关闭 | ✅ 本 controller `Shutdown` 只清引用；HUD 根由 `UDZ_HUDController::Shutdown` 移除 |
 | 死亡 / 无 Pawn 时隐藏 | ❌ 待定 |
 
 ## 7. 验收

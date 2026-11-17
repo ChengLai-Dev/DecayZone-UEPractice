@@ -1,0 +1,123 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/HUD/WBP_RaidTime",
+	"designSizeMode": "Desired",
+	"parentClass": "/Script/DecayZone.DZ_RaidTime",
+	"root":
+	{
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Size_RaidTime",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Border",
+				"className": "Border",
+				"name": "Border_RaidTimeOutline",
+				"isVariable": false,
+				"properties":
+				{
+					"Padding":
+					{
+						"left": 1,
+						"top": 1,
+						"right": 1,
+						"bottom": 1
+					},
+					"BrushColor":
+					{
+						"r": 0.068478003144264221,
+						"g": 0.10218899697065353,
+						"b": 0.12478700280189514,
+						"a": 1
+					}
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
+					"properties":
+					{
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.Border",
+						"className": "Border",
+						"name": "Border_RaidTimeFill",
+						"isVariable": false,
+						"properties":
+						{
+							"Padding":
+							{
+								"left": 18,
+								"top": 6,
+								"right": 18,
+								"bottom": 6
+							},
+							"BrushColor":
+							{
+								"r": 0.027320999652147293,
+								"g": 0.045186001807451248,
+								"b": 0.057805001735687256,
+								"a": 1
+							}
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.BorderSlot",
+							"className": "BorderSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 1,
+									"top": 1,
+									"right": 1,
+									"bottom": 1
+								}
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.TextBlock",
+								"className": "TextBlock",
+								"name": "Text_RaidTime",
+								"isVariable": true,
+								"properties":
+								{
+									"Text": "00:00",
+									"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+									"MinDesiredWidth": 64,
+									"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=20.000000,MonospacedWidth=1.000000)",
+									"Justification": "Center"
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.BorderSlot",
+									"className": "BorderSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 18,
+											"top": 6,
+											"right": 18,
+											"bottom": 6
+										},
+										"HorizontalAlignment": "HAlign_Center",
+										"VerticalAlignment": "VAlign_Center"
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "2333df656d2509b781bd98b3c1dc03cd"
+}

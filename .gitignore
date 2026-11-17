@@ -34,3 +34,9 @@ AGENTS.md
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# ---------------------------------------------------------------------------
+# IDE / editor artifacts
+# ---------------------------------------------------------------------------
+*.DotSettings.user
+**/*_editor_conflict.json

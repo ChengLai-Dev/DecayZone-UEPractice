@@ -3,6 +3,7 @@
 
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "Game/DZ_GameInstance.h"
+#include "UI/UIManager.h"
 
 void UDZ_UIControllerBase::Initialize(APlayerController* InPlayerController)
 {
@@ -24,4 +25,9 @@ void UDZ_UIControllerBase::Shutdown()
 
 void UDZ_UIControllerBase::Tick(float DeltaSeconds)
 {
+}
+
+UUIManager* UDZ_UIControllerBase::GetOwningManager() const
+{
+	return Cast<UUIManager>(GetOuter());
 }

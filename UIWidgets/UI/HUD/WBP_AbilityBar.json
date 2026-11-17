@@ -3,129 +3,82 @@
 	"assetPath": "/Game/UI/HUD/WBP_AbilityBar",
 	"designSizeMode": "Desired",
 	"root":
+{
+	"class": "/Script/UMG.SizeBox",
+	"className": "SizeBox",
+	"name": "Size_AbilityBar",
+	"isVariable": false,
+	"properties":
 	{
-		"class": "/Script/UMG.CanvasPanel",
-		"className": "CanvasPanel",
-		"name": "RootCanvas",
-		"isVariable": false,
-		"properties":
+		"Visibility": "SelfHitTestInvisible",
+		"WidthOverride": 140,
+		"HeightOverride": 64,
+		"bOverride_WidthOverride": true,
+		"bOverride_HeightOverride": true
+	},
+	"children": [
 		{
-		},
-		"children": [
+			"class": "/Script/UMG.HorizontalBox",
+			"className": "HorizontalBox",
+			"name": "HB_Slots",
+			"isVariable": true,
+			"properties":
 			{
-				"class": "/Script/UMG.SizeBox",
-				"className": "SizeBox",
-				"name": "Size_AbilityBar",
-				"isVariable": false,
+			},
+			"slot":
+			{
+				"class": "/Script/UMG.SizeBoxSlot",
+				"className": "SizeBoxSlot",
 				"properties":
 				{
-					"WidthOverride": 140,
-					"HeightOverride": 64,
-					"bOverride_WidthOverride": true,
-					"bOverride_HeightOverride": true
-				},
-				"slot":
+				}
+			},
+			"children": [
 				{
-					"class": "/Script/UMG.CanvasPanelSlot",
-					"className": "CanvasPanelSlot",
+					"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
+					"className": "WBP_AbilitySlot_C",
+					"name": "AbilitySlot_1",
+					"isVariable": true,
 					"properties":
 					{
-						"LayoutData":
+					},
+					"slot":
+					{
+						"class": "/Script/UMG.HorizontalBoxSlot",
+						"className": "HorizontalBoxSlot",
+						"properties":
 						{
-							"offsets":
+							"Padding":
 							{
 								"left": 0,
-								"top": -36,
-								"right": 140,
-								"bottom": 64
+								"top": 0,
+								"right": 12,
+								"bottom": 0
 							},
-							"anchors":
-							{
-								"min":
-								{
-									"x": 0.5,
-									"y": 1
-								},
-								"max":
-								{
-									"x": 0.5,
-									"y": 1
-								}
-							},
-							"alignment":
-							{
-								"x": 0.5,
-								"y": 1
-							}
+							"VerticalAlignment": "VAlign_Center"
 						}
 					}
 				},
-				"children": [
+				{
+					"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
+					"className": "WBP_AbilitySlot_C",
+					"name": "AbilitySlot_2",
+					"isVariable": true,
+					"properties":
 					{
-						"class": "/Script/UMG.HorizontalBox",
-						"className": "HorizontalBox",
-						"name": "HB_Slots",
-						"isVariable": true,
+					},
+					"slot":
+					{
+						"class": "/Script/UMG.HorizontalBoxSlot",
+						"className": "HorizontalBoxSlot",
 						"properties":
 						{
-						},
-						"slot":
-						{
-							"class": "/Script/UMG.SizeBoxSlot",
-							"className": "SizeBoxSlot",
-							"properties":
-							{
-							}
-						},
-						"children": [
-							{
-								"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
-								"className": "WBP_AbilitySlot_C",
-								"name": "AbilitySlot_1",
-								"isVariable": true,
-								"properties":
-								{
-								},
-								"slot":
-								{
-									"class": "/Script/UMG.HorizontalBoxSlot",
-									"className": "HorizontalBoxSlot",
-									"properties":
-									{
-										"Padding":
-										{
-											"left": 0,
-											"top": 0,
-											"right": 12,
-											"bottom": 0
-										},
-										"VerticalAlignment": "VAlign_Center"
-									}
-								}
-							},
-							{
-								"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
-								"className": "WBP_AbilitySlot_C",
-								"name": "AbilitySlot_2",
-								"isVariable": true,
-								"properties":
-								{
-								},
-								"slot":
-								{
-									"class": "/Script/UMG.HorizontalBoxSlot",
-									"className": "HorizontalBoxSlot",
-									"properties":
-									{
-										"VerticalAlignment": "VAlign_Center"
-									}
-								}
-							}
-						]
+							"VerticalAlignment": "VAlign_Center"
+						}
 					}
-				]
-			}
-		]
-	},
-	"contentHash": "b783d31525a6f73ed28c55862cc7986c"
+				}
+			]
+		}
+	]
+}
 }
