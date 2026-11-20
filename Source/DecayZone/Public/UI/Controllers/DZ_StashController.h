@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DZ_DelegateTypes.h"
+#include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "UI/Controllers/DZ_UIControllerBase.h"
 #include "DZ_StashController.generated.h"
 
@@ -33,6 +34,15 @@ private:
 
 	UFUNCTION()
 	void HandleStartRequested();
+
+	UFUNCTION()
+	void HandleShopRequested();
+
+	UFUNCTION()
+	void HandleSellTargetChanged(FDZ_ItemSlotHandle Handle);
+
+	UFUNCTION()
+	void HandleSellRequested(FDZ_ItemSlotHandle Handle);
 
 	UFUNCTION()
 	void HandleStashChanged();

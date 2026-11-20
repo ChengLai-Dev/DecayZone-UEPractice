@@ -64,7 +64,7 @@ C++ 侧已落地：
 | `Data/UI/DZ_UIConfig.h` | 新增 `StashWidgetClass` |
 | `UI/UIManager.h/.cpp` | 注册 `StashController` |
 
-`WBP_StashPanel` 是**单文件扁平结构**（没有拆子 WBP），因为局外界面是一次性的，拆开反而多三个 C++ 类。整个界面共 84 个节点，其中 30 个仓库格 + 6 个背包格是 `WBP_ItemSlot` 实例。
+`WBP_StashPanel` 是**单文件扁平结构**（没有拆子 WBP），因为局外界面是一次性的，拆开反而多三个 C++ 类。整个界面共 92 个节点，其中 30 个仓库格 + 6 个背包格是 `WBP_ItemSlot` 实例，仓库标题行右侧有 `Btn_Shop`（商店入口），底部有 `HB_SellBar`（出售栏）。
 
 ---
 

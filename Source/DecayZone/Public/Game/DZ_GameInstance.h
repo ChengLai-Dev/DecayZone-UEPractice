@@ -6,6 +6,7 @@
 #include "DZ_DelegateTypes.h"
 #include "Data/Item/FDZ_ItemStack.h"
 #include "Data/Item/FDZ_Loadout.h"
+#include "Data/Shop/FDZ_ShopItemData.h"
 #include "Engine/GameInstance.h"
 #include "DZ_GameInstance.generated.h"
 
@@ -41,12 +42,10 @@ public:
 	const FDZ_ItemData* GetItemData(int32 ItemId);
 	const FDZ_SkillData* GetSkillData(int32 SkillId) const;
 	
-	/** 槽位 SkillId，索引即槽位号 */
 	int32 GetSlotSkillId(int32 SlotIndex) const;
 	void SetSlotSkillId(int32 SlotIndex, int32 SkillId);
 	int32 GetSlotSkillCount() const;
 	
-	/** 按 UIConfig 的默认配置填充槽位，只在 Init 时调用一次 */
 	void InitSlotSkills();
 	
 	const TArray<FDZ_ItemStack>& GetStashItems() const { return StashItems; }
@@ -63,6 +62,20 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category = "DecayZone|Stash")
 	FOnEvent OnStashChanged;
+	
+	const TArray<FDZ_ShopItemData>& GetShopItems() const { return ShopItems; }
+	
+	int32 GetMoney() const { return Money; }
+	int32 GetSellPrice(int32 ItemId) const;
+	
+	bool CanBuyShopItem(int32 ItemId, int32 Count, FText& OutFailReason) const;
+	bool TryBuyShopItem(int32 ItemId, int32 Count, FText& OutFailReason);
+	
+	bool CanSellStashSlot(const FDZ_ItemSlotHandle& Handle, int32 Count, FText& OutFailReason) const;
+	bool TrySellStashSlot(const FDZ_ItemSlotHandle& Handle, int32 Count, FText& OutFailReason);
+	
+	UPROPERTY(BlueprintAssignable, Category = "DecayZone|Shop")
+	FOnEvent OnMoneyChanged;
 	
 	bool TakeDepartureLoadout();
 	
@@ -103,6 +116,18 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Stash")
 	TArray<FDZ_ItemStack> DebugStashItems;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Shop")
+	TObjectPtr<UDataTable> ShopItemDataTable;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|Shop")
+	int32 InitialMoney = 5000;
+	
+	UPROPERTY()
+	int32 Money = 0;
+	
+	UPROPERTY()
+	TArray<FDZ_ShopItemData> ShopItems;
+	
 	UPROPERTY()
 	FDZ_Loadout PendingLoadout;
 	
@@ -116,6 +141,11 @@ private:
 	
 	bool TryAddItemToStash(const FDZ_ItemStack& Item);
 	bool TryAddEquipmentToStash(int32 ItemId);
+	
+	void InitShopItems();
+	const FDZ_ShopItemData* FindShopItem(int32 ItemId) const;
+	bool HasStashRoomFor(int32 ItemId, int32 Count) const;
+	void AddMoney(int32 Amount);
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Items", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UDataTable> ItemDataTable;

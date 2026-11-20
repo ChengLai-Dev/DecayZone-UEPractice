@@ -157,6 +157,68 @@
 										}
 									},
 									{
+										"class": "/Script/UMG.Button",
+										"className": "Button",
+										"name": "Btn_Shop",
+										"isVariable": true,
+										"properties":
+										{
+											"BackgroundColor":
+											{
+												"r": 0.10588199645280838,
+												"g": 0.078431002795696259,
+												"b": 0.043136999011039734,
+												"a": 1
+											}
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 0,
+													"right": 14,
+													"bottom": 0
+												},
+												"VerticalAlignment": "VAlign_Center"
+											}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.TextBlock",
+												"className": "TextBlock",
+												"name": "Text_Shop",
+												"isVariable": false,
+												"properties":
+												{
+													"Text": "商 店",
+													"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+													"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
+													"Justification": "Center"
+												},
+												"slot":
+												{
+													"class": "/Script/UMG.ButtonSlot",
+													"className": "ButtonSlot",
+													"properties":
+													{
+														"Padding":
+														{
+															"left": 14,
+															"top": 6,
+															"right": 14,
+															"bottom": 6
+														}
+													}
+												}
+											}
+										]
+									},
+									{
 										"class": "/Script/UMG.TextBlock",
 										"className": "TextBlock",
 										"name": "Text_StashCount",
@@ -989,7 +1051,172 @@
 										]
 									}
 								]
-							}
+							},
+							{
+								"class": "/Script/UMG.HorizontalBox",
+								"className": "HorizontalBox",
+								"name": "HB_SellBar",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.VerticalBoxSlot",
+									"className": "VerticalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 0,
+											"top": 8,
+											"right": 0,
+											"bottom": 0
+										}
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_SellInfo",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "未选中物品",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)",
+											"TextOverflowPolicy": "Ellipsis"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Size":
+												{
+													"value": 1,
+													"rule": "Fill"
+												},
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_SellPrice",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "售价 $0",
+											"Visibility": "Collapsed",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 10,
+													"top": 0,
+													"right": 0,
+													"bottom": 0
+												},
+												"VerticalAlignment": "VAlign_Center"
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.SizeBox",
+										"className": "SizeBox",
+										"name": "Size_Sell",
+										"isVariable": false,
+										"properties":
+										{
+											"WidthOverride": 84,
+											"bOverride_WidthOverride": true
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.HorizontalBoxSlot",
+											"className": "HorizontalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 12,
+													"top": 0,
+													"right": 0,
+													"bottom": 0
+												},
+												"VerticalAlignment": "VAlign_Center"
+											}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.Button",
+												"className": "Button",
+												"name": "Btn_Sell",
+												"isVariable": true,
+												"properties":
+												{
+													"BackgroundColor":
+													{
+														"r": 0.10588199645280838,
+														"g": 0.078431002795696259,
+														"b": 0.043136999011039734,
+														"a": 1
+													}
+												},
+												"slot":
+												{
+													"class": "/Script/UMG.SizeBoxSlot",
+													"className": "SizeBoxSlot",
+													"properties":
+													{
+													}
+												},
+												"children": [
+													{
+														"class": "/Script/UMG.TextBlock",
+														"className": "TextBlock",
+														"name": "Text_Sell",
+														"isVariable": false,
+														"properties":
+														{
+															"Text": "出 售",
+															"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+															"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
+															"Justification": "Center"
+														},
+														"slot":
+														{
+															"class": "/Script/UMG.ButtonSlot",
+															"className": "ButtonSlot",
+															"properties":
+															{
+																"Padding":
+																{
+																	"left": 10,
+																	"top": 6,
+																	"right": 10,
+																	"bottom": 6
+																}
+															}
+														}
+													}
+												]
+											}
+										]
+									}
+								]
+							},
 						]
 					}
 				]

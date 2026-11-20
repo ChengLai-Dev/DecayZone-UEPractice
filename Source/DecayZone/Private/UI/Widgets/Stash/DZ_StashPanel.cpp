@@ -29,6 +29,10 @@ void UDZ_StashPanel::NativeOnInitialized()
 	EquipSlot_Backpack->OnWidgetDragEnded.AddDynamic(this, &ThisClass::HandleItemDrop);
 
 	Btn_Start->OnClicked.AddDynamic(this, &ThisClass::HandleStartClicked);
+	Btn_Shop->OnClicked.AddDynamic(this, &ThisClass::HandleShopClicked);
+	Btn_Sell->OnClicked.AddDynamic(this, &ThisClass::HandleSellClicked);
+
+	ClearSellInfo();
 }
 
 void UDZ_StashPanel::SetStashItems(const TArray<FDZ_ItemStack>& Items)
@@ -44,6 +48,16 @@ void UDZ_StashPanel::SetStashItems(const TArray<FDZ_ItemStack>& Items)
 		}
 		StashSlots[Index]->SetItemInfo(Items[Index].ItemId, Items[Index].Count);
 	}
+
+	if (SelectedSlot.SlotIndex == INDEX_NONE) return;
+
+	if (!Items.IsValidIndex(SelectedSlot.SlotIndex) || Items[SelectedSlot.SlotIndex].IsEmpty())
+	{
+		ClearStashSelection();
+		return;
+	}
+	RefreshSlotSelection();
+	OnSellTargetChanged.Broadcast(SelectedSlot);
 }
 
 void UDZ_StashPanel::SetStashSummary(int32 Used, int32 Capacity)
@@ -101,6 +115,21 @@ void UDZ_StashPanel::SetEquipmentInfo(const TArray<int32>& Equipments)
 	}
 }
 
+void UDZ_StashPanel::SetSellInfo(const FText& Info, int32 Price)
+{
+	Text_SellInfo->SetText(Info);
+	Text_SellPrice->SetText(FText::FromString(FString::Printf(TEXT("售价 $%d"), Price)));
+	Text_SellPrice->SetVisibility(ESlateVisibility::Visible);
+	Btn_Sell->SetIsEnabled(true);
+}
+
+void UDZ_StashPanel::ClearSellInfo()
+{
+	Text_SellInfo->SetText(FText::FromString(TEXT("未选中物品")));
+	Text_SellPrice->SetVisibility(ESlateVisibility::Collapsed);
+	Btn_Sell->SetIsEnabled(false);
+}
+
 void UDZ_StashPanel::CollectSlots(UUniformGridPanel* Grid, EItemContainer Container, TArray<TObjectPtr<UDZ_ItemSlot>>& OutSlots)
 {
 	OutSlots.Reset();
@@ -114,6 +143,31 @@ void UDZ_StashPanel::CollectSlots(UUniformGridPanel* Grid, EItemContainer Contai
 		OutSlots.Add(ItemSlot);
 		ItemSlot->SetSlotInfo(Container, OutSlots.Num() - 1);
 		ItemSlot->OnWidgetDragEnded.AddDynamic(this, &ThisClass::HandleItemDrop);
+		ItemSlot->OnWidgetLeftClicked.AddDynamic(this, &ThisClass::HandleStashSlotClicked);
+	}
+}
+
+void UDZ_StashPanel::SetStashSelection(const FDZ_ItemSlotHandle& Handle)
+{
+	SelectedSlot = Handle;
+	RefreshSlotSelection();
+	OnSellTargetChanged.Broadcast(SelectedSlot);
+}
+
+void UDZ_StashPanel::ClearStashSelection()
+{
+	SelectedSlot = FDZ_ItemSlotHandle();
+	RefreshSlotSelection();
+	ClearSellInfo();
+	OnSellTargetChanged.Broadcast(SelectedSlot);
+}
+
+void UDZ_StashPanel::RefreshSlotSelection()
+{
+	for (UDZ_ItemSlot* ItemSlot : StashSlots)
+	{
+		if (!IsValid(ItemSlot)) continue;
+		ItemSlot->SetSelected(ItemSlot->GetSlotHandle().SlotIndex == SelectedSlot.SlotIndex);
 	}
 }
 
@@ -125,4 +179,31 @@ void UDZ_StashPanel::HandleItemDrop(UWidget* From, UWidget* To)
 void UDZ_StashPanel::HandleStartClicked()
 {
 	OnStartRequested.Broadcast();
+}
+
+void UDZ_StashPanel::HandleShopClicked()
+{
+	OnShopRequested.Broadcast();
+}
+
+void UDZ_StashPanel::HandleStashSlotClicked(UWidget* Widget)
+{
+	UDZ_ItemSlot* ItemSlot = Cast<UDZ_ItemSlot>(Widget);
+	if (!IsValid(ItemSlot)) return;
+	if (ItemSlot->GetSlotHandle().Container != EItemContainer::Stash) return;
+
+	if (ItemSlot->IsEmptyState())
+	{
+		ClearStashSelection();
+		return;
+	}
+
+	SetStashSelection(ItemSlot->GetSlotHandle());
+}
+
+void UDZ_StashPanel::HandleSellClicked()
+{
+	if (SelectedSlot.SlotIndex == INDEX_NONE) return;
+
+	OnSellRequested.Broadcast(SelectedSlot);
 }

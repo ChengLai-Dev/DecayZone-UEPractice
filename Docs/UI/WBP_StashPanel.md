@@ -25,6 +25,21 @@
 - 两块卡片高度固定 940，需要屏幕高度 ≥ 1000 才不裁切（1080p 及以上的目标分辨率满足）。
 - 中间区域不铺任何底板。**不要**在 `RootCanvas` 上加全屏半透明底，会把场景压暗。
 
+### 左卡片竖向结构
+
+```
+Panel_Stash (760×940, Padding 15)
+└─ VB_Stash
+   ├─ HB_StashHeader   仓库 | Spacer | 商 店 | 0 / 30
+   ├─ Size_Divider_Stash
+   ├─ Grid_Stash       30 格，5 列 × 6 行，水平居中
+   ├─ Spacer_StashFill 把底栏推到底
+   ├─ Panel_StashFooter  总价值 $N | Spacer | 拖拽整理
+   └─ HB_SellBar      未选中物品 | 售价 $0(隐藏) | [出 售]
+```
+
+`HB_SellBar` 是这次新增的，高度约 34（按钮 6+6 内边距 + 文字）。卡片原本有约 100 的竖向余量，加这一行不需要缩格子。
+
 ---
 
 ## 需要程序接的节点（建议 BindWidget 全集）
@@ -41,8 +56,12 @@
 | `EquipSlot_Armor` | `WBP_EquipmentSlot` | 护甲槽 |
 | `EquipSlot_Backpack` | `WBP_EquipmentSlot` | 背包槽 |
 | `Btn_Start` | Button | 「出发」 |
+| `Btn_Shop` | Button | 「商 店」入口，点开局外商店面板 |
+| `Text_SellInfo` | TextBlock | 出售栏：选中物品名称与数量（`医疗包 ×3`） |
+| `Text_SellPrice` | TextBlock | 出售栏：单件售价（`售价 $48`），无选中时 `Collapsed` |
+| `Btn_Sell` | Button | 「出 售」，点一次卖 1 件；无选中或不可卖时禁用 |
 
-> 这 10 个就是 C++ 里**可以**声明的 BindWidget 全集。**不要**额外声明别的 BindWidget —— 插件导入时找不到控件会让整次导入失败。
+> 这 14 个就是 C++ 里**可以**声明的 BindWidget 全集。**不要**额外声明别的 BindWidget —— 插件导入时找不到控件会让整次导入失败。
 
 ## 不需要接的节点
 
@@ -66,11 +85,13 @@
 
 | 来源 | 事件 | 程序要做什么 |
 |---|---|---|
-| `ItemSlot_1` … `ItemSlot_30` | 左键单击 | 记下当前选中的仓库格；需要详情时用 `GetItemID()` 取物品。本版没有详情栏，先只做选中高亮 |
+| `ItemSlot_1` … `ItemSlot_30` | 左键单击 | 记下当前选中的仓库格，全体 `SetSelected(false)` 后给这一格 `SetSelected(true)`；抛 `OnSellTargetChanged(Handle)` 给控制器算价。点空格子 = 清空选中（抛无效 Handle） |
 | `ItemSlot_*` | 拖拽结束 | 把 `From` / `To` 两个 `FDZ_ItemSlotHandle` 交给移动入口，合法性由数据层判定 |
-| `BagSlot_1` … `BagSlot_6` | 左键单击 / 拖拽结束 | 同上，只是容器类型不同 |
+| `BagSlot_1` … `BagSlot_6` | 左键单击 / 拖拽结束 | 同上，只是容器类型不同（背包格**不可出售**） |
 | `EquipSlot_*` | 拖入 / 拖出 | 同 `WBP_EquipmentPanel` 的处理方式，聚合后统一发移动请求 |
 | `Btn_Start` | `OnClicked` | 1) 校验能否出发（至少一件装备可选）；2) 把出发配置提交给出发流程；3) 提交成功后不许重复点击 |
+| `Btn_Shop` | `OnClicked` | 抛 `OnShopRequested`，由 `UDZ_StashController` 转给 `UDZ_ShopController::Open()`。商店打开期间本面板的拖拽要禁用 |
+| `Btn_Sell` | `OnClicked` | 把当前选中的 `FDZ_ItemSlotHandle` 抛给控制器，控制器调 `GameInstance::TrySellStashSlot(Handle, 1)`，**一次只卖 1 件** |
 | 面板空白处 | 左键单击 | 取消选中（可选，不接也不影响） |
 | `ESC` | 按键 | 隐藏面板（按键不在 UI 节点上，由 Controller 处理） |
 
@@ -99,7 +120,28 @@
 | 仓库总价值变化 | `Text_TotalValue` | `$总价值` |
 | 背包占用变化 | `Text_BagCount` | `已放 / 6` |
 | 是否可出发 | `Btn_Start` | 当前恒为可用。将来要加条件，在 `UDZ_StashPanel` 加一个 setter 调 `UButton::SetIsEnabled` |
+| 未选中 / 选中空格 | `Text_SellInfo` / `Text_SellPrice` / `Btn_Sell` | 文案回「未选中物品」、价格 `Collapsed`、按钮禁用 |
+| 选中可卖物品 | `Text_SellInfo` / `Text_SellPrice` / `Btn_Sell` | 「医疗包 ×3」+「售价 $40」+ 按钮可用；`Value` 为 0 时显示「售价 $0」也照样可点 |
+| 出售扣减数量 | `Text_SellInfo` | `×3 → ×2`；卖到 0 时整行清空选中 |
 | 面板显示 / 隐藏 | 面板整体 | 由外部加到视口 / 移除，或用 `SetVisibility` |
+
+> **选中高亮会被刷新冲掉**：`SetStashItems()` 会把 30 个格子整体重写，所以按 `SelectedHandle.SlotIndex` 在 `SetStashItems` 末尾重新 `SetSelected(true)`，不要只在点击时刷一次。
+> 反查格子用 `StashSlots[Handle.SlotIndex]`，不要重新遍历 `Grid_Stash->GetAllChildren()` 复数下标。
+
+### 选中状态归谁（别随手改）
+
+| 内容 | 归属 | 理由 |
+|---|---|---|
+| 选中哪一格、高亮 | **面板**（`SelectedSlot`） | 视图状态，只有这个面板消费；离开面板就没有意义 |
+| 卖多少钱、底栏文案、按钮可用 | **控制器** | 派生自已存数据，控制器算完 `SetSellInfo` 推给面板；面板保持纯渲染 |
+| 出售动作 | **控制器** → `GameInstance` | 改数据的操作不走 UI |
+
+两条硬约定：
+
+1. **面板不暴露 `GetSelectedSlot()`**。要出售就把地址放进命令：`OnSellRequested(FDZ_ItemSlotHandle)`。控制器不允许回读视图状态，否则会形成 `Controller → View` 的反向依赖。
+2. **`OnSellTargetChanged(Handle)` 不只在点击时发**，`SetStashItems` 末尾也要发一次——因为卖出一件后数量变了（`×3 → ×2`），地址没变但内容变了。事件名取的是"出售目标变了"，不是"选中变了"。
+
+> 以后如果出现第二个消费者（详情栏、快捷键、跨面板保持选中），再把选中上移到 ViewModel，而不是塞进 `GameInstance`。
 
 ---
 
@@ -111,6 +153,8 @@
 | `BagSlot_1` … `BagSlot_6` | `WBP_ItemSlot` | 同上 | 见 [WBP_ItemSlot.md](WBP_ItemSlot.md) |
 | `EquipSlot_*` | `WBP_EquipmentSlot` | 设置图标 / 名称，转发拖放 | 见 [WBP_EquipmentSlot.md](WBP_EquipmentSlot.md) |
 | `Btn_Start` | `Button` | 只有一个 `OnClicked` | — |
+| `Btn_Shop` | `Button` | 只有一个 `OnClicked` | — |
+| `Btn_Sell` | `Button` | 只有一个 `OnClicked` | — |
 
 ---
 

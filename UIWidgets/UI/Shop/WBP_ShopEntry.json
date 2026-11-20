@@ -1,0 +1,373 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/Shop/WBP_ShopEntry",
+	"parentClass": "/Script/DecayZone.DZ_ShopEntryWidget",
+	"designSizeMode": "Desired",
+	"root":
+	{
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Root_Size",
+		"isVariable": false,
+		"properties":
+		{
+			"HeightOverride": 72,
+			"bOverride_HeightOverride": true
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Border",
+				"className": "Border",
+				"name": "BG_Row",
+				"isVariable": false,
+				"properties":
+				{
+					"BrushColor":
+					{
+						"r": 0.015208999626338482,
+						"g": 0.024157999083399773,
+						"b": 0.030712999403476715,
+						"a": 1
+					}
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
+					"properties":
+					{
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.HorizontalBox",
+						"className": "HorizontalBox",
+						"name": "HB_Row",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.BorderSlot",
+							"className": "BorderSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 10,
+									"top": 6,
+									"right": 12,
+									"bottom": 6
+								},
+								"VerticalAlignment": "VAlign_Center"
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Icon",
+								"isVariable": false,
+								"properties":
+								{
+									"WidthOverride": 56,
+									"HeightOverride": 56,
+									"bOverride_WidthOverride": true,
+									"bOverride_HeightOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.Image",
+										"className": "Image",
+										"name": "Img_Icon",
+										"isVariable": true,
+										"properties":
+										{
+											"Visibility": "Collapsed"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.VerticalBox",
+								"className": "VerticalBox",
+								"name": "VB_Name",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 10,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										},
+										"Size":
+										{
+											"value": 1,
+											"rule": "Fill"
+										},
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Name",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "商品名称",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.775823,G=0.830771,B=0.854992,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=14.300000,MonospacedWidth=1.000000)",
+											"TextOverflowPolicy": "Ellipsis"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+												"Padding":
+												{
+													"left": 0,
+													"top": 0,
+													"right": 0,
+													"bottom": 2
+												}
+											}
+										}
+									},
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Type",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "类型",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=11.000000,MonospacedWidth=1.000000)",
+											"TextOverflowPolicy": "Ellipsis"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.VerticalBoxSlot",
+											"className": "VerticalBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Price",
+								"isVariable": false,
+								"properties":
+								{
+									"WidthOverride": 110,
+									"bOverride_WidthOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 8,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										},
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Price",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "$0",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=14.300000,MonospacedWidth=1.000000)",
+											"Justification": "Right"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Stock",
+								"isVariable": false,
+								"properties":
+								{
+									"Visibility": "Collapsed",
+									"WidthOverride": 88,
+									"bOverride_WidthOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.TextBlock",
+										"className": "TextBlock",
+										"name": "Text_Stock",
+										"isVariable": true,
+										"properties":
+										{
+											"Text": "库存 0",
+											"ColorAndOpacity": "(SpecifiedColor=(R=0.291771,G=0.366253,B=0.407240,A=1.000000))",
+											"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=12.100000,MonospacedWidth=1.000000)",
+											"Justification": "Right"
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										}
+									}
+								]
+							},
+							{
+								"class": "/Script/UMG.SizeBox",
+								"className": "SizeBox",
+								"name": "Size_Buy",
+								"isVariable": false,
+								"properties":
+								{
+									"WidthOverride": 76,
+									"bOverride_WidthOverride": true
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.HorizontalBoxSlot",
+									"className": "HorizontalBoxSlot",
+									"properties":
+									{
+										"Padding":
+										{
+											"left": 12,
+											"top": 0,
+											"right": 0,
+											"bottom": 0
+										},
+										"VerticalAlignment": "VAlign_Center"
+									}
+								},
+								"children": [
+									{
+										"class": "/Script/UMG.Button",
+										"className": "Button",
+										"name": "Btn_Buy",
+										"isVariable": true,
+										"properties":
+										{
+											"BackgroundColor":
+											{
+												"r": 0.10588199645280838,
+												"g": 0.078431002795696259,
+												"b": 0.043136999011039734,
+												"a": 1
+											}
+										},
+										"slot":
+										{
+											"class": "/Script/UMG.SizeBoxSlot",
+											"className": "SizeBoxSlot",
+											"properties":
+											{
+											}
+										},
+										"children": [
+											{
+												"class": "/Script/UMG.TextBlock",
+												"className": "TextBlock",
+												"name": "Text_Buy",
+												"isVariable": false,
+												"properties":
+												{
+													"Text": "购买",
+													"ColorAndOpacity": "(SpecifiedColor=(R=0.584078,G=0.396755,B=0.138432,A=1.000000))",
+													"Font": "(FontObject=\"/Script/Engine.Font'/Engine/EngineFonts/Roboto.Roboto'\",OutlineSettings=(OutlineColor=(R=0.000000,G=0.000000,B=0.000000,A=1.000000)),TypefaceFontName=\"Bold\",Size=13.200000,MonospacedWidth=1.000000)",
+													"Justification": "Center"
+												},
+												"slot":
+												{
+													"class": "/Script/UMG.ButtonSlot",
+													"className": "ButtonSlot",
+													"properties":
+													{
+														"Padding":
+														{
+															"left": 8,
+															"top": 8,
+															"right": 8,
+															"bottom": 8
+														}
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

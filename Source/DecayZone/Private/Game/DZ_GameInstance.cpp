@@ -85,6 +85,9 @@ void UDZ_GameInstance::Init()
 			UE_LOG(LogDZ, Warning, TEXT("Debug stash item %d x%d dropped, stash is full"), DebugItem.ItemId, DebugItem.Count);
 		}
 	}
+	
+	InitShopItems();
+	Money = InitialMoney;
 }
 
 void UDZ_GameInstance::InitSlotSkills()
@@ -411,4 +414,139 @@ bool UDZ_GameInstance::TryAddEquipmentToStash(int32 ItemId)
 	}
 	
 	return TryAddItemToStash(FDZ_ItemStack(ItemId, 1));
+}
+
+void UDZ_GameInstance::InitShopItems()
+{
+	ShopItems.Reset();
+	
+	if (!IsValid(ShopItemDataTable))
+	{
+		UE_LOG(LogDZ, Error, TEXT("ShopItemDataTable is not set, shop will be empty"));
+		return;
+	}
+	
+	TArray<FDZ_ShopItemData*> Rows;
+	ShopItemDataTable->GetAllRows(TEXT("Init ShopItems"), Rows);
+	for (const FDZ_ShopItemData* Row : Rows)
+	{
+		if (!Row || Row->ItemId == DZItem::EmptyId) continue;
+		if (!ItemMap.Contains(Row->ItemId))
+		{
+			UE_LOG(LogDZ, Warning, TEXT("Shop item %d has no item data row, skipped"), Row->ItemId);
+			continue;
+		}
+		ShopItems.Add(*Row);
+	}
+}
+
+const FDZ_ShopItemData* UDZ_GameInstance::FindShopItem(int32 ItemId) const
+{
+	for (const FDZ_ShopItemData& ShopItem : ShopItems)
+	{
+		if (ShopItem.ItemId == ItemId) return &ShopItem;
+	}
+	return nullptr;
+}
+
+int32 UDZ_GameInstance::GetSellPrice(int32 ItemId) const
+{
+	const FDZ_ItemData* const* Found = ItemMap.Find(ItemId);
+	if (!Found || !*Found) return 0;
+
+	return FMath::Max((*Found)->Value, 0);
+}
+
+bool UDZ_GameInstance::HasStashRoomFor(int32 ItemId, int32 Count) const
+{
+	const int32 MaxStack = ItemHelper::GetMaxStack(this, ItemId);
+	int32 Remaining = Count;
+	
+	for (const FDZ_ItemStack& Slot : StashItems)
+	{
+		if (Remaining <= 0) break;
+		if (!Slot.IsEmpty() && Slot.ItemId != ItemId) continue;
+		
+		const int32 Space = Slot.IsEmpty() ? MaxStack : MaxStack - Slot.Count;
+		if (Space <= 0) continue;
+		Remaining -= Space;
+	}
+	
+	return Remaining <= 0;
+}
+
+void UDZ_GameInstance::AddMoney(int32 Amount)
+{
+	if (Amount == 0) return;
+	
+	Money = FMath::Max(Money + Amount, 0);
+	OnMoneyChanged.Broadcast();
+}
+
+bool UDZ_GameInstance::CanBuyShopItem(int32 ItemId, int32 Count, FText& OutFailReason) const
+{
+	OutFailReason = FText::GetEmpty();
+	if (Count <= 0) return false;
+	
+	const FDZ_ShopItemData* ShopItem = FindShopItem(ItemId);
+	if (!ShopItem || !ShopItem->bEnabled)
+	{
+		OutFailReason = FText::FromString(TEXT("该商品已下架"));
+		return false;
+	}
+	
+	if (Money < ShopItem->Price * Count)
+	{
+		OutFailReason = FText::FromString(TEXT("余额不足"));
+		return false;
+	}
+	
+	if (!HasStashRoomFor(ItemId, Count))
+	{
+		OutFailReason = FText::FromString(TEXT("仓库空间不足"));
+		return false;
+	}
+	
+	return true;
+}
+
+bool UDZ_GameInstance::TryBuyShopItem(int32 ItemId, int32 Count, FText& OutFailReason)
+{
+	if (!CanBuyShopItem(ItemId, Count, OutFailReason)) return false;
+	
+	const FDZ_ShopItemData* ShopItem = FindShopItem(ItemId);
+	AddMoney(-ShopItem->Price * Count);
+	TryAddItemToStash(FDZ_ItemStack(ItemId, Count));
+	OnStashChanged.Broadcast();
+	return true;
+}
+
+bool UDZ_GameInstance::CanSellStashSlot(const FDZ_ItemSlotHandle& Handle, int32 Count, FText& OutFailReason) const
+{
+	OutFailReason = FText::GetEmpty();
+	if (Handle.Container != EItemContainer::Stash || Count <= 0) return false;
+	
+	const TArray<FDZ_ItemStack>* Items = GetStashStackArray(Handle.Container);
+	if (!Items || !Items->IsValidIndex(Handle.SlotIndex)) return false;
+	
+	const FDZ_ItemStack& Item = (*Items)[Handle.SlotIndex];
+	if (Item.IsEmpty() || Count > Item.Count) return false;
+	
+	return true;
+}
+
+bool UDZ_GameInstance::TrySellStashSlot(const FDZ_ItemSlotHandle& Handle, int32 Count, FText& OutFailReason)
+{
+	if (!CanSellStashSlot(Handle, Count, OutFailReason)) return false;
+	
+	TArray<FDZ_ItemStack>* Items = GetStashStackArray(Handle.Container);
+	const FDZ_ItemStack Item = (*Items)[Handle.SlotIndex];
+	
+	FDZ_ItemStack Remaining = Item;
+	Remaining.Count -= Count;
+	SetStashSlotItem(Handle, Remaining.Count > 0 ? Remaining : FDZ_ItemStack());
+	
+	AddMoney(GetSellPrice(Item.ItemId) * Count);
+	OnStashChanged.Broadcast();
+	return true;
 }
