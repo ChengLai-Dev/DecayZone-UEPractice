@@ -46,11 +46,11 @@
 
 ---
 
-## 已实现的接口
+## 程序接口
 
 | 接口 | 参数 | 说明 |
 |---|---|---|
-| `SetItem` | `int32 ItemId`、`int32 Count` | 内部用 `ItemHelper::GetItemData` 查图标；`Count <= 1` 隐藏角标 |
+| `SetItem` | `int32 ItemId`、`int32 Count` | 显示图标与数量；`Count <= 1` 隐藏角标 |
 
 ---
 

@@ -66,28 +66,7 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 
 ---
 
-## 5. 实现状态
-
-**已完成**
-
-| 项 | 位置 |
-|---|---|
-| `UDZ_Tips` 类，两个动画回调绑定 | `Source/.../Public/UI/Widgets/HUD/DZ_Tips.h` + `.cpp` |
-| `UDZ_UIConfig::TipsClass` 字段 | `Source/.../Public/Data/UI/DZ_UIConfig.h` |
-| 创建入口 `UIHelper::ShowTips(WorldContext, Text, Duration)` | `Source/.../Private/Library/UIHelper.cpp` |
-
-**待补**
-
-1. **`Text_Tips` 没接**：`UDZ_Tips` 没有 `BindWidget` 的 `UTextBlock` 成员，`ShowTips` 也没调 `SetText`。当前屏幕上永远是 JSON 里的默认文本「提示消息」。
-2. **Timer 句柄是局部变量**：`HandleFadeInComplete` 里用的是函数内 `FTimerHandle`，函数返回后无法取消。应改用成员 `HoldTimerHandle`。
-3. **ZOrder 用了魔数**：`UIHelper::ShowTips` 里是 `AddToViewport(999)`，应改走 `UIHelper::GetZOrder`（并在 `DA_UIConfig.ZOrderMap` 里给 `WBP_Tips_C` 配值）。
-4. **owner 不统一**：`UIHelper::ShowTips` 用 `UWorld` 作 owner，项目其他 Widget 都用 `PlayerController`。用 World 会让 Widget 活到世界销毁，PIE 里更容易被旧世界引用链拖住。
-5. **`Duration` 无兜底**：调用方传 0.1 秒时，淡出会打断 0.25 秒的淡入。建议 `FMath::Max(Duration, Anim_FadeIn->GetEndTime())`。
-6. **`DA_UIConfig` 配置**：`TipsClass` 是否已指向 `WBP_Tips`、`ZOrderMap` 是否已加条目，需在编辑器里核对。
-
----
-
-## 5.1 动画时序
+## 5. 动画时序
 
 `UDZ_Tips` 当前实现走的是「回调」路线，两条动画各绑一个 `BindToAnimationFinished`：
 

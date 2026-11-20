@@ -1,0 +1,120 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/WBP_Test",
+	"designSizeMode": "FillScreen",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "CanvasPanel_31",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Image",
+				"className": "Image",
+				"name": "Image_52",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 416,
+								"top": 668,
+								"right": 100,
+								"bottom": 30
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0,
+									"y": 0
+								},
+								"max":
+								{
+									"x": 0,
+									"y": 0
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						}
+					}
+				}
+			},
+			{
+				"class": "/Script/UMG.Overlay",
+				"className": "Overlay",
+				"name": "Overlay_101",
+				"isVariable": false,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+					}
+				},
+				"children": [
+					{
+						"class": "/Script/UMG.SizeBox",
+						"className": "SizeBox",
+						"name": "SizeBox_184",
+						"isVariable": false,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.OverlaySlot",
+							"className": "OverlaySlot",
+							"properties":
+							{
+							}
+						},
+						"children": [
+							{
+								"class": "/Script/UMG.Image",
+								"className": "Image",
+								"name": "Image_107",
+								"isVariable": false,
+								"properties":
+								{
+								},
+								"slot":
+								{
+									"class": "/Script/UMG.SizeBoxSlot",
+									"className": "SizeBoxSlot",
+									"properties":
+									{
+										"HorizontalAlignment": "HAlign_Left",
+										"VerticalAlignment": "VAlign_Top"
+									}
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	"contentHash": "b613579182e0b6c4e5b8eb095b7de31a"
+}

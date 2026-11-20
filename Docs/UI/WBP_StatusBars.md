@@ -64,19 +64,7 @@ Size_Status (SizeBox 340×64, SelfHitTestInvisible, 根节点)
 - **层级**：由 HUD 根内部的控件树顺序决定，不再走 `UDZ_UIConfig::ZOrderMap`。
 - **输入**：根节点 `SizeBox` 为 `SelfHitTestInvisible`，不拦截鼠标，不参与输入模式切换。
 
-## 6. 程序侧现状
-
-| 项 | 状态 |
-|---|---|
-| `UDZ_StatusBars`（4 个 `BindWidget` + `SetHealthInfo` / `SetEnergyInfo`） | ✅ 已实现 |
-| `UDZ_UIConfig::HUDClass` → `WBP_HUD` | ✅ 已加（`StatusBarsClass` 保留但已不再使用） |
-| 创建与常驻 | ✅ `UDZ_HUDController::Initialize` 创建 HUD 根并常驻，随后创建本 controller 并用 `SetStatusBarsWidget` 注入 `WBP_StatusBars`；本 controller 不创建、不查找控件 |
-| 刷新 | ✅ `UDZ_StatusBarsController::Refresh` 从 PlayerState 的 ASC 读数；外部经 `RaidUI->HUDController->RefreshStatusBars()` 触发 |
-| 属性委托 | ✅ 仍由 PC 统一注册，经 `RefreshUIAll` 进入 |
-| 关闭 | ✅ 本 controller `Shutdown` 只清引用；HUD 根由 `UDZ_HUDController::Shutdown` 移除 |
-| 死亡 / 无 Pawn 时隐藏 | ❌ 待定 |
-
-## 7. 验收
+## 6. 验收
 
 | 场景 | 期望 |
 |---|---|

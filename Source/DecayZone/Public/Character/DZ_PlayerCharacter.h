@@ -11,7 +11,6 @@
 
 class UDZ_ContainerComponent;
 class UGameplayEffect;
-class UDZ_InventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class UDZ_AbilitySystemComponent;
@@ -53,8 +52,6 @@ public:
 	bool IsInteractableInRange(AActor* Actor);
 
 protected:
-	virtual void BeginPlay() override;
-
 	virtual void OnAbilitySystemInitialized() override;
 	
 private:
@@ -64,16 +61,11 @@ private:
 	
 	void RecalculateArmor();
 	
-	void ApplyPendingLoadout();
-	
 	UFUNCTION()
 	void HandleEquipmentsChanged();
 
 	UPROPERTY()
 	TSet<AActor*> OverlappingInteractables;
-	
-	UPROPERTY()
-	TObjectPtr<UDZ_InventoryComponent> InventoryComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<USpringArmComponent> SpringArm;

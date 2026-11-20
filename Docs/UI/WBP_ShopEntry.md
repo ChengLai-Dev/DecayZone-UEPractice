@@ -57,36 +57,21 @@ Root_Size (SizeBox, 高 72)
 
 | 节点 | 事件 | 程序要做什么 |
 |---|---|---|
-| `Btn_Buy` | `OnClicked` | `GetListItem<UDZ_ShopItemObject>()` 向列表要当前条目，沿 Outer 链找到所属 `UDZ_ShopPanel` 并调用 `RequestBuy(Item)`。**不要**在这里直接扣钱或改仓库 |
+| `Btn_Buy` | `OnClicked` | 表示「要买这一条商品」，把这一条的 item 交给面板处理。买不买得起、仓库放不放得下由程序判定 |
 
-按钮点击的语义：Entry 只负责「哪一条被买了」，买不买得起、仓库放不放得下，全部由面板 / GameInstance 判定。
+按钮点击只表达意图，不在这里扣钱或改仓库。
 
 ---
 
-## 绘制入口（`OnEntryRefresh`）
+## 数据入口
 
-条目继承 `UDZ_ListEntryWidget`，自己不缓存 item。写控件只发生在一个函数里：
-
-```cpp
-virtual void OnEntryRefresh(UObject* Item) override;
-```
-
-两条调用路径最终都落到它：
-
-```
-引擎绑定 ─→ UDZ_ListEntryWidget::NativeOnListItemObjectSet ─→ OnEntryRefresh(Item)
-列表刷新 ─→ UDZ_ListView::RefreshDisplayedEntries() ────────→ OnEntryRefresh(Item)
-```
-
-所以这个函数里必须把**所有**字段都写全，漏一项就会拿到上一条商品的残留状态：
+条目通过 `OnEntryRefresh(UObject* Item)` 接收要显示的数据，每次刷新都会重新调用一遍。所以这个函数里必须把**所有**字段都写全，漏一项就会拿到上一条商品的残留状态：
 
 | 项 | 重置规则 |
 |---|---|
 | `Text_Name` / `Text_Type` / `Text_Price` | 每条都重写，空值也要写空字符串 |
-| `Img_Icon` | 有图标 → `SetBrushFromTexture` + `Visible`；没图标 → `Collapsed` |
-| `Btn_Buy` | 每次刷新都重新 `SetIsEnabled`，不要只在构造时设一次 |
-
-`Btn_Buy` 的点击回调在 `NativeOnInitialized` 里只绑一次。
+| `Img_Icon` | 有图标 → 显示贴图；没图标 → `Collapsed` |
+| `Btn_Buy` | 每次刷新都重新设置可用状态，不要只在构造时设一次 |
 
 ---
 
@@ -104,16 +89,7 @@ virtual void OnEntryRefresh(UObject* Item) override;
 
 ---
 
-## 待清理（等 C++）
-
-C++ 删掉 `UDZ_ShopEntryWidget::Text_Stock` 之后，本 JSON 需要再删一次：
-
-1. 删 `Size_Stock` 整个节点（含内部的 `Text_Stock`）
-2. 名称区宽度不用调，`VB_Name` 是 Fill，会自动占满
-
----
-
 ## 已知事项
 
 - 行高 72，面板 `Size_List` 高 592，能放下 **8 行**；改任一个都要同步另一个。
-- 图标源只有 6 张（Ammo / Armor / Grenade / MedKit / Potion / Rifle）。近战武器没有图标，那一条会走 `Collapsed` 分支。
+- 图标源只有 6 张（Ammo / Armor / Grenade / MedKit / Potion / Rifle）。短剑目前复用的是步枪图标；没有图标时该行走 `Collapsed` 分支。

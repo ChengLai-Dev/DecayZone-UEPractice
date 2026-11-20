@@ -57,16 +57,6 @@ M1 只显示 4 个槽：主武器（`Primary`）、近战武器（`Melee`）、�
 
 ---
 
-## 程序侧待实现（M1）
-
-1. `UDZ_EquipmentSlot` 改继承 `UDZ_ItemSlotBase`。
-2. 新增 `SetItemInfo(const FDZ_ItemStack&)` / `SetEmpty()`，内部只改上面两个节点。
-3. 构造函数或 `NativeOnInitialized` 里 `SetDragEnabled(true)`，并实现 `CreateDragVisualWidget()`（复用 `WBP_ItemSlot`）。
-4. `NativeOnDrop` 先调父类（触发 `OnWidgetDragEnded`），空槽时返回 false 不拦截。
-5. ✅ 已完成：`WBP_EquipmentSlot` 父类已改为 `UDZ_EquipmentSlot` 并编译保存。
-
----
-
 ## 含有的子控件
 
 无。

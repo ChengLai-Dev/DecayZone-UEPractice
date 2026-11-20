@@ -87,7 +87,7 @@ ADZ_PlayerController
 
 **槽位不自己算时间，也不自己判定能不能放。** 时间与可用性都来自 ASC 与复制过的属性值。技能换槽后冷却跟着技能走，不需要迁移任何计时状态。
 
-## 7. 已实现接口
+## 7. 程序接口
 
 `Source/DecayZone/Public/UI/Widgets/HUD/DZ_AbilitySlot.h`
 
@@ -99,14 +99,6 @@ ADZ_PlayerController
 | `SetAvailable(bool)` | 切换 `Border_Disabled` |
 | `SetActive(bool)` | 切换 `Border_Active`（仅持续型技能会亮） |
 | `SetEmpty(bool)` | 空槽：隐藏图标、收起所有遮罩与边框、清空秒数；非空状态下的后四个 setter 才会生效 |
-
-实现要点：
-
-1. 冷却材质的动态实例在 `NativeOnInitialized` 里取一次并缓存，不每帧创建。
-2. 冷却结束（`Percent <= 0`）时遮罩与秒数一起清空，不残留。
-3. `SetAvailable(false)`（变暗）与冷却遮罩互不覆盖，两者可同时存在。
-4. 本类不查询 ASC、不读能量、不认识任何技能；数据全部由 `UDZ_AbilityBarController` 组装后通过原语 setter 推入。
-5. 图标按指针缓存，重复推同一个图标不会重建 Brush。
 
 ## 8. 依赖玩法侧的部分
 

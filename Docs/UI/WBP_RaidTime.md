@@ -84,31 +84,7 @@ ADZ_GameState::GetElapsedTime()          （= GetServerWorldTimeSeconds() - Star
 
 ---
 
-## 6. 实现状态
-
-**已完成**
-
-| 项 | 位置 |
-|---|---|
-| 控件树 JSON | `UIWidgets/UI/HUD/WBP_RaidTime.json` |
-| `UDZ_RaidTimeViewModel`（`TimeText` FieldNotify + `SetElapsedSeconds`） | `Source/.../Public/UI/ViewModel/DZ_RaidTimeViewModel.h` + `.cpp` |
-| `UDZ_RaidTime` 空壳控件类 | `Source/.../Public/UI/Widgets/HUD/DZ_RaidTime.h` + `.cpp` |
-| `UDZ_HUDLayout::RaidTime`（`BindWidget`） | `Source/.../Public/UI/Widgets/HUD/DZ_HUDLayout.h` |
-| `UDZ_RaidTimeController`（由 HUD 控制器创建并注入 widget；建 VM、注入、Tick 推秒数） | `Source/.../Public/UI/Controllers/DZ_RaidTimeController.h` + `.cpp` |
-
-**待做**
-
-| 项 | 负责 | 说明 |
-|---|---|---|
-| View Bindings 配置 | 你（学习 MVVM） | 见 §3；`Text_RaidTime.Text` ← `TimeText`，One Way，VM 创建方式 Manual |
-| `DA_UIConfig::HUDClass` 指向 `WBP_HUD` | ✅ 已配 | 未填时 HUD 根不会创建 |
-| PIE 验收 | 程序 | 见 §7 |
-
-> 父类已由 JSON 的 `parentClass` 在建资产时指定为 `UDZ_RaidTime`，不需要再手工 Reparent。
-
----
-
-## 7. 验收
+## 6. 验收
 
 | 场景 | 期望 |
 |---|---|
@@ -121,7 +97,7 @@ ADZ_GameState::GetElapsedTime()          （= GetServerWorldTimeSeconds() - Star
 
 ---
 
-## 8. 已知限制
+## 7. 已知限制
 
 - **改名断绑**：`Text_RaidTime` 改名会静默断开 View Binding。
 - **JSON 重建不保留 MVVM 绑定以外的资产内修改**：`animations` 字段缺省时不动已有动画；但如果以后给这个 WBP 加动画，要在 JSON 的 `animations` 里表达，否则编辑器里手加的动画会被下一次导入删除。

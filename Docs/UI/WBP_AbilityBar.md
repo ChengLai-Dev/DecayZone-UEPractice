@@ -66,16 +66,7 @@ Size_AbilityBar (SizeBox 140×64, SelfHitTestInvisible, 根节点)
 
 36px 是留白，不是硬需求；`WBP_StatusBars` 在左下角距底 40px，两者视觉基线接近。要微调只改 `WBP_HUD` 里 `AbilityBar` 的槽位偏移即可，不需要动本控件。
 
-## 7. 已实现
-
-1. `UDZ_AbilityBar` 持有两个槽的 `BindWidget`，对外是 `SetKeyText` / `SetIcon` / `SetCooldown` / `SetAvailable` / `SetActive` / `SetEmpty`，都多一个槽位索引；越界索引静默忽略。
-2. `UDZ_UIConfig` 增加 `AbilityBarClass`、`AbilitySlots`（键位 + 默认技能 ID）；`UDZ_GameInstance` 增加 `SkillDataTable`。
-3. `UDZ_AbilityBarController` 不再自己创建控件：`UDZ_HUDController` 创建 HUD 根后，把 `WBP_AbilityBar` 注入进来；外部通过 `RaidUI->HUDController->RefreshAbilityBar()` / `HideAbilityBar()` 调用。
-4. 刷新节流为 0.1 秒一次：`UDZ_AbilityBarController` 按槽位查技能行 → AbilityTag → AbilitySpec → 冷却 / `CheckCost` / `IsActive`，再通过原语 setter 写入槽位。
-5. `SetSlotSkill(槽位, SkillId)` 是换槽入口；`GetSlotSkill(槽位)` 可读当前映射。
-6. 结算面板打开时隐藏技能栏。
-
-## 8. 仍未做
+## 7. 仍未做
 
 | 项 | 归属 |
 |---|---|
@@ -84,7 +75,7 @@ Size_AbilityBar (SizeBox 140×64, SelfHitTestInvisible, 根节点)
 | 扩到 4 槽（同时改 `Size_AbilityBar` 宽度与 `AbilitySlots` 长度） | 后续 |
 | `GA_Shield` / `GA_Sprint`、Cost/Cooldown GE、`IA_Skill1/2` 与 IMC 映射 | 程序/玩法侧 |
 
-## 9. 验收
+## 8. 验收
 
 | 场景 | 期望 |
 |---|---|

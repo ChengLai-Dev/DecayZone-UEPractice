@@ -242,8 +242,15 @@ bool UDZ_InventoryComponent::CanAddWeight(float Delta) const
 
 void UDZ_InventoryComponent::ClearAll()
 {
-	Items.Empty();
-	Equipments.Empty();
+	for (FDZ_ItemStack& Item : Items)
+	{
+		Item = FDZ_ItemStack();
+	}
+	
+	for (int32& Equipment : Equipments)
+	{
+		Equipment = DZItem::EmptyId;
+	}
 }
 
 TArray<FDZ_ItemStack> UDZ_InventoryComponent::GetAllItems()

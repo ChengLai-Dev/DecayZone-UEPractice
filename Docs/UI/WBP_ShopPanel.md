@@ -72,38 +72,6 @@ RootCanvas (CanvasPanel)
 
 ---
 
-## 面板内数据流
-
-```
-【控制器创建时，只有一次】
-UDZ_ShopController::Initialize()
-  → CreateWidget(WBP_ShopPanel)
-  → BuildEntries()
-      → GameInstance::GetShopItems() / GetMoney()
-      → 创建 UDZ_ShopItemObject（每件一次）
-      → List_Items->SetListItems(...)      ← 一辈子只调这一次
-
-【之后每次买/卖、每次打开面板】
-ShopController.Refresh()
-  → 遍历 Entries，更新 bCanBuy（CanBuyShopItem）
-  → Text_Money->SetText(...)
-  → List_Items->RefreshDisplayedEntries()  ← 只重刷可见的 8 行
-        └ 逐个 Entry->OnEntryRefresh(item)
-
-Entry.Btn_Buy 点击
-  → GetListItem<UDZ_ShopItemObject>()      ← 向列表要，条目不缓存
-  → Panel::RequestBuy(Item) → OnBuyRequested(ItemId)
-  → ShopController → GameInstance::TryBuyShopItem(ItemId, 1, OutFailReason)
-      ├ 失败 → 弹 Tips(OutFailReason)，列表不动
-      └ 成功 → 广播 OnStashChanged + OnMoneyChanged
-                 ├ ShopController::Refresh()（两次，都是轻量刷新）
-                 └ StashController 已有 OnStashChanged 监听 → 仓库面板自动刷新
-```
-
-> `SetListItems` / `RegenerateAllEntries` / `RequestRefresh` 在刷新路径里都不再使用：条目集合不变，只有 `bCanBuy` 变，所以直接推给可见条目。
-
----
-
 ## 布局约束（改布局前先看）
 
 | 项 | 约束 |
@@ -113,16 +81,3 @@ Entry.Btn_Buy 点击
 | 行高联动 | 改 `WBP_ShopEntry` 的行高必须同步改 `Size_List`，反之亦然 |
 | 叠加关系 | 面板在仓库面板（`WBP_StashPanel`）之上，仓库卡片不会被压暗（商店面板不开全屏底） |
 | 拖拽 | 商店打开期间仓库的拖拽要禁用，避免拖影穿透到商店面板 |
-
----
-
-## 当前阶段
-
-| 项 | 状态 |
-|---|---|
-| 界面（尺寸 / 图标 / 购买按钮 / 余额 / 关闭） | ✅ JSON 完成 |
-| 局外入口按钮 `Btn_Shop` | ✅ 已加进 `WBP_StashPanel` |
-| C++：面板父类改 `UDZ_UserWidget` | ✅ 已完成 |
-| C++：`Text_Money` / `Btn_Close` 两个 BindWidget | ✅ 已完成 |
-| C++：`UDZ_ShopController` + `UIConfig::ShopWidgetClass` | ✅ 已完成 |
-| C++：删除 5 个调试 BindWidget | ✅ 已完成，待清 JSON 里的 `VB_Debug` |

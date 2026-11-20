@@ -42,11 +42,11 @@
 
 ---
 
-## 已实现的接口
+## 程序接口
 
 | 接口 | 参数 | 说明 |
 |---|---|---|
-| `SetStat` | `int32 Value`、`const FText& Label` | 整数指标，内部 `FText::AsNumber` |
-| `SetStat` | `float Value`、`const FText& Label` | 小数指标，内部保留 1 位小数 |
+| `SetStat` | `int32 Value`、`const FText& Label` | 整数指标 |
+| `SetStat` | `float Value`、`const FText& Label` | 小数指标，保留 1 位小数 |
 
 > 数值是否加千分位由调用方决定，本类不做格式化，直接显示传入文本。

@@ -17,6 +17,9 @@
 #include "Data/Ability/DZ_SkillDefines.h"
 #include "Data/Ability/FDZ_SkillData.h"
 #include "Data/Input/DZ_InputConfig.h"
+#include "Data/Item/DZ_ItemDefines.h"
+#include "Data/Item/FDZ_ItemStack.h"
+#include "Data/Item/FDZ_Loadout.h"
 #include "Data/UI/DZ_UIConfig.h"
 #include "Data/UI/FDZ_SettlementInfo.h"
 #include "DecayZone/DecayZone.h"
@@ -38,6 +41,21 @@
 #include "UI/Widgets/HUD/DZ_Tips.h"
 #include "UI/Widgets/Inventory/DZ_EquipmentPanel.h"
 
+
+ADZ_RaidPlayerController::ADZ_RaidPlayerController()
+{
+	InventoryComponent = CreateDefaultSubobject<UDZ_InventoryComponent>("InventoryComponent");
+}
+
+void ADZ_RaidPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (IsValid(InventoryComponent))
+	{
+		InventoryComponent->OnItemsChanged.AddUniqueDynamic(this, &ThisClass::HandleInventoryItemsChanged);
+	}
+}
 
 void ADZ_RaidPlayerController::SetupInputComponent()
 {
@@ -209,9 +227,12 @@ void ADZ_RaidPlayerController::ClientOpenLootPanel_Implementation(UDZ_ContainerC
 	RefreshUIAll(false);
 }
 
-void ADZ_RaidPlayerController::ServerMoveItem_Implementation(UDZ_InventoryComponent* InventoryComp,
-	UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To)
+void ADZ_RaidPlayerController::ServerMoveItem_Implementation(UDZ_ContainerComponent* ContainerComp,
+	const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To)
 {
+	UDZ_InventoryComponent* InventoryComp = GetInventoryComponent();
+	if (!InventoryComp) return;
+	
 	if (ItemHelper::MoveItem(InventoryComp, ContainerComp, From, To))
 	{
 		RefreshUIAll(false);
@@ -230,19 +251,32 @@ void ADZ_RaidPlayerController::NotifyGameEnd(bool bExtracted)
 {
 	if (!HasAuthority()) return;
 	
-	Settle(bExtracted ? EDZExtractResult::Extracted : EDZExtractResult::Dead);
+	if (!Settle(bExtracted ? EDZExtractResult::Extracted : EDZExtractResult::Dead)) return;
+	
+	if (bExtracted) return;
+	
+	APawn* OwnPawn = GetPawn();
+	UDZ_ContainerComponent* ContainerComp = OwnPawn ? OwnPawn->FindComponentByClass<UDZ_ContainerComponent>() : nullptr;
+	if (!ContainerComp)
+	{
+		UE_LOG(LogDZ, Warning, TEXT("NotifyGameEnd: no container component found on pawn, corpse will be empty"));
+		return;
+	}
+	
+	TransferInventoryToContainer(ContainerComp);
 }
 
-void ADZ_RaidPlayerController::Settle(EDZExtractResult Result)
+bool ADZ_RaidPlayerController::Settle(EDZExtractResult Result)
 {
-	if (!HasAuthority()) return;
+	if (!HasAuthority()) return false;
 	
 	ADZ_PlayerState* DZPlayerState = GetPlayerState<ADZ_PlayerState>();
-	if (!DZPlayerState) return;
-	if (DZPlayerState->GetExtractResult() != EDZExtractResult::InProgress) return;
+	if (!DZPlayerState) return false;
+	if (DZPlayerState->GetExtractResult() != EDZExtractResult::InProgress) return false;
 	
 	DZPlayerState->SetExtractResult(Result);
 	ClientOpenSettlementPanel(BuildSettlementInfo());
+	return true;
 }
 
 void ADZ_RaidPlayerController::RefreshUIAll(bool bForceRefresh)
@@ -260,8 +294,48 @@ void ADZ_RaidPlayerController::RefreshUIAll(bool bForceRefresh)
 
 UDZ_InventoryComponent* ADZ_RaidPlayerController::GetInventoryComponent() const
 {
-	APawn* OwnerPawn = GetPawn();
-	return OwnerPawn ? OwnerPawn->FindComponentByClass<UDZ_InventoryComponent>() : nullptr;
+	return InventoryComponent;
+}
+
+void ADZ_RaidPlayerController::InitializeInventoryFromLoadout()
+{
+	if (!HasAuthority()) return;
+	if (!IsValid(InventoryComponent)) return;
+	
+	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
+	if (!IsValid(GameInstance)) return;
+	
+	const FDZ_Loadout& PendingLoadout = GameInstance->GetPendingLoadout();
+	
+	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.Equipments.Num(); SlotIndex++)
+	{
+		const int32 ItemId = PendingLoadout.Equipments[SlotIndex];
+		if (ItemId == DZItem::EmptyId) continue;
+		InventoryComponent->SetEquipments(SlotIndex, ItemId);
+	}
+	
+	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.BagItems.Num(); SlotIndex++)
+	{
+		const FDZ_ItemStack& Item = PendingLoadout.BagItems[SlotIndex];
+		if (Item.IsEmpty()) continue;
+		if (!InventoryComponent->AddItem(SlotIndex, Item.ItemId, Item.Count))
+		{
+			UE_LOG(LogDZ, Warning, TEXT("Failed to restore bag item %d x%d at slot %d"), Item.ItemId, Item.Count, SlotIndex);
+		}
+	}
+	
+	InventoryComponent->OnItemsChanged.Broadcast();
+	GameInstance->ClearPendingLoadout();
+}
+
+void ADZ_RaidPlayerController::TransferInventoryToContainer(UDZ_ContainerComponent* TargetContainer)
+{
+	if (!HasAuthority()) return;
+	if (!IsValid(InventoryComponent)) return;
+	if (!IsValid(TargetContainer)) return;
+	
+	TargetContainer->SetContents(InventoryComponent->GetAllItems());
+	InventoryComponent->ClearAll();
 }
 
 bool ADZ_RaidPlayerController::BuildCharacterStats(FDZ_CharacterStatsInfo& OutStats) const
@@ -349,12 +423,8 @@ void ADZ_RaidPlayerController::AcknowledgePossession(APawn* InPawn)
 	Super::AcknowledgePossession(InPawn);
 	if (ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(InPawn))
 	{
-		PlayerCharacter->OnFocusInteractableActorChanged.AddDynamic(this, &ADZ_RaidPlayerController::HandleInteractableActorChanged);
-		if (UDZ_InventoryComponent* InventoryComp = PlayerCharacter->FindComponentByClass<UDZ_InventoryComponent>())
-		{
-			InventoryComp->OnItemsChanged.AddDynamic(this, &ADZ_RaidPlayerController::HandleInventoryItemsChanged);
-		}
-		PlayerCharacter->OnAttributesInitialized.AddDynamic(this, &ADZ_RaidPlayerController::RefreshStatusBars);
+		PlayerCharacter->OnFocusInteractableActorChanged.AddUniqueDynamic(this, &ADZ_RaidPlayerController::HandleInteractableActorChanged);
+		PlayerCharacter->OnAttributesInitialized.AddUniqueDynamic(this, &ADZ_RaidPlayerController::RefreshStatusBars);
 	}
 }
 
@@ -377,9 +447,7 @@ void ADZ_RaidPlayerController::ServerTakeItem_Implementation(AActor* ContainerAc
 	UDZ_ContainerComponent* Container = ContainerActor->FindComponentByClass<UDZ_ContainerComponent>();
 	if (!Container) return;
 	
-	APawn* LocalPawn = GetPawn();
-	if (!LocalPawn) return;
-	UDZ_InventoryComponent* InventoryComp = LocalPawn->FindComponentByClass<UDZ_InventoryComponent>();
+	UDZ_InventoryComponent* InventoryComp = GetInventoryComponent();
 	if (!InventoryComp) return;
 	
 	if (ItemHelper::TakeItem(InventoryComp, Container, SlotIndex, Count))
@@ -461,8 +529,7 @@ FDZ_SettlementInfo ADZ_RaidPlayerController::BuildSettlementInfo() const
 		Info.ElapsedSeconds = GameState->GetElapsedTime();
 	}
 	
-	APawn* PlayerPawn = GetPawn();
-	if (UDZ_InventoryComponent* InventoryComp = PlayerPawn ? PlayerPawn->FindComponentByClass<UDZ_InventoryComponent>() : nullptr)
+	if (UDZ_InventoryComponent* InventoryComp = GetInventoryComponent())
 	{
 		Info.Items = InventoryComp->GetAllItems();
 		Info.Equipments = InventoryComp->GetEquipments();

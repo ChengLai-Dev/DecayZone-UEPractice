@@ -75,10 +75,7 @@ void UDZ_LootController::HandleItemMoveRequested(UWidget* From, UWidget* To)
 	UDZ_ItemSlotBase* ToWidget = Cast<UDZ_ItemSlotBase>(To);
 	if (!FromWidget || !ToWidget || !IsValid(RaidPlayerController)) return;
 
-	UDZ_InventoryComponent* InventoryComp = RaidPlayerController->GetInventoryComponent();
-	if (!InventoryComp) return;
-
-	RaidPlayerController->ServerMoveItem(InventoryComp, RaidPlayerController->GetInteractContainer().Get(),
+	RaidPlayerController->ServerMoveItem(RaidPlayerController->GetInteractContainer().Get(),
 		FromWidget->GetSlotHandle(), ToWidget->GetSlotHandle());
 }
 

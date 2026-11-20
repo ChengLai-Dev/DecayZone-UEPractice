@@ -14,9 +14,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameplayEffect.h"
 #include "Components/DZ_ContainerComponent.h"
-#include "Data/Item/DZ_ItemDefines.h"
-#include "Data/Item/FDZ_ItemStack.h"
-#include "Game/DZ_GameInstance.h"
 #include "GameplayTags/DZGameplayTags.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/DZ_BlueprintLibrary.h"
@@ -51,8 +48,6 @@ ADZ_PlayerCharacter::ADZ_PlayerCharacter()
 	InteractionBox->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnInteractableBeginOverlap);
 	InteractionBox->OnComponentEndOverlap.AddDynamic(this, &ThisClass::OnInteractableEndOverlap);
 	
-	InventoryComponent = CreateDefaultSubobject<UDZ_InventoryComponent>("InventoryComponent");
-	
 	ContainerComponent = CreateDefaultSubobject<UDZ_ContainerComponent>("ContainerComponent");
 }
 
@@ -61,28 +56,15 @@ bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)
 	return OverlappingInteractables.Find(Actor) != nullptr;
 }
 
-void ADZ_PlayerCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	if (InventoryComponent)
-	{
-		InventoryComponent->OnEquipmentsChanged.AddDynamic(this, &ThisClass::HandleEquipmentsChanged);
-	}
-}
-
 void ADZ_PlayerCharacter::Death()
 {
 	if (!HasAuthority()) return;
 	Super::Death();
+	
 	ADZ_RaidPlayerController* PlayerController = Cast<ADZ_RaidPlayerController>(GetController());
-	if (PlayerController)
-	{
-		PlayerController->NotifyGameEnd(false);
-	}
+	if (!PlayerController) return;
 	
-	ContainerComponent->SetContents(InventoryComponent->GetAllItems());
-	InventoryComponent->ClearAll();
-	
+	PlayerController->NotifyGameEnd(false);
 }
 
 void ADZ_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -94,6 +76,14 @@ void ADZ_PlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	
+	if (ADZ_RaidPlayerController* RaidController = Cast<ADZ_RaidPlayerController>(NewController))
+	{
+		if (UDZ_InventoryComponent* RaidInventory = RaidController->GetInventoryComponent())
+		{
+			RaidInventory->OnEquipmentsChanged.AddUniqueDynamic(this, &ThisClass::HandleEquipmentsChanged);
+		}
+	}
+	
 	ADZ_PlayerState* DZ_PlayerState = Cast<ADZ_PlayerState>(GetPlayerState());
 	if (!DZ_PlayerState) return;
 	
@@ -104,40 +94,13 @@ void ADZ_PlayerCharacter::OnAbilitySystemInitialized()
 {
 	if (!HasAuthority()) return;
 	
-	ApplyPendingLoadout();
+	if (ADZ_RaidPlayerController* RaidController = Cast<ADZ_RaidPlayerController>(GetController()))
+	{
+		RaidController->InitializeInventoryFromLoadout();
+	}
 	
 	OnAttributesInitialized.Broadcast();
 	RecalculateArmor();
-}
-
-void ADZ_PlayerCharacter::ApplyPendingLoadout()
-{
-	if (!InventoryComponent) return;
-	
-	UDZ_GameInstance* GameInstance = GetGameInstance<UDZ_GameInstance>();
-	if (!IsValid(GameInstance)) return;
-	
-	const FDZ_Loadout& PendingLoadout = GameInstance->GetPendingLoadout();
-	
-	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.Equipments.Num(); SlotIndex++)
-	{
-		const int32 ItemId = PendingLoadout.Equipments[SlotIndex];
-		if (ItemId == DZItem::EmptyId) continue;
-		InventoryComponent->SetEquipments(SlotIndex, ItemId);
-	}
-	
-	for (int32 SlotIndex = 0; SlotIndex < PendingLoadout.BagItems.Num(); SlotIndex++)
-	{
-		const FDZ_ItemStack& Item = PendingLoadout.BagItems[SlotIndex];
-		if (Item.IsEmpty()) continue;
-		if (!InventoryComponent->AddItem(SlotIndex, Item.ItemId, Item.Count))
-		{
-			UE_LOG(LogDZ, Warning, TEXT("Failed to restore bag item %d x%d at slot %d"), Item.ItemId, Item.Count, SlotIndex);
-		}
-	}
-	
-	InventoryComponent->OnItemsChanged.Broadcast();
-	GameInstance->ClearPendingLoadout();
 }
 
 void ADZ_PlayerCharacter::RecalculateArmor()
@@ -150,8 +113,10 @@ void ADZ_PlayerCharacter::RecalculateArmor()
 		AbilitySystemComponent->RemoveActiveGameplayEffect(ArmorGEHandle);
 	}
 	
-	if (!EquipmentArmorGEClass || !InventoryComponent) return;
-	const float TotalArmor = InventoryComponent->GetTotalArmor();
+	ADZ_RaidPlayerController* RaidController = Cast<ADZ_RaidPlayerController>(GetController());
+	UDZ_InventoryComponent* RaidInventory = RaidController ? RaidController->GetInventoryComponent() : nullptr;
+	if (!EquipmentArmorGEClass || !RaidInventory) return;
+	const float TotalArmor = RaidInventory->GetTotalArmor();
 	if (TotalArmor <= 0.f) return;
 	
 	FGameplayEffectContextHandle Context = AbilitySystemComponent->MakeEffectContext();

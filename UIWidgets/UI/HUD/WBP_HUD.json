@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"assetPath": "/Game/UI/HUD/WBP_HUD",
-	"designSizeMode": "Desired",
+	"designSizeMode": "FillScreen",
 	"parentClass": "/Script/DecayZone.DZ_HUDLayout",
 	"root":
 	{
@@ -11,7 +11,6 @@
 		"isVariable": false,
 		"properties":
 		{
-			"Visibility": "SelfHitTestInvisible"
 		},
 		"children": [
 			{
@@ -56,8 +55,7 @@
 								"y": 1
 							}
 						},
-						"bAutoSize": true,
-						"ZOrder": 0
+						"bAutoSize": true
 					}
 				}
 			},
@@ -156,5 +154,6 @@
 				}
 			}
 		]
-	}
+	},
+	"contentHash": "eeb144c6eacf1b91c02da0b74deda2a8"
 }

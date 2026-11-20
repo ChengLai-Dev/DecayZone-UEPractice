@@ -103,8 +103,6 @@ Panel_Stash (760×940, Padding 15)
 | 随身背包格子 | `EItemContainer::LoadoutBag` | 0 ~ 5 |
 | 四个装备槽 | `EItemContainer::LoadoutEquipment` | `EEquipSlot` 数值 |
 
-这三个枚举值**目前不存在**，需要先加进 `EItemContainer`，见 [Stash_Handoff.md](Stash_Handoff.md) 第 5 节。
-
 > 为什么装备槽不复用 `EItemContainer::Equipment`：局内角色也有一套 `Equipment`，两者数据源不同。共用一个枚举值就得靠「当前在大厅还是局内」来分流，容易在跨阶段刷新时读错数组。
 
 ---
@@ -125,23 +123,7 @@ Panel_Stash (760×940, Padding 15)
 | 出售扣减数量 | `Text_SellInfo` | `×3 → ×2`；卖到 0 时整行清空选中 |
 | 面板显示 / 隐藏 | 面板整体 | 由外部加到视口 / 移除，或用 `SetVisibility` |
 
-> **选中高亮会被刷新冲掉**：`SetStashItems()` 会把 30 个格子整体重写，所以按 `SelectedHandle.SlotIndex` 在 `SetStashItems` 末尾重新 `SetSelected(true)`，不要只在点击时刷一次。
-> 反查格子用 `StashSlots[Handle.SlotIndex]`，不要重新遍历 `Grid_Stash->GetAllChildren()` 复数下标。
-
-### 选中状态归谁（别随手改）
-
-| 内容 | 归属 | 理由 |
-|---|---|---|
-| 选中哪一格、高亮 | **面板**（`SelectedSlot`） | 视图状态，只有这个面板消费；离开面板就没有意义 |
-| 卖多少钱、底栏文案、按钮可用 | **控制器** | 派生自已存数据，控制器算完 `SetSellInfo` 推给面板；面板保持纯渲染 |
-| 出售动作 | **控制器** → `GameInstance` | 改数据的操作不走 UI |
-
-两条硬约定：
-
-1. **面板不暴露 `GetSelectedSlot()`**。要出售就把地址放进命令：`OnSellRequested(FDZ_ItemSlotHandle)`。控制器不允许回读视图状态，否则会形成 `Controller → View` 的反向依赖。
-2. **`OnSellTargetChanged(Handle)` 不只在点击时发**，`SetStashItems` 末尾也要发一次——因为卖出一件后数量变了（`×3 → ×2`），地址没变但内容变了。事件名取的是"出售目标变了"，不是"选中变了"。
-
-> 以后如果出现第二个消费者（详情栏、快捷键、跨面板保持选中），再把选中上移到 ViewModel，而不是塞进 `GameInstance`。
+> 刷新后选中高亮要保留，不能因为重新铺格子而丢失。
 
 ---
 

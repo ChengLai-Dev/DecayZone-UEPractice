@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
+#include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "Player/DZ_PlayerController.h"
 #include "DZ_RaidPlayerController.generated.h"
 
@@ -30,6 +31,8 @@ class DECAYZONE_API ADZ_RaidPlayerController : public ADZ_PlayerController
 	
 
 public:
+	ADZ_RaidPlayerController();
+
 	void BeginInteract(AActor* Target);
 	void CancelInteract();
 	void EndInteract();
@@ -38,6 +41,8 @@ public:
 	void Kick();
 	
 	const UDZ_InputConfig* GetInputConfig() const { return InputConfig; }
+	
+	virtual void BeginPlay() override;
 	
 	virtual void OnRep_PlayerState() override;
 	
@@ -53,7 +58,7 @@ public:
 	void ServerCancelInteract();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerMoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
+	void ServerMoveItem(UDZ_ContainerComponent* ContainerComp, const FDZ_ItemSlotHandle& From, const FDZ_ItemSlotHandle& To);
 	
 	UFUNCTION(Client, Reliable)
 	void ClientInteractFinished(AActor* Target, bool bSucceeded);
@@ -84,6 +89,8 @@ public:
 	UDZ_InventoryComponent* GetInventoryComponent() const;
 	bool BuildCharacterStats(FDZ_CharacterStatsInfo& OutStats) const;
 	TWeakObjectPtr<UDZ_ContainerComponent> GetInteractContainer() const;
+	
+	void InitializeInventoryFromLoadout();
 
 protected:
 	virtual void SetupInputComponent() override;
@@ -122,8 +129,12 @@ private:
 	void OpenOrCloseInventoryPanel();
 	
 	FDZ_SettlementInfo BuildSettlementInfo() const;
-	void Settle(EDZExtractResult Result);
+	bool Settle(EDZExtractResult Result);
+	void TransferInventoryToContainer(UDZ_ContainerComponent* TargetContainer);
 
+	UPROPERTY()
+	TObjectPtr<UDZ_InventoryComponent> InventoryComponent;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UDZ_InputConfig> InputConfig;
 	

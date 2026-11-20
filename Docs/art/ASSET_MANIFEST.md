@@ -61,7 +61,6 @@
 | 运行期路径 | `/Game/UI/HUD/WBP_AbilityBar`、`/Game/UI/HUD/WBP_AbilitySlot` |
 | JSON 源 | `UIWidgets/UI/HUD/WBP_AbilityBar.json`、`WBP_AbilitySlot.json` |
 | 尺寸 | 单槽 64×64，栏 140×64（两槽 + 12px 间距），底部居中、距底 36px |
-| 交接文档 | `Docs/UI/AbilityBar_Handoff.md` |
 
 ## 命名与放置约定（本批确立）
 
