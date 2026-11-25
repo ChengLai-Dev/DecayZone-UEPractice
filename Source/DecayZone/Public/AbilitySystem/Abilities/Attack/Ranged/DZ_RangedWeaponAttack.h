@@ -1,13 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/Attack/DZ_WeaponAttackAbility.h"
-#include "DZ_RangedAttackAbility.generated.h"
+#include "AbilitySystem/Abilities/Attack/DZ_WeaponAttack.h"
+#include "DZ_RangedWeaponAttack.generated.h"
 
 class URangedWeaponData;
 
 UCLASS()
-class DECAYZONE_API UDZ_RangedAttackAbility : public UDZ_WeaponAttackAbility
+class DECAYZONE_API UDZ_RangedWeaponAttack : public UDZ_WeaponAttack
 {
 	GENERATED_BODY()
 

@@ -1,10 +1,10 @@
-#include "AbilitySystem/Abilities/Attack/Ranged/DZ_RangedAttackAbility.h"
+#include "AbilitySystem/Abilities/Attack/Ranged/DZ_RangedWeaponAttack.h"
 
 #include "Components/SceneComponent.h"
 #include "Data/ItemType/Weapon/DZ_RangedWeaponData.h"
 #include "GameFramework/Pawn.h"
 
-bool UDZ_RangedAttackAbility::ResolveAttackData(FDZ_AttackData& OutAttackData) const
+bool UDZ_RangedWeaponAttack::ResolveAttackData(FDZ_AttackData& OutAttackData) const
 {
 	const URangedWeaponData* RangedWeaponData = Cast<URangedWeaponData>(ResolveWeaponData());
 	if (!RangedWeaponData) return false;
@@ -13,7 +13,7 @@ bool UDZ_RangedAttackAbility::ResolveAttackData(FDZ_AttackData& OutAttackData) c
 	return true;
 }
 
-void UDZ_RangedAttackAbility::PerformAttack(const FDZ_AttackData& AttackData)
+void UDZ_RangedWeaponAttack::PerformAttack(const FDZ_AttackData& AttackData)
 {
 	const URangedWeaponData* RangedWeaponData = Cast<URangedWeaponData>(ResolveWeaponData());
 	if (!RangedWeaponData) return;
@@ -37,7 +37,7 @@ void UDZ_RangedAttackAbility::PerformAttack(const FDZ_AttackData& AttackData)
 	ApplyAttackDamage(HitResult.GetActor(), AttackData);
 }
 
-bool UDZ_RangedAttackAbility::GetAimRay(FVector& OutStart, FVector& OutDirection, const URangedWeaponData& WeaponData) const
+bool UDZ_RangedWeaponAttack::GetAimRay(FVector& OutStart, FVector& OutDirection, const URangedWeaponData& WeaponData) const
 {
 	const APawn* Avatar = Cast<APawn>(GetAvatarActorFromActorInfo());
 	if (!Avatar) return false;

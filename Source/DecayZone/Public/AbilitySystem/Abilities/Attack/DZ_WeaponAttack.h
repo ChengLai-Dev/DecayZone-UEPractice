@@ -2,12 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/Attack/DZ_AttackAbility.h"
-#include "DZ_WeaponAttackAbility.generated.h"
+#include "DZ_WeaponAttack.generated.h"
 
 class UWeaponData;
 
 UCLASS(Abstract)
-class DECAYZONE_API UDZ_WeaponAttackAbility : public UDZ_AttackAbility
+class DECAYZONE_API UDZ_WeaponAttack : public UDZ_AttackAbility
 {
 	GENERATED_BODY()
 

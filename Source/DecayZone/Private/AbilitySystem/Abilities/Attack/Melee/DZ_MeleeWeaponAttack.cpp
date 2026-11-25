@@ -1,9 +1,9 @@
-#include "AbilitySystem/Abilities/Attack/Melee/DZ_MeleeAttackAbility.h"
+#include "AbilitySystem/Abilities/Attack/Melee/DZ_MeleeWeaponAttack.h"
 
 #include "Data/ItemType/Weapon/DZ_MeleeWeaponData.h"
 #include "Library/DZ_BlueprintLibrary.h"
 
-bool UDZ_MeleeAttackAbility::ResolveAttackData(FDZ_AttackData& OutAttackData) const
+bool UDZ_MeleeWeaponAttack::ResolveAttackData(FDZ_AttackData& OutAttackData) const
 {
 	const UMeleeWeaponData* MeleeWeaponData = Cast<UMeleeWeaponData>(ResolveWeaponData());
 	if (!MeleeWeaponData) return false;
@@ -12,7 +12,7 @@ bool UDZ_MeleeAttackAbility::ResolveAttackData(FDZ_AttackData& OutAttackData) co
 	return true;
 }
 
-void UDZ_MeleeAttackAbility::PerformAttack(const FDZ_AttackData& AttackData)
+void UDZ_MeleeWeaponAttack::PerformAttack(const FDZ_AttackData& AttackData)
 {
 	const UMeleeWeaponData* MeleeWeaponData = Cast<UMeleeWeaponData>(ResolveWeaponData());
 	if (!MeleeWeaponData) return;
