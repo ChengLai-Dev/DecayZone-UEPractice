@@ -14,9 +14,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameplayEffect.h"
 #include "Components/DZ_ContainerComponent.h"
+#include "Data/ItemType/Weapon/DZ_WeaponData.h"
 #include "GameplayTags/DZGameplayTags.h"
 #include "Interface/DZ_Interactable.h"
 #include "Library/DZ_BlueprintLibrary.h"
+#include "Library/ItemHelper.h"
+#include "Net/UnrealNetwork.h"
 #include "Player/DZ_RaidPlayerController.h"
 #include "Player/DZ_PlayerState.h"
 
@@ -24,6 +27,12 @@ void ADZ_PlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	HighlightInteractable();
+}
+
+void ADZ_PlayerCharacter::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ThisClass, ActiveWeaponSlot);
 }
 
 ADZ_PlayerCharacter::ADZ_PlayerCharacter()
@@ -54,6 +63,32 @@ ADZ_PlayerCharacter::ADZ_PlayerCharacter()
 bool ADZ_PlayerCharacter::IsInteractableInRange(AActor* Actor)
 {
 	return OverlappingInteractables.Find(Actor) != nullptr;
+}
+
+int32 ADZ_PlayerCharacter::GetActiveWeapon()
+{
+	return ActiveWeaponSlot;
+}
+
+const UWeaponData* ADZ_PlayerCharacter::GetActiveWeaponData() const
+{
+	return ItemHelper::GetWeaponInfo(this, ActiveWeaponSlot);
+}
+
+FName ADZ_PlayerCharacter::GetWeaponSocketName()
+{
+	return "hand_r";
+}
+
+void ADZ_PlayerCharacter::SetActiveWeapon(int32 Weapon)
+{
+	if (!HasAuthority()) return;
+	ActiveWeaponSlot = Weapon;
+}
+
+void ADZ_PlayerCharacter::OnRep_ActiveWeaponSlot()
+{
+	
 }
 
 void ADZ_PlayerCharacter::Death()

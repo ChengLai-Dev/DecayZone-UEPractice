@@ -15,6 +15,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UDZ_AbilitySystemComponent;
 class UBoxComponent;
+class UWeaponData;
 
 UCLASS()
 class DECAYZONE_API ADZ_PlayerCharacter : public ADZ_BaseCharacter
@@ -22,6 +23,8 @@ class DECAYZONE_API ADZ_PlayerCharacter : public ADZ_BaseCharacter
 	GENERATED_BODY()
 
 public:
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	ADZ_PlayerCharacter();
 	
 	virtual void Tick(float DeltaSeconds) override;
@@ -50,11 +53,27 @@ public:
 	FOnEvent OnAttributesInitialized;
 	
 	bool IsInteractableInRange(AActor* Actor);
-
+	
+	int32 GetActiveWeapon();
+	
+	UFUNCTION(BlueprintPure)
+	const UWeaponData* GetActiveWeaponData() const;
+	
+	FName GetWeaponSocketName();
+	
+	void SetActiveWeapon(int32 Weapon);
+	
 protected:
 	virtual void OnAbilitySystemInitialized() override;
 	
 private:
+	
+	UPROPERTY(ReplicatedUsing = OnRep_ActiveWeaponSlot)
+	int32 ActiveWeaponSlot;
+	
+	UFUNCTION()
+	void OnRep_ActiveWeaponSlot();
+	
 	virtual void Death() override;
 	void HighlightInteractable();
 	AActor* FindTargetInteractableActor();

@@ -93,10 +93,16 @@ public:
 	void InitializeInventoryFromLoadout();
 
 protected:
+
 	virtual void SetupInputComponent() override;
 	virtual UUIManager* CreateUIManager() override;
 	
 private:
+	UFUNCTION(Server, Reliable)
+	void ServerSwitchWeapon(const int32 Weapon);
+	
+	void SwitchWeaponMelee();
+	void SwitchWeaponGun();
 	void Skill1();
 	void Skill2();
 	void ActivateSkill(int32 SlotIndex);

@@ -50,4 +50,10 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
 	TObjectPtr<UInputAction> Skill2;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> SwitchWeaponGun;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|InputConfig")
+	TObjectPtr<UInputAction> SwitchWeaponMelee;
 };

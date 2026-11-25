@@ -17,7 +17,7 @@ namespace
 	{
 		if (!Data) return FText::GetEmpty();
 
-		switch (Data->EquipSlot)
+		switch (Data->GetEquipSlot())
 		{
 		case EEquipSlot::Armor:
 			return FText::FromString(TEXT("护甲"));
@@ -31,7 +31,7 @@ namespace
 			break;
 		}
 
-		return Data->ItemType == EItemType::Equipment
+		return Data->GetItemType() != EItemType::Normal
 			? FText::FromString(TEXT("装备"))
 			: FText::FromString(TEXT("物资"));
 	}

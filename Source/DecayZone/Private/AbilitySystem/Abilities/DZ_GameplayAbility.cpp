@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/DZ_GameplayAbility.h"
 
+#include "AbilitySystemComponent.h"
 #include "DecayZone/DecayZone.h"
 
 void UDZ_GameplayAbility::SetEndReason(EDZAbilityEndReason Reason, const FString& Detail)
@@ -17,7 +18,7 @@ void UDZ_GameplayAbility::PreActivate(const FGameplayAbilitySpecHandle Handle,
 {
 	EndReason = EDZAbilityEndReason::Completed;
 	EndReasonDetail.Empty();
-
+	ActorInfo->AbilitySystemComponent->AddLooseGameplayTags(LocalActivationOwnedTags, 1, EGameplayTagReplicationState::None);
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 }
 
@@ -43,7 +44,7 @@ void UDZ_GameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
 			bWasCancelled ? 1 : 0);
 
 		OnAbilityEnded(ResolvedReason);
+		ActorInfo->AbilitySystemComponent->RemoveLooseGameplayTags(LocalActivationOwnedTags, 1, EGameplayTagReplicationState::None);
 	}
-
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

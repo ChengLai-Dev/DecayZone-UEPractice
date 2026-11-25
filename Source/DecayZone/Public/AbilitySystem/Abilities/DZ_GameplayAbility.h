@@ -35,6 +35,10 @@ protected:
 	
 	virtual void OnAbilityEnded(EDZAbilityEndReason Reason) {}
 
+	// 有些Tag只有本地用，服务器预测会有额外的问题
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "DecayZone|Ability")
+	FGameplayTagContainer LocalActivationOwnedTags;
+	
 private:
 	EDZAbilityEndReason GetEndReason(bool bWasCancelled) const;
 	

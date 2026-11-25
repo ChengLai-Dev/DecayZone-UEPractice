@@ -301,7 +301,7 @@ bool UDZ_GameInstance::CanAcceptStashItem(const FDZ_ItemSlotHandle& Handle, int3
 	if (Count != 1) return false;
 	
 	const FDZ_ItemData* Data = GetItemData(ItemId);
-	return Data && static_cast<int32>(Data->EquipSlot) == Handle.SlotIndex;
+	return Data && static_cast<int32>(Data->GetEquipSlot()) == Handle.SlotIndex;
 }
 
 bool UDZ_GameInstance::TakeDepartureLoadout()

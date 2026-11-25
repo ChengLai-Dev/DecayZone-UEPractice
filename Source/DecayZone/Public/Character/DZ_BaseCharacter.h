@@ -50,10 +50,8 @@ protected:
 	
 	void SetupAbilitySystem(UAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	
-	// 服务端：按顺序应用 InitialGameplayEffects，在授予能力之前调用
 	void ApplyInitialGameplayEffects();
 	
-	// 双端钩子：初始化完成后调用，服务端专属逻辑由子类自行判断 HasAuthority
 	virtual void OnAbilitySystemInitialized() {}
 
 	UPROPERTY(EditDefaultsOnly, Category = "DecayZone|AbilitySystem")
@@ -74,7 +72,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DecayZone|Character")
 	TObjectPtr<UAnimMontage> DeathMontage;
 	
-		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DecayZone|Character")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 private:

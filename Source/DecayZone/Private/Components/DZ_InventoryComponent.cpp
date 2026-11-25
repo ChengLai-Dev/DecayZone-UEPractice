@@ -149,7 +149,7 @@ bool UDZ_InventoryComponent::MoveItem(const FDZ_ItemSlotHandle& From, const FDZ_
 		if (Items[FromIndex].IsEmpty()) return false;
 		
 		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Items[FromIndex].ItemId);
-		if (!Data || static_cast<int32>(Data->EquipSlot) != ToIndex) return false;
+		if (!Data || static_cast<int32>(Data->GetEquipSlot()) != ToIndex) return false;
 		if (Equipments[ToIndex] != DZItem::EmptyId)
 		{
 			if (Equipments[ToIndex] == Items[FromIndex].ItemId) return false;
@@ -275,6 +275,18 @@ TArray<FDZ_ItemStack> UDZ_InventoryComponent::GetAllItems()
 	return Result;
 }
 
+int32 UDZ_InventoryComponent::GetEquippedGun()
+{
+	const int32 SlotIndex = static_cast<int32>(EEquipSlot::Primary);
+	return Equipments[SlotIndex];
+}
+
+int32 UDZ_InventoryComponent::GetEquippedMelee()
+{
+	const int32 SlotIndex = static_cast<int32>(EEquipSlot::Melee);
+	return Equipments[SlotIndex];
+}
+
 float UDZ_InventoryComponent::GetTotalArmor() const
 {
 	float TotalArmor = 0;
@@ -284,7 +296,7 @@ float UDZ_InventoryComponent::GetTotalArmor() const
 		const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Equipments[SlotIndex]);
 		if (!Data) continue;
 		
-		TotalArmor += Data->ArmorBonus;
+		TotalArmor += Data->GetArmorBonus();
 	}
 	return TotalArmor;
 }

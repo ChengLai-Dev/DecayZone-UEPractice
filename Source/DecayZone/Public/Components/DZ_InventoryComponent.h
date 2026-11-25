@@ -40,6 +40,10 @@ public:
 	bool CanAddWeight(float Delta) const;
 	void ClearAll();
 	TArray<FDZ_ItemStack> GetAllItems();
+	
+	int32 GetEquippedGun();
+	int32 GetEquippedMelee();
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnEvent OnItemsChanged;
 	

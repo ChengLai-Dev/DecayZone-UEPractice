@@ -18,6 +18,8 @@
 #include "Data/Ability/FDZ_SkillData.h"
 #include "Data/Input/DZ_InputConfig.h"
 #include "Data/Item/DZ_ItemDefines.h"
+#include "Data/ItemType/Weapon/DZ_WeaponData.h"
+#include "Data/Item/FDZ_ItemData.h"
 #include "Data/Item/FDZ_ItemStack.h"
 #include "Data/Item/FDZ_Loadout.h"
 #include "Data/UI/DZ_UIConfig.h"
@@ -79,6 +81,8 @@ void ADZ_RaidPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(InputConfig->WeaponAttackAction, ETriggerEvent::Started, this, &ADZ_RaidPlayerController::WeaponAttack);
 	EnhancedInputComponent->BindAction(InputConfig->Skill1, ETriggerEvent::Started, this, &ADZ_RaidPlayerController::Skill1);
 	EnhancedInputComponent->BindAction(InputConfig->Skill2, ETriggerEvent::Started, this, &ADZ_RaidPlayerController::Skill2);
+	EnhancedInputComponent->BindAction(InputConfig->SwitchWeaponGun, ETriggerEvent::Started, this, &ADZ_RaidPlayerController::SwitchWeaponGun);
+	EnhancedInputComponent->BindAction(InputConfig->SwitchWeaponMelee, ETriggerEvent::Started, this, &ADZ_RaidPlayerController::SwitchWeaponMelee);
 	
 }
 
@@ -86,6 +90,51 @@ UUIManager* ADZ_RaidPlayerController::CreateUIManager()
 {
 	RaidUI = NewObject<UDZ_RaidUIManager>(this);
 	return RaidUI;
+}
+
+void ADZ_RaidPlayerController::ServerSwitchWeapon_Implementation(const int32 Weapon)
+{
+	const FDZ_ItemData* Data = ItemHelper::GetItemData(this, Weapon);
+	if (!Data) return;
+	if (Data->GetEquipSlot() != EEquipSlot::Melee && Data->GetEquipSlot() != EEquipSlot::Primary) return;
+	if (!Data->GetWeaponData()) return;
+	if (!IsValid(InventoryComponent)) return;
+
+	const int32 EquipSlotIndex = static_cast<int32>(Data->GetEquipSlot());
+	if (!InventoryComponent->IsEquipSlotValid(EquipSlotIndex)) return;
+	if (InventoryComponent->GetEquipments()[EquipSlotIndex] != Weapon) return;
+
+	TSubclassOf<AActor> WeaponActorClass = Data->GetWeaponData()->WeaponActorClass;
+	if (!IsValid(WeaponActorClass)) return;
+	if (!GetWorld()) return;
+	
+	AActor* WeaponActor = GetWorld()->SpawnActorDeferred<AActor>(WeaponActorClass, FTransform(), GetPawn(), GetPawn(), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	if (!WeaponActor) return;
+	
+	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!PlayerCharacter) return;
+	
+	PlayerCharacter->SetActiveWeapon(Weapon);
+	WeaponActor->FinishSpawning(FTransform());
+	WeaponActor->AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, PlayerCharacter->GetWeaponSocketName());
+}
+
+void ADZ_RaidPlayerController::SwitchWeaponMelee()
+{
+	if (!GetPawn()) return;
+	const int32 MeleeWeapon = InventoryComponent->GetEquippedMelee();
+	if (MeleeWeapon == DZItem::EmptyId) return;
+	if (MeleeWeapon == Cast<ADZ_PlayerCharacter>(GetPawn())->GetActiveWeapon()) return;
+	ServerSwitchWeapon(MeleeWeapon);
+}
+
+void ADZ_RaidPlayerController::SwitchWeaponGun()
+{
+	if (!GetPawn()) return;
+	const int32 GunWeapon = InventoryComponent->GetEquippedGun();
+	if (GunWeapon == DZItem::EmptyId) return;
+	if (GunWeapon == Cast<ADZ_PlayerCharacter>(GetPawn())->GetActiveWeapon()) return;
+	ServerSwitchWeapon(GunWeapon);
 }
 
 void ADZ_RaidPlayerController::OnAttributeValueChanged(const FOnAttributeChangeData& Data)
@@ -176,7 +225,14 @@ void ADZ_RaidPlayerController::WeaponAttack()
 {
 	if (IsValid(RaidUI) && RaidUI->InteractController->IsBlockingAction()) return;
 	
-	ActivateAbilityByTag(DZGameplayTags::Ability_Player_Attack_Weapon);
+	const ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!PlayerCharacter) return;
+	
+	const UWeaponData* WeaponData = PlayerCharacter->GetActiveWeaponData();
+	if (!WeaponData || !WeaponData->AttackAbilityClass) return;
+	if (!AbilitySystemComponent.IsValid()) return;
+	
+	AbilitySystemComponent->TryActivateAbilityByClass(WeaponData->AttackAbilityClass);
 }
 
 void ADZ_RaidPlayerController::Kick()
@@ -232,6 +288,17 @@ void ADZ_RaidPlayerController::ServerMoveItem_Implementation(UDZ_ContainerCompon
 {
 	UDZ_InventoryComponent* InventoryComp = GetInventoryComponent();
 	if (!InventoryComp) return;
+
+	if (From.Container == EItemContainer::Loot || To.Container == EItemContainer::Loot)
+	{
+		ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+		if (!PlayerCharacter) return;
+		if (!IsValid(ContainerComp)) return;
+
+		AActor* ContainerOwner = ContainerComp->GetOwner();
+		if (!IsValid(ContainerOwner)) return;
+		if (!PlayerCharacter->IsInteractableInRange(ContainerOwner)) return;
+	}
 	
 	if (ItemHelper::MoveItem(InventoryComp, ContainerComp, From, To))
 	{
@@ -443,6 +510,11 @@ void ADZ_RaidPlayerController::ServerCancelInteract_Implementation()
 void ADZ_RaidPlayerController::ServerTakeItem_Implementation(AActor* ContainerActor, int32 SlotIndex, int32 Count)
 {
 	if (!IsValid(ContainerActor)) return;
+	if (Count <= 0) return;
+
+	ADZ_PlayerCharacter* PlayerCharacter = Cast<ADZ_PlayerCharacter>(GetPawn());
+	if (!PlayerCharacter) return;
+	if (!PlayerCharacter->IsInteractableInRange(ContainerActor)) return;
 
 	UDZ_ContainerComponent* Container = ContainerActor->FindComponentByClass<UDZ_ContainerComponent>();
 	if (!Container) return;

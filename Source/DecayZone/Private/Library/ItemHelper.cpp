@@ -3,6 +3,7 @@
 #include "Components/DZ_ContainerComponent.h"
 #include "Components/DZ_InventoryComponent.h"
 #include "Data/Item/FDZ_ItemData.h"
+#include "Data/ItemType/Weapon/DZ_WeaponData.h"
 #include "Data/Item/DZ_ItemDefines.h"
 #include "Data/Item/FDZ_ItemSlotHandle.h"
 #include "Data/Item/FDZ_ItemStack.h"
@@ -20,6 +21,14 @@ const FDZ_ItemData* ItemHelper::GetItemData(const UObject* WorldContextObject, i
 	
 	return GI->GetItemData(ItemID);
 }
+
+const UWeaponData* ItemHelper::GetWeaponInfo(const UObject* WorldContextObject, int32 ItemID)
+{
+	const FDZ_ItemData* Data = GetItemData(WorldContextObject, ItemID);
+	if (!Data) return nullptr;
+	return Data->GetWeaponData();
+}
+
 
 void ItemHelper::UseItem(ADZ_BaseCharacter* Target, int32 ItemID)
 {
@@ -56,7 +65,7 @@ bool ItemHelper::MoveItem(UDZ_InventoryComponent* InventoryComp, UDZ_ContainerCo
 		int32 ItemID = ContainerComp->GetItems()[From.SlotIndex].ItemId;
 		const FDZ_ItemData* Data = GetItemData(InventoryComp, ItemID);
 		if (!Data) return false;
-		int32 EquipSlot = static_cast<int32>(Data->EquipSlot);
+		int32 EquipSlot = static_cast<int32>(Data->GetEquipSlot());
 		if (EquipSlot != To.SlotIndex) return false;
 		
 		
@@ -121,7 +130,7 @@ int32 ItemHelper::GetMaxStack(const UObject* WorldContextObject, int32 ItemId)
 {
 	const FDZ_ItemData* Data = GetItemData(WorldContextObject, ItemId);
 	if (!Data) return 1;
-	if (Data->ItemType == EItemType::Equipment) return 1;
+	if (Data->GetItemType() != EItemType::Normal) return 1;
 	
 	return TNumericLimits<int32>::Max();
 }
