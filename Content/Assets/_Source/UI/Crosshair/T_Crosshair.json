@@ -1,0 +1,10 @@
+{
+  "kind": "procedural",
+  "seed": 20261126,
+  "size": [
+    128,
+    128
+  ],
+  "usage": "HUD crosshair image, center anchored",
+  "anchor": "exact center"
+}

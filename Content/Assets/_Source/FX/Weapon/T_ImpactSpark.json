@@ -1,0 +1,10 @@
+{
+  "kind": "procedural",
+  "seed": 20261126,
+  "size": [
+    256,
+    256
+  ],
+  "usage": "impact spark additive quad",
+  "anchor": "centered"
+}

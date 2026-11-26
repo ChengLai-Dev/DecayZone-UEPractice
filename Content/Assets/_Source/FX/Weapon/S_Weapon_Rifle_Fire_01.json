@@ -1,0 +1,12 @@
+{
+  "kind": "downloaded",
+  "source_url": "https://opengameart.org/content/the-free-firearm-sound-library",
+  "source_file": "Prepared SFX Library/AR-15/D_32P.wav",
+  "license": "CC0 1.0 (public domain, commercial use allowed, no attribution required)",
+  "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+  "onset_seconds": 5.646,
+  "crop_before_seconds": 0.05,
+  "crop_duration_seconds": 1.35,
+  "processing": "mono, 48kHz, PCM16, peak -1 dBFS, tail fade 120ms",
+  "usage": "rifle single shot, 3D attenuation"
+}

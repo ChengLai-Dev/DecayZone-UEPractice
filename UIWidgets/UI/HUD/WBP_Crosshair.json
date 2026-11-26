@@ -1,0 +1,66 @@
+{
+	"schemaVersion": 1,
+	"assetPath": "/Game/UI/HUD/WBP_Crosshair",
+	"designSizeMode": "FillScreen",
+	"root":
+	{
+		"class": "/Script/UMG.CanvasPanel",
+		"className": "CanvasPanel",
+		"name": "RootCanvas",
+		"isVariable": false,
+		"properties":
+		{
+		},
+		"children": [
+			{
+				"class": "/Script/UMG.Image",
+				"className": "Image",
+				"name": "Img_Crosshair",
+				"isVariable": true,
+				"properties":
+				{
+					"Brush": "(TintColor=(SpecifiedColor=(R=1.000000,G=1.000000,B=1.000000,A=1.000000)),DrawAs=Image,ImageSize=(X=64.000000,Y=64.000000),Margin=(),ResourceObject=\"/Script/Engine.Texture2D'/Game/UI/Textures/T_Crosshair.T_Crosshair'\",OutlineSettings=(CornerRadii=(X=0.000000,Y=0.000000,Z=0.000000,W=0.000000),Color=(SpecifiedColor=(R=0.000000,G=0.000000,B=0.000000,A=0.000000)),RoundingType=HalfHeightRadius),UVRegion=(Min=(X=0.000000,Y=0.000000),Max=(X=0.000000,Y=0.000000),bIsValid=False))",
+					"Visibility": "HitTestInvisible"
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": -32,
+								"top": -32,
+								"right": 32,
+								"bottom": 32
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0.5,
+									"y": 0.5
+								},
+								"max":
+								{
+									"x": 0.5,
+									"y": 0.5
+								}
+							},
+							"alignment":
+							{
+								"x": 0.5,
+								"y": 0.5
+							}
+						},
+						"bAutoSize": false,
+						"ZOrder": 10
+					}
+				}
+			}
+		]
+	}
+}

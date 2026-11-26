@@ -12,6 +12,8 @@ namespace DZGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Ability_Enemy_Attack, "Ability.Enemy.Attack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Ability_Shield, "GameplayCue.Ability.Shield");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Weapon_Fire, "GameplayCue.Weapon.Fire");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Weapon_Impact, "GameplayCue.Weapon.Impact");
 	
 	
 	

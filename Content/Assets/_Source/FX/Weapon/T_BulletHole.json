@@ -1,0 +1,10 @@
+{
+  "kind": "procedural",
+  "seed": 20261126,
+  "size": [
+    512,
+    512
+  ],
+  "usage": "deferred decal, opacity from alpha",
+  "anchor": "centered, faces decal normal"
+}

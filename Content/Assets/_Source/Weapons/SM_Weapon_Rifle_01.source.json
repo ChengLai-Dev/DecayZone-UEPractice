@@ -1,0 +1,10 @@
+{
+  "asset": "SM_Weapon_Rifle_01",
+  "source_url": "https://poly.pizza/m/cCAgiMOQow",
+  "author": "Quaternius",
+  "license": "CC0 1.0 (public domain, commercial use allowed, no attribution required)",
+  "original_format": "glTF",
+  "processing": "scaled to 90cm length, rotated so muzzle points +X, pivot moved to pistol grip, exported as glb/fbx",
+  "original_mesh": "Rifle (2836 tris, 5 materials: Detail, ScopeHandle, Main, Barrel, Glass)",
+  "socket": "Muzzle at local (66, 0, 9)"
+}

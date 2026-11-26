@@ -152,6 +152,53 @@
 						"ZOrder": 2
 					}
 				}
+			},
+			{
+				"class": "/Game/UI/HUD/WBP_Crosshair.WBP_Crosshair_C",
+				"className": "WBP_Crosshair_C",
+				"name": "Crosshair",
+				"isVariable": true,
+				"properties":
+				{
+				},
+				"slot":
+				{
+					"class": "/Script/UMG.CanvasPanelSlot",
+					"className": "CanvasPanelSlot",
+					"properties":
+					{
+						"LayoutData":
+						{
+							"offsets":
+							{
+								"left": 0,
+								"top": 0,
+								"right": 0,
+								"bottom": 0
+							},
+							"anchors":
+							{
+								"min":
+								{
+									"x": 0,
+									"y": 0
+								},
+								"max":
+								{
+									"x": 1,
+									"y": 1
+								}
+							},
+							"alignment":
+							{
+								"x": 0,
+								"y": 0
+							}
+						},
+						"bAutoSize": false,
+						"ZOrder": 10
+					}
+				}
 			}
 		]
 	},

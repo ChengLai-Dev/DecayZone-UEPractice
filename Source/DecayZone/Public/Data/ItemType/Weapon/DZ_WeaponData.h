@@ -17,6 +17,9 @@ class DECAYZONE_API UWeaponData : public UEquipmentData
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack")
 	FDZ_AttackData AttackData;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	FName AttachSocketName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<AActor> WeaponActorClass;

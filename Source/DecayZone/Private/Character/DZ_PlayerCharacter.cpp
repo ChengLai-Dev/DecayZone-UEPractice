@@ -77,7 +77,10 @@ const UWeaponData* ADZ_PlayerCharacter::GetActiveWeaponData() const
 
 FName ADZ_PlayerCharacter::GetWeaponSocketName()
 {
-	return "hand_r";
+	const UWeaponData* Data = GetActiveWeaponData();
+	if (!Data) return FName();
+	
+	return Data->AttachSocketName;
 }
 
 void ADZ_PlayerCharacter::SetActiveWeapon(int32 Weapon)

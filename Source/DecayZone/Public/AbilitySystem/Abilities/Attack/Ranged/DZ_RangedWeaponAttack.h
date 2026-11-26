@@ -17,4 +17,6 @@ protected:
 
 private:
 	bool GetAimRay(FVector& OutStart, FVector& OutDirection, const URangedWeaponData& WeaponData) const;
+
+	bool GetMuzzleTransform(const URangedWeaponData& WeaponData, FVector& OutLocation) const;
 };

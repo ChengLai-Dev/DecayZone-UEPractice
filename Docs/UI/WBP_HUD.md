@@ -19,12 +19,14 @@
 RootCanvas (CanvasPanel, SelfHitTestInvisible)
 ├─ StatusBars  → WBP_StatusBars   锚点 (0,1)   轴心 (0,1)   偏移 left=40,  top=-40   bAutoSize
 ├─ AbilityBar  → WBP_AbilityBar   锚点 (0.5,1) 轴心 (0.5,1) 偏移 left=0,   top=-36   bAutoSize
-└─ RaidTime    → WBP_RaidTime     锚点 (1,0)   轴心 (1,0)   偏移 left=-28, top=18    bAutoSize
+├─ RaidTime    → WBP_RaidTime     锚点 (1,0)   轴心 (1,0)   偏移 left=-28, top=18    bAutoSize
+└─ Crosshair   → WBP_Crosshair     锚点 (0,0)-(1,1) 轴心 (0,0) 偏移 0  非 AutoSize  ZOrder 10
 ```
 
-- 三个子控件都是**设计期子控件**（JSON 里 `class` 指向各自 WBP 的 `_C` 类），不是运行时 `CreateWidget`。
+- 四个子控件都是**设计期子控件**（JSON 里 `class` 指向各自 WBP 的 `_C` 类），不是运行时 `CreateWidget`。
 - 点锚点 + `bAutoSize`：槽位大小跟随子控件期望尺寸；子控件内部不再有 `RootCanvas`，尺寸由各自根 `SizeBox` 决定。
-- 层级由控件树顺序决定（`StatusBars` → `AbilityBar` → `RaidTime`），三者不重叠，顺序只影响理论上的遮挡。
+- `Crosshair` 铺满全屏、非 AutoSize，准心贴图由它自己居中；`ZOrder = 10` 保证压在状态条与技能条之上。
+- 层级由控件树顺序决定（`StatusBars` → `AbilityBar` → `RaidTime` → `Crosshair`），前三个不重叠。
 
 ## 3. BindWidget 契约
 
@@ -37,6 +39,8 @@ RootCanvas (CanvasPanel, SelfHitTestInvisible)
 | `RaidTime` | `RaidTime` | `UDZ_RaidTime*` | `UDZ_RaidTimeController` 注入 ViewModel |
 
 改名、删节点都会让 WBP 导入失败（插件会列出缺失项），这是有意的保护。
+
+`Crosshair` **不在 BindWidget 契约内**，`UDZ_HUDLayout` 没有对应成员；需要操作准心时按节点名 `Crosshair` 取子控件，再取它内部的 `Img_Crosshair`。详见 `Docs/UI/WBP_Crosshair.md`。
 
 ## 4. 显示方式
 

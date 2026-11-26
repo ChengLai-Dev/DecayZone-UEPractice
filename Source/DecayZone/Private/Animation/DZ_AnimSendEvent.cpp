@@ -4,7 +4,9 @@
 #include "Animation/DZ_AnimSendEvent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemGlobals.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayCueManager.h"
 
 FString UDZ_AnimSendEvent::GetNotifyName_Implementation() const
 {
@@ -29,8 +31,59 @@ void UDZ_AnimSendEvent::BranchingPointNotify(FBranchingPointNotifyPayload& Branc
 	const USkeletalMeshComponent* MeshComp = BranchingPointPayload.SkelMeshComponent;
 
 	AActor* OwnerActor = MeshComp ? MeshComp->GetOwner() : nullptr;
-	if (OwnerActor && OwnerActor->Implements<UAbilitySystemInterface>())
+	if (!OwnerActor) return;
+	
+	if (CosmeticCueTag.IsValid())
+	{
+		FGameplayCueParameters CueParameters;
+		CueParameters.Instigator = OwnerActor;
+		FTransform SpawnTransform;
+		if (FindCosmeticTransform(MeshComp, SpawnTransform))
+		{
+			CueParameters.Location = SpawnTransform.GetLocation();
+			CueParameters.Normal = SpawnTransform.GetRotation().GetForwardVector();
+		}
+		UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(
+			OwnerActor, CosmeticCueTag, EGameplayCueEvent::Executed, CueParameters);
+		
+	}
+	
+	if (OwnerActor->Implements<UAbilitySystemInterface>())
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OwnerActor, EventTag, FGameplayEventData());
 	}
+}
+
+bool UDZ_AnimSendEvent::FindCosmeticTransform(const USkeletalMeshComponent* MeshComp, FTransform& OutTransform) const
+{
+	const AActor* OwnerActor = MeshComp ? MeshComp->GetOwner() : nullptr;
+	if (!OwnerActor) return false;
+
+	TArray<AActor*> AttachedActors;
+	OwnerActor->GetAttachedActors(AttachedActors);
+
+	for (const AActor* Attached : AttachedActors)
+	{
+		TArray<USceneComponent*> Components;
+		Attached->GetComponents<USceneComponent>(Components);
+
+		for (const USceneComponent* Component : Components)
+		{
+			if (!Component || !Component->DoesSocketExist(CosmeticSocketName)) continue;
+
+			OutTransform = Component->GetSocketTransform(CosmeticSocketName);
+			return true;
+		}
+	}
+
+	if (!MeshComp) return false;
+
+	if (MeshComp->DoesSocketExist(CosmeticSocketName))
+	{
+		OutTransform = MeshComp->GetSocketTransform(CosmeticSocketName);
+		return true;
+	}
+
+	OutTransform = MeshComp->GetComponentTransform();
+	return true;
 }

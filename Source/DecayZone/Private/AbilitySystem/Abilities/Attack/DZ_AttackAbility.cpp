@@ -47,9 +47,6 @@ void UDZ_AttackAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	MontageTask->OnCancelled.AddDynamic(this, &ThisClass::HandleMontageCancelled);
 	MontageTask->ReadyForActivation();
 
-	AActor* AvatarActor = GetAvatarActorFromActorInfo();
-	if (!AvatarActor || !AvatarActor->HasAuthority()) return;
-
 	AttackEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, DZGameplayTags::Event_Attack, nullptr, false, false);
 	if (!AttackEventTask) return;
 

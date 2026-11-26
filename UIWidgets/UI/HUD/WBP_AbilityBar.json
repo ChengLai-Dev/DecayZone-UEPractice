@@ -2,83 +2,84 @@
 	"schemaVersion": 1,
 	"assetPath": "/Game/UI/HUD/WBP_AbilityBar",
 	"designSizeMode": "Desired",
+	"parentClass": "/Script/DecayZone.DZ_AbilityBar",
 	"root":
-{
-	"class": "/Script/UMG.SizeBox",
-	"className": "SizeBox",
-	"name": "Size_AbilityBar",
-	"isVariable": false,
-	"properties":
 	{
-		"Visibility": "SelfHitTestInvisible",
-		"WidthOverride": 140,
-		"HeightOverride": 64,
-		"bOverride_WidthOverride": true,
-		"bOverride_HeightOverride": true
-	},
-	"children": [
+		"class": "/Script/UMG.SizeBox",
+		"className": "SizeBox",
+		"name": "Size_AbilityBar",
+		"isVariable": false,
+		"properties":
 		{
-			"class": "/Script/UMG.HorizontalBox",
-			"className": "HorizontalBox",
-			"name": "HB_Slots",
-			"isVariable": true,
-			"properties":
+			"WidthOverride": 140,
+			"HeightOverride": 64,
+			"bOverride_WidthOverride": true,
+			"bOverride_HeightOverride": true
+		},
+		"children": [
 			{
-			},
-			"slot":
-			{
-				"class": "/Script/UMG.SizeBoxSlot",
-				"className": "SizeBoxSlot",
+				"class": "/Script/UMG.HorizontalBox",
+				"className": "HorizontalBox",
+				"name": "HB_Slots",
+				"isVariable": true,
 				"properties":
 				{
-				}
-			},
-			"children": [
+				},
+				"slot":
 				{
-					"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
-					"className": "WBP_AbilitySlot_C",
-					"name": "AbilitySlot_1",
-					"isVariable": true,
+					"class": "/Script/UMG.SizeBoxSlot",
+					"className": "SizeBoxSlot",
 					"properties":
 					{
-					},
-					"slot":
-					{
-						"class": "/Script/UMG.HorizontalBoxSlot",
-						"className": "HorizontalBoxSlot",
-						"properties":
-						{
-							"Padding":
-							{
-								"left": 0,
-								"top": 0,
-								"right": 12,
-								"bottom": 0
-							},
-							"VerticalAlignment": "VAlign_Center"
-						}
 					}
 				},
-				{
-					"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
-					"className": "WBP_AbilitySlot_C",
-					"name": "AbilitySlot_2",
-					"isVariable": true,
-					"properties":
+				"children": [
 					{
-					},
-					"slot":
-					{
-						"class": "/Script/UMG.HorizontalBoxSlot",
-						"className": "HorizontalBoxSlot",
+						"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
+						"className": "WBP_AbilitySlot_C",
+						"name": "AbilitySlot_1",
+						"isVariable": true,
 						"properties":
 						{
-							"VerticalAlignment": "VAlign_Center"
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.HorizontalBoxSlot",
+							"className": "HorizontalBoxSlot",
+							"properties":
+							{
+								"Padding":
+								{
+									"left": 0,
+									"top": 0,
+									"right": 12,
+									"bottom": 0
+								},
+								"VerticalAlignment": "VAlign_Center"
+							}
+						}
+					},
+					{
+						"class": "/Game/UI/HUD/WBP_AbilitySlot.WBP_AbilitySlot_C",
+						"className": "WBP_AbilitySlot_C",
+						"name": "AbilitySlot_2",
+						"isVariable": true,
+						"properties":
+						{
+						},
+						"slot":
+						{
+							"class": "/Script/UMG.HorizontalBoxSlot",
+							"className": "HorizontalBoxSlot",
+							"properties":
+							{
+								"VerticalAlignment": "VAlign_Center"
+							}
 						}
 					}
-				}
-			]
-		}
-	]
-}
+				]
+			}
+		]
+	},
+	"contentHash": "8d0059fd70a07a14198ad88761ffad53"
 }

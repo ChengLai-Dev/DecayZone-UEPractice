@@ -17,8 +17,15 @@ class DECAYZONE_API UDZ_AnimSendEvent : public UAnimNotify
 public:
 	UDZ_AnimSendEvent();
 	virtual void BranchingPointNotify(FBranchingPointNotifyPayload& BranchingPointPayload) override;
+	bool FindCosmeticTransform(const USkeletalMeshComponent* MeshComp, FTransform& OutTransform) const;
 	virtual FString GetNotifyName_Implementation() const override;
 	
 	UPROPERTY(EditAnywhere, Category = "DecayZone|GameplayTags")
 	FGameplayTag EventTag;
+	
+	UPROPERTY(EditAnywhere, Category = "DecayZone|GameplayCue")
+	FGameplayTag CosmeticCueTag;
+	
+	UPROPERTY(EditAnywhere, Category = "DecayZone|GameplayCue")
+	FName CosmeticSocketName;
 };

@@ -1,8 +1,11 @@
 #include "AbilitySystem/Abilities/Attack/Ranged/DZ_RangedWeaponAttack.h"
 
+#include "AbilitySystemComponent.h"
 #include "Components/SceneComponent.h"
 #include "Data/ItemType/Weapon/DZ_RangedWeaponData.h"
 #include "GameFramework/Pawn.h"
+#include "GameplayEffectTypes.h"
+#include "GameplayTags/DZGameplayTags.h"
 
 bool UDZ_RangedWeaponAttack::ResolveAttackData(FDZ_AttackData& OutAttackData) const
 {
@@ -21,7 +24,7 @@ void UDZ_RangedWeaponAttack::PerformAttack(const FDZ_AttackData& AttackData)
 	FVector Start;
 	FVector Direction;
 	if (!GetAimRay(Start, Direction, *RangedWeaponData)) return;
-
+	
 	if (RangedWeaponData->SpreadAngle > 0.f)
 	{
 		Direction = FMath::VRandCone(Direction, FMath::DegreesToRadians(RangedWeaponData->SpreadAngle * 0.5f));
@@ -52,12 +55,26 @@ bool UDZ_RangedWeaponAttack::GetAimRay(FVector& OutStart, FVector& OutDirection,
 	OutStart = ViewLocation;
 	OutDirection = ViewRotation.Vector();
 
-	if (WeaponData.MuzzleSocketName.IsNone()) return true;
+	FVector MuzzleLocation;
+	if (GetMuzzleTransform(WeaponData, MuzzleLocation))
+	{
+		OutStart = MuzzleLocation;
+	}
+
+	return true;
+}
+
+bool UDZ_RangedWeaponAttack::GetMuzzleTransform(const URangedWeaponData& WeaponData, FVector& OutLocation) const
+{
+	if (WeaponData.MuzzleSocketName.IsNone()) return false;
+
+	const APawn* Avatar = Cast<APawn>(GetAvatarActorFromActorInfo());
+	if (!Avatar) return false;
 
 	TArray<AActor*> AttachedActors;
 	Avatar->GetAttachedActors(AttachedActors);
 
-	for (const AActor* Actor : AttachedActors)
+	for (AActor* Actor : AttachedActors)
 	{
 		if (!IsValid(Actor)) continue;
 
@@ -68,10 +85,10 @@ bool UDZ_RangedWeaponAttack::GetAimRay(FVector& OutStart, FVector& OutDirection,
 		{
 			if (!Component || !Component->DoesSocketExist(WeaponData.MuzzleSocketName)) continue;
 
-			OutStart = Component->GetSocketLocation(WeaponData.MuzzleSocketName);
+			OutLocation = Component->GetSocketLocation(WeaponData.MuzzleSocketName);
 			return true;
 		}
 	}
 
-	return true;
+	return false;
 }

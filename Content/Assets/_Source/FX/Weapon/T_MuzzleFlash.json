@@ -1,0 +1,10 @@
+{
+  "kind": "procedural",
+  "seed": 20261126,
+  "size": [
+    512,
+    256
+  ],
+  "usage": "muzzle flash additive quad / emissive mesh",
+  "anchor": "muzzle at x=0 (left), flame extends +X"
+}

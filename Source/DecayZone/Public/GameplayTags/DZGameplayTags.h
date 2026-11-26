@@ -14,6 +14,8 @@ namespace DZGameplayTags
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Enemy_Attack);
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Ability_Shield);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Weapon_Fire);
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Weapon_Impact);
 	
 	
 	UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Armor);
